@@ -10,7 +10,6 @@ try:
     from Bandera_PyChton_quotes import Quotes1
     import json
     import requests
-    import win10toast
     import os
     import sys
     import random
@@ -32,11 +31,6 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
-
-    @bot.event
-    async def on_ready():
-        toaster = win10toast.ToastNotifier()    
-        toaster.show_toast("Discord", "Слава Украине, Bandera_Bot готов к работе!")
 
     @bot.event
     async def on_message(message):
