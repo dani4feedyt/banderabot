@@ -31,16 +31,6 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
-
-    @bot.event
-    async def on_message(message):
-        emojis = ["<:Smiling_Mork:796132958834262067>", "<:Pixelmork:770035597212778517>", "<:leMork:813123719106789406>", "<:Neadikvat:775838652626501674>"]
-        if message.content("морк"):
-            await message.add_reaction(random.choice(emojis))
-        if message.content("админ" or "администратор" or "Заха"):
-            await message.add_reaction("<:Admin_Ebalo:698661524247412826>")
-        if message.content("гачи" or "гачимучи" or "right" or "gachi"):
-            await message.add_reaction("<:leGachi:816045154610839582>")
         
     @bot.command()
     async def slava_ukraine(ctx):
