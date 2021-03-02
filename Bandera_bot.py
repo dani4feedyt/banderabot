@@ -43,9 +43,9 @@ try:
         emojis = ["<:Smiling_Mork:796132958834262067>", "<:Pixelmork:770035597212778517>", "<:leMork:813123719106789406>", "<:Neadikvat:775838652626501674>"]
         if message.content == ("морк"):
             await message.add_reaction(random.choice(emojis))
-        elif message.content == ("админ", "администратор", "Заха"):
+        elif message.content == ("админ"):
             await message.add_reaction("<:Admin_Ebalo:698661524247412826>")
-        elif message.content == ("гачи", "гачимучи", "right", "gachi"):
+        elif message.content == ("гачи"):
             await message.add_reaction("<:leGachi:816045154610839582>")
         
     @bot.command()
