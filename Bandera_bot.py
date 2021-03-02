@@ -10,6 +10,7 @@ try:
     from Bandera_PyChton_quotes import Quotes1
     import json
     import requests
+    import win10toast
     import os
     import sys
     import random
@@ -31,6 +32,21 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
+
+    @bot.event
+    async def on_ready():
+        toaster = win10toast.ToastNotifier()    
+        toaster.show_toast("Discord", "Слава Украине, Bandera_Bot готов к работе!")
+
+    @bot.event
+    async def on_message(message):
+        emojis = ["<:Smiling_Mork:796132958834262067>", "<:Pixelmork:770035597212778517>", "<:leMork:813123719106789406>", "<:Neadikvat:775838652626501674>"]
+        if message.content == ("морк"):
+            await message.add_reaction(random.choice(emojis))
+        elif message.content == ("админ", "администратор", "Заха"):
+            await message.add_reaction("<:Admin_Ebalo:698661524247412826>")
+        elif message.content == ("гачи", "гачимучи", "right", "gachi"):
+            await message.add_reaction("<:leGachi:816045154610839582>")
         
     @bot.command()
     async def slava_ukraine(ctx):
@@ -45,7 +61,7 @@ try:
     @bot.command()
     async def info(ctx: commands.Context):
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
-        await ctx.send(f'Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*\n\n**b!slava_ukraine** - Головна функція Бандери\n**b!birb** - Світлина випадкового птаха\n**b!kick (Нікнейм)** - Заслання до Сибіру {zaha_emoji}\n**b!clear (Кількість повідомлень)** - Видалення повідомлень  {zaha_emoji}\n**b!quote** - Надішлю вам випадковий вислів Степана Андрійовича\n**b!pasta (Number 1-4)** - Один з крилатих висловів про так званий "Колюмбокс"\n**b!spam_info** - Інформація про належне використання вибухової спам програми\n**b!mute_info** - Інформація про використання b!mute  {zaha_emoji}\n**b!stop** - Зупинити виконання усіх операцій\n\n||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**\n*ver.1.2.7*')
+        await ctx.send(f'Патріотичий бот, який вміє робити деякі прикольні штуки:\n\n**b!slava_ukraine** - Головна функція Бандери\n**b!birb** - Світлина випадкового птаха\n**b!kick (Нікнейм)** - Заслання до Сибіру {zaha_emoji}\n**b!clear (Кількість повідомлень)** - Видалення повідомлень  {zaha_emoji}\n**b!quote** - Надішлю вам випадковий вислів Степана Андрійовича\n**b!pasta (Number 1-4)** - Один з крилатих висловів про так званий "Колюмбокс"\n**b!spam_info** - Інформація про належне використання вибухової спам програми\n**b!mute_info** - Інформація про використання b!mute  {zaha_emoji}\n**b!stop** - Зупинити виконання усіх операцій\n\n||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**\n*ver.1.2.7*')
 
     @bot.command()
     async def birb(ctx):
@@ -111,7 +127,8 @@ try:
     
     @bot.command(pass_context=True)
     async def clear(ctx, amount = 8192):
-        await ctx.channel.purge(limit=int(amount))
+        await ctx.send(f'Ви дійсно бажаєте видалити {amount} повідомлень?')
+        await ctx.channel.purge(limit=100)
         if amount == 8192:
             amount = 'дуууууже багато'
         time.sleep(0.75)    
