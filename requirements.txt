@@ -20,5 +20,4 @@ PyTweening==1.0.3
 requests==2.25.1
 typing-extensions==3.7.4.3
 urllib3==1.26.2
-win10toast==0.9
 yarl==1.6.3
