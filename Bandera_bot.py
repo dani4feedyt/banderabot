@@ -111,7 +111,7 @@ try:
     
     @bot.command(pass_context=True)
     async def clear(ctx, amount = 8192):
-        await ctx.channel.purge(limit=amount)
+        await ctx.channel.purge(limit=int(amount))
         if amount == 8192:
             amount = 'дуууууже багато'
         time.sleep(0.75)    
