@@ -115,7 +115,7 @@ try:
         if amount == 8192:
             amount = 'дуууууже багато'
         time.sleep(0.75)    
-        await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=10)
+        await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=60)
 
     @bot.command()
     async def spam_info(ctx):
