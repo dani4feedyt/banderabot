@@ -111,8 +111,7 @@ try:
     
     @bot.command(pass_context=True)
     async def clear(ctx, amount = 8192):
-        await ctx.send(f'Ви дійсно бажаєте видалити {amount} повідомлень?')
-        await ctx.channel.purge(limit=100)
+        await ctx.channel.purge(limit=amount)
         if amount == 8192:
             amount = 'дуууууже багато'
         time.sleep(0.75)    
