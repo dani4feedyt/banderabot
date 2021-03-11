@@ -110,9 +110,9 @@ try:
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
-    async def clear(ctx, amount = 8192):
+    async def clear(ctx, amount = 100):
         await ctx.channel.purge(limit=int(amount))
-        if amount == 8192:
+        if amount >= 100:
             amount = 'дуууууже багато'
         time.sleep(0.75)    
         await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=60)
