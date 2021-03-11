@@ -111,12 +111,15 @@ try:
     
     @bot.command(pass_context=True)
     async def clear(ctx, amount = 100):
-        await ctx.channel.purge(limit=int(amount))
-        if int(amount) >= 100:
-            amount = 'дуууууже багато'
-        time.sleep(0.75)    
-        await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=60)
-
+        if int(amount) <= 150:
+            await ctx.channel.purge(limit=int(amount))
+            if int(amount) >= 100:
+                amount = 'дуууууже багато'
+            time.sleep(0.75)    
+            await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=60)
+        else:
+            await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
+            
     @bot.command()
     async def spam_info(ctx):
         await ctx.send("Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Швидкість відправки в секундах) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
