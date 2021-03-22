@@ -55,7 +55,7 @@ try:
         embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми")
         embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute")
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
+        embed.add_field(name=f"\n||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
         await ctx.send(embed=embed)
         
     @bot.command()
