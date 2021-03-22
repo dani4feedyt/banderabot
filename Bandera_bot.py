@@ -102,7 +102,7 @@ try:
             mutedRole = await guild.create_role(name="Muted")
             for channel in guild.channels:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
-        embed = discord.Embed(title="Мут", description=f"{member.mention} відлетів до муту на **{time}** хвилин", colour=0x013ADF)
+        embed = discord.Embed(title="Мут", description=f"{member.mention} відлетів до муту на **{time}** хвилин", colour=discord.Colour.light_gray())
         embed.add_field(name="причина:", value=reason, inline=False)
         await ctx.send(embed=embed)
         await member.add_roles(mutedRole, reason=reason)
@@ -117,7 +117,7 @@ try:
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(mutedRole)
         await member.send(f" З вас було знято мут на сервері: - {ctx.guild.name}")
-        embed = discord.Embed(title="Мут знято", description=f" Було знято мут з -{member.mention}",colour=0x013ADF)
+        embed = discord.Embed(title="Мут знято", description=f" Було знято мут з -{member.mention}", colour=discord.Colour.light_gray())
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
