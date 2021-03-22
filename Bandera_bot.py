@@ -55,7 +55,8 @@ try:
         embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми")
         embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute")
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
-        embed.add_field(name=f"\n||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
+        embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
         await ctx.send(embed=embed)
         
     @bot.command()
