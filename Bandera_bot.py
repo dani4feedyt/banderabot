@@ -45,8 +45,19 @@ try:
     @bot.command()
     async def info(ctx: commands.Context):
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
-        await ctx.send(f'Патріотичий бот, який вміє робити деякі прикольні штуки:\n\n**b!slava_ukraine** - Головна функція Бандери\n**b!birb** - Світлина випадкового птаха\n**b!kick (Нікнейм)** - Заслання до Сибіру {zaha_emoji}\n**b!clear (Кількість повідомлень)** - Видалення повідомлень  {zaha_emoji}\n**b!quote** - Надішлю вам випадковий вислів Степана Андрійовича\n**b!pasta (Number 1-4)** - Один з крилатих висловів про так званий "Колюмбокс"\n**b!spam_info** - Інформація про належне використання вибухової спам програми\n**b!mute_info** - Інформація про використання b!mute  {zaha_emoji}\n**b!stop** - Зупинити виконання усіх операцій\n\n||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**\n*ver.1.2.7*')
-
+        embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
+        embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери")
+        embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха")
+        embed.add_field(name=f"**b!kick (Нікнейм)**{zaha_emoji}", value=f"Заслання до Сибіру")
+        embed.add_field(name=f"**b!clear (Кількість повідомлень)**{zaha_emoji}", value=f"Видалення повідомлень")
+        embed.add_field(name=f"**b!quote**", value=f"Надішлю вам випадковий вислів Степана Андрійовича")
+        embed.add_field(name=f"**b!pasta (Number 1-4)**", value=f'Один з крилатих висловів про так званий "Колюмбокс"')
+        embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми")
+        embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute")
+        embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
+        await ctx.send(embed=embed)
+        
     @bot.command()
     async def birb(ctx):
         response = requests.get("https://some-random-api.ml/img/birb")
