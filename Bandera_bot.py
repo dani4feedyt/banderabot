@@ -32,6 +32,18 @@ try:
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
 
+    @bot.event
+    async def on_member_join(ctx, member):
+        guild = ctx.guild
+        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
+        await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
+
+    @bot.command()
+    async def test11(ctx, member: discord.Member):
+        guild = ctx.guild
+        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
+        await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
+
     @bot.command()
     async def slava_ukraine(ctx):
         author = ctx.message.author
@@ -66,10 +78,28 @@ try:
         embed = discord.Embed(color = 0x013ADF, title = (random.choice(t11)) + ":") 
         embed.set_image(url = json_data["link"])
         await ctx.send(embed = embed)
+
+    @bot.command(pass_context = True)
+    async def test12(message):
+        channel = message.channel
+        await channel.send("await test passed")
+
+        def check(m):
+            return m.content == 'content test' and m.channel == channel
         
+        try:
+            m = await bot.wait_for("message", check=check, timeout = 30)
+            
+        except asyncio.TimeoutError:
+            await channel.send("time test passed")
+
+        else:
+            await channel.send("Else test passed")
+                
     @bot.command(pass_context = True)
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, *, reason = None):
+        await ctx.send("Ви дійсно бажаєте вигнати {user} з сереверу?")
         await user.kick(reason = reason)
 
     @bot.command()
