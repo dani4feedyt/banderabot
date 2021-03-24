@@ -95,7 +95,7 @@ try:
     @bot.command(pass_context = True)
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, *, reason = None):
-        await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?")
+        await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -157,7 +157,7 @@ try:
     
     @bot.command(pass_context=True)
     async def clear(ctx, amount = 100):
-        await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлень?")
+        await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлень?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
