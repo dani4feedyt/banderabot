@@ -85,20 +85,25 @@ try:
         await channel.send("Чи бажаєте ви {String}?")
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
-        
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
-            
         except asyncio.TimeoutError:
             print("Error")
-
         else:
             await channel.send("Підтверджено")
                 
     @bot.command(pass_context = True)
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, *, reason = None):
-        await ctx.send("Ви дійсно бажаєте вигнати {user} з сереверу?")
+        await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?")
+        def check(m):
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
+        try:
+            m = await bot.wait_for("message", check=check, timeout = 30)
+        except asyncio.TimeoutError:
+            print("Error")
+        else:
+            await channel.send(f"{user} залишив сервер")
         await user.kick(reason = reason)
 
     @bot.command()
@@ -137,7 +142,7 @@ try:
         await ctx.send(embed=embed)
         await member.add_roles(mutedRole, reason=reason)
         await member.edit(voice_channel=None)
-        await member.send(f" На вас було накладено мут на сервері {guild.name} на {time} хвилин, по причині: {reason}")
+        await member.send(f"На вас було накладено мут на сервері {guild.name} на {time} хвилин, по причині: {reason}")
         await asyncio.sleep(time * 60)
         await member.remove_roles(mutedRole)
             
@@ -146,20 +151,28 @@ try:
     async def unmute(ctx, member: discord.Member):
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(mutedRole)
-        await member.send(f" З вас було знято мут на сервері: - {ctx.guild.name}")
+        await member.send(f"З вас було знято мут на сервері: - {ctx.guild.name}")
         embed = discord.Embed(title="Мут знято", description=f" Було знято мут з -{member.mention}", colour=discord.Colour.light_gray())
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
     async def clear(ctx, amount = 100):
-        if int(amount) <= 150:
-            await ctx.channel.purge(limit=int(amount))
-            if int(amount) >= 100:
-                amount = 'дуууууже багато'
-            time.sleep(0.75)    
-            await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=60)
+        await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлень")
+        def check(m):
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
+        try:
+            m = await bot.wait_for("message", check=check, timeout = 30)
+        except asyncio.TimeoutError:
+            print("Error")
         else:
-            await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
+            if int(amount) <= 150:
+                await ctx.channel.purge(limit=int(amount))
+                if int(amount) >= 100:
+                    amount = 'дуууууже багато'
+                time.sleep(0.75)    
+                await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=60)
+            else:
+                await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
             
     @bot.command()
     async def spam_info(ctx):
