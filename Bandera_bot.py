@@ -98,7 +98,7 @@ try:
         channel = message.channel
         await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?")
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
         except asyncio.TimeoutError:
@@ -161,7 +161,7 @@ try:
         channel = message.channel
         await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлень?")
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
         except asyncio.TimeoutError:
