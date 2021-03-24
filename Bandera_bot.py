@@ -84,13 +84,13 @@ try:
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
         def check(m):
-            return m.content == 'Так' and m.channel == channel
+            return m.content.lower() == ('так' or 'да' or 'yes' or 'y') and m.channel == channel
         
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
             
         except asyncio.TimeoutError:
-            await channel.send("Час вийшов\\\\$112h")
+            print("Error")
 
         else:
             await channel.send("Підтверджено")
