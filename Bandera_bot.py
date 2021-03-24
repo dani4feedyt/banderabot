@@ -23,6 +23,7 @@ try:
     
     client = discord.Client()
     t12 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
+    sfx = "ь"
     t11 = ['Випадковий птах для тебе' + random.choice(t12),
            'Тримай птаха' + random.choice(t12), 'Випадковий птах, як ти й просив' + random.choice(t12),
            'Світлина випадкового птаха' + random.choice(t12), 'Світлина птаха, як ти й просив' + random.choice(t12),
@@ -31,7 +32,7 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
-
+    
     @bot.event
     async def on_member_join(ctx, member):
         guild = ctx.guild
@@ -157,7 +158,13 @@ try:
     
     @bot.command(pass_context=True)
     async def clear(ctx, amount = 100):
-        await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлень?", delete_after=60)
+        if 11<=amount<=14:
+            sfx = "ь"
+        elif (str(amount).endswith("1") or str(amount).endswith("2") or str(amount).endswith("3") or str(amount).endswith("4")):
+            sfx = "ня"
+        else:
+            sfx = "ь"
+        await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлен{sfx}?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -170,7 +177,7 @@ try:
                 if int(amount) >= 100:
                     amount = 'дуууууже багато'
                 time.sleep(0.75)    
-                await ctx.send(f'Будо видалено {amount} повідомлень!', delete_after=60)
+                await ctx.send(f'Будо видалено {amount} повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
             
