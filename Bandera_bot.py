@@ -84,7 +84,7 @@ try:
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
         def check(m):
-            return m.content.lower() == ('так' or 'да' or 'yes' or 'y') and m.channel == channel
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
         
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
