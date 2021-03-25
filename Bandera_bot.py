@@ -10,7 +10,6 @@ try:
     from Bandera_PyChton_quotes import Quotes1
     import json
     import requests
-    import win10toast
     import os
     import sys
     import random
@@ -24,6 +23,7 @@ try:
     
     client = discord.Client()
     t12 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
+    sfx = "ь"
     t11 = ['Випадковий птах для тебе' + random.choice(t12),
            'Тримай птаха' + random.choice(t12), 'Випадковий птах, як ти й просив' + random.choice(t12),
            'Світлина випадкового птаха' + random.choice(t12), 'Світлина птаха, як ти й просив' + random.choice(t12),
@@ -32,22 +32,19 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
-
+    
     @bot.event
-    async def on_ready():
-        toaster = win10toast.ToastNotifier()    
-        toaster.show_toast("Discord", "Слава Украине, Bandera_Bot готов к работе!")
+    async def on_member_join(ctx, member):
+        guild = ctx.guild
+        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
+        await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
-    @bot.event
-    async def on_message(message):
-        emojis = ["<:Smiling_Mork:796132958834262067>", "<:Pixelmork:770035597212778517>", "<:leMork:813123719106789406>", "<:Neadikvat:775838652626501674>"]
-        if message.content == ("морк"):
-            await message.add_reaction(random.choice(emojis))
-        elif message.content == ("админ", "администратор", "Заха"):
-            await message.add_reaction("<:Admin_Ebalo:698661524247412826>")
-        elif message.content == ("гачи", "гачимучи", "right", "gachi"):
-            await message.add_reaction("<:leGachi:816045154610839582>")
-        
+    @bot.command()
+    async def test11(ctx, member: discord.Member):
+        guild = ctx.guild
+        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
+        await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
+
     @bot.command()
     async def slava_ukraine(ctx):
         author = ctx.message.author
@@ -61,20 +58,54 @@ try:
     @bot.command()
     async def info(ctx: commands.Context):
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
-        await ctx.send(f'Патріотичий бот, який вміє робити деякі прикольні штуки:\n\n**b!slava_ukraine** - Головна функція Бандери\n**b!birb** - Світлина випадкового птаха\n**b!kick (Нікнейм)** - Заслання до Сибіру {zaha_emoji}\n**b!clear (Кількість повідомлень)** - Видалення повідомлень  {zaha_emoji}\n**b!quote** - Надішлю вам випадковий вислів Степана Андрійовича\n**b!pasta (Number 1-4)** - Один з крилатих висловів про так званий "Колюмбокс"\n**b!spam_info** - Інформація про належне використання вибухової спам програми\n**b!mute_info** - Інформація про використання b!mute  {zaha_emoji}\n**b!stop** - Зупинити виконання усіх операцій\n\n||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**\n*ver.1.2.7*')
-
+        embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
+        embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери")
+        embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха")
+        embed.add_field(name=f"**b!kick (Нікнейм)**{zaha_emoji}", value=f"Заслання до Сибіру")
+        embed.add_field(name=f"**b!clear (Кількість повідомлень)**{zaha_emoji}", value=f"Видалення повідомлень")
+        embed.add_field(name=f"**b!quote**", value=f"Надішлю вам випадковий вислів Степана Андрійовича")
+        embed.add_field(name=f"**b!pasta (Number 1-4)**", value=f'Один з крилатих висловів про так званий "Колюмбокс"')
+        embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми")
+        embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute")
+        embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
+        embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
+        await ctx.send(embed=embed)
+        
     @bot.command()
     async def birb(ctx):
         response = requests.get("https://some-random-api.ml/img/birb")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color = 0xff9900, title = (random.choice(t11)) + ":") 
+        embed = discord.Embed(color = 0x013ADF, title = (random.choice(t11)) + ":") 
         embed.set_image(url = json_data["link"])
         await ctx.send(embed = embed)
-        
+
+    @bot.command(pass_context = True)
+    async def test12(message):
+        channel = message.channel
+        await channel.send("Чи бажаєте ви {String}?")
+        def check(m):
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
+        try:
+            m = await bot.wait_for("message", check=check, timeout = 30)
+        except asyncio.TimeoutError:
+            print("Error")
+        else:
+            await channel.send("Підтверджено")
+                
     @bot.command(pass_context = True)
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, *, reason = None):
-        await user.kick(reason = reason)
+        await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?", delete_after=60)
+        def check(m):
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+        try:
+            m = await bot.wait_for("message", check=check, timeout = 30)
+        except asyncio.TimeoutError:
+            print("Error")
+        else:
+            await ctx.send(f"{user} залишив сервер")
+            await user.kick(reason = reason)
 
     @bot.command()
     async def pasta(ctx, pa: int):
@@ -112,7 +143,7 @@ try:
         await ctx.send(embed=embed)
         await member.add_roles(mutedRole, reason=reason)
         await member.edit(voice_channel=None)
-        await member.send(f" На вас було накладено мут на сервері {guild.name} на {time} хвилин, по причині: {reason}")
+        await member.send(f"На вас було накладено мут на сервері {guild.name} на {time} хвилин, по причині: {reason}")
         await asyncio.sleep(time * 60)
         await member.remove_roles(mutedRole)
             
@@ -121,19 +152,35 @@ try:
     async def unmute(ctx, member: discord.Member):
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(mutedRole)
-        await member.send(f" З вас було знято мут на сервері: - {ctx.guild.name}")
-        embed = discord.Embed(title="Мут знято", description=f" Було знято мут з -{member.mention}",colour=discord.Colour.light_gray())
+        await member.send(f"З вас було знято мут на сервері: - {ctx.guild.name}")
+        embed = discord.Embed(title="Мут знято", description=f" Було знято мут з -{member.mention}", colour=discord.Colour.light_gray())
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
-    async def clear(ctx, amount = 8192):
-        await ctx.send(f'Ви дійсно бажаєте видалити {amount} повідомлень?')
-        await ctx.channel.purge(limit=100)
-        if amount == 8192:
-            amount = 'дуууууже багато'
-        time.sleep(0.75)    
-        await ctx.send(f'Будо видалено {amount} повідомлень!')
-
+    async def clear(ctx, amount = 100):
+        if 11<=amount<=14:
+            sfx = "ь"
+        elif (str(amount).endswith("1") or str(amount).endswith("2") or str(amount).endswith("3") or str(amount).endswith("4")):
+            sfx = "ня"
+        else:
+            sfx = "ь"
+        await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлен{sfx}?", delete_after=60)
+        def check(m):
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+        try:
+            m = await bot.wait_for("message", check=check, timeout = 30)
+        except asyncio.TimeoutError:
+            print("Error")
+        else:
+            if int(amount) <= 150:
+                await ctx.channel.purge(limit=int(amount))
+                if int(amount) >= 100:
+                    amount = 'дуууууже багато'
+                time.sleep(0.75)    
+                await ctx.send(f'Будо видалено {amount} повідомлен{sfx}!', delete_after=60)
+            else:
+                await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
+            
     @bot.command()
     async def spam_info(ctx):
         await ctx.send("Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Швидкість відправки в секундах) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
