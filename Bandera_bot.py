@@ -93,19 +93,7 @@ try:
         else:
             await channel.send("Підтверджено")
                 
-    @bot.command(pass_context = True)
-    @commands.has_permissions(kick_members=True)
-    async def kick(ctx, user: discord.Member, *, reason = None):
-        await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?", delete_after=60)
-        def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
-        try:
-            m = await bot.wait_for("message", check=check, timeout = 30)
-        except asyncio.TimeoutError:
-            print("Error")
-        else:
-            await ctx.send(f"{user} залишив сервер")
-        await user.kick(reason = reason)
+    
 
     @bot.command()
     async def pasta(ctx, pa: int):
