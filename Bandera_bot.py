@@ -40,10 +40,18 @@ try:
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
     @bot.command()
-    async def test11(ctx, member: discord.Member):
+    async def invite(ctx, member: discord.Member, age = 5000):
         guild = ctx.guild
-        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
-        await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
+        message = discord.Message
+        author = message.author.id
+        link = await ctx.channel.create_invite(max_age = age)
+        await member.send(f"{author}запрошує вас на сервер {ctx.guild.name}!"+link)
+
+    @bot.command()
+    async def invite(ctx, member: discord.Member):
+        guild = ctx.guild
+        
+        
 
     @bot.command()
     async def slava_ukraine(ctx):
