@@ -105,7 +105,7 @@ try:
             print("Error")
         else:
             await ctx.send(f"{user} залишив сервер")
-        await user.kick(reason = reason)
+            await user.kick(reason = reason)
 
     @bot.command()
     async def pasta(ctx, pa: int):
