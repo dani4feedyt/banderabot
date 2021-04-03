@@ -48,7 +48,7 @@ try:
     async def on_message(message: str):
         channel = message.channel
         time = datetime.datetime.now().strftime("%m %d %H:%M")
-        with open("D:\hypesquad_logs\logs.txt", "a") as text_file:
+        with open("logs.txt", "a") as text_file:
             print(f"<{channel}  {time}> {message.content}", file=text_file)
     
     @bot.command()
