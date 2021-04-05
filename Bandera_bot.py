@@ -44,12 +44,13 @@ try:
     async def joke(ctx, amount):
         print("test")
 
-
     @bot.command()
     async def kanava(ctx, member: discord.Member, t = 10):
+        channel1 = discord.utils.get(ctx.guild.voice_channels, name="Durka")
+        channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")                             
         for i in range(t):
-            await member.edit(voice_channel=695715314696061073)
-            await member.edit(voice_channel=695724013409927179)
+            await member.edit(voice_channel=channel1)
+            await member.edit(voice_channel=channel2)
         
     @bot.command()
     async def test11(ctx, member: discord.Member):
