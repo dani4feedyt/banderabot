@@ -44,13 +44,13 @@ try:
     async def joke(ctx, amount):
         print("test")
 
-    @bot.event
-    async def on_message(message: str):
-        channel = message.channel
-        time = datetime.datetime.now().strftime("%m %d %H:%M")
-        with open("logs.txt", "a") as text_file:
-            print(f"<{channel}  {time}> {message.content}", file=text_file)
-    
+
+    @bot.command()
+    async def kanava(ctx, member: discord.Member, t = 10):
+        for i in range(t):
+            await member.edit(voice_channel=695715314696061073)
+            await member.edit(voice_channel=695724013409927179)
+        
     @bot.command()
     async def test11(ctx, member: discord.Member):
         guild = ctx.guild
