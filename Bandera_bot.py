@@ -50,7 +50,9 @@ try:
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")                             
         for i in range(t):
             await member.edit(voice_channel=channel1)
+            time.sleep(0.5)
             await member.edit(voice_channel=channel2)
+            time.sleep(0.5)
         
     @bot.command()
     async def test11(ctx, member: discord.Member):
