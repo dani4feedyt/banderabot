@@ -14,6 +14,7 @@ try:
     import os
     import sys
     import random
+    from random import randint
     from urllib.request import urlopen
     import lxml
     from lxml import etree
