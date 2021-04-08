@@ -66,7 +66,7 @@ try:
                 if rn <= 3:
                     await member.send("Хорошо, верю. Парни, вытаскивайте его!")
                     break
-                else:
+                elif rn > 3:
                     await member.send("Не верю. Парни, окунайте его!")
                     continue
                     
