@@ -40,13 +40,21 @@ try:
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
+    @bot.event
+    async def on_message(message: str):#############################Может крашить бота на хосте#############################
+        channel = message.channel
+        author = message.author
+        time = datetime.datetime.now().strftime("%m %d %H:%M")
+        with open("D:\hypesquad_logs\logs.txt", "a") as text_file:
+            print(f"<{channel}  {time}  {author}> {message.content}", file=text_file)
+
     @bot.command()
     async def joke(ctx, amount):
         print("test")
 
     @bot.command()
     async def kanava(ctx, member: discord.Member, t = 10):
-        channel1 = discord.utils.get(ctx.guild.voice_channels, name="Durka")
+        channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")                             
         for i in range(t):
             await member.edit(voice_channel=channel1)
