@@ -68,6 +68,7 @@ try:
                     break
                 else:
                     member.send("Не верю. Парни, окунайте его!")
+                    continue
                     
     @bot.command()
     async def test11(ctx, member: discord.Member):
