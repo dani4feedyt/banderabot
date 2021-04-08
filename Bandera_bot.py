@@ -41,8 +41,8 @@ try:
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
     @bot.command()
-    async def joke(ctx, amount):
-        print("test")
+    async def govno(ctx):
+        print("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
     async def kanava(ctx, member: discord.Member, t = 10):
@@ -57,7 +57,7 @@ try:
             def check(m):
                 return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
-                m = await bot.wait_for("message", check=check, timeout = 30)
+                m = await bot.wait_for("message", check=check, timeout = 1)
             except asyncio.TimeoutError:
                 continue
             else:
