@@ -244,8 +244,8 @@ try:
                 
     @bot.command()
     async def stop(ctx: commands.Context):
-        Process.Start(Application.ExecutablePath)
-        Close()
+        os.system('python "Bandera_bot.py"')
+        quit()
     
     @bot.command()
     async def ping(ctx):       
