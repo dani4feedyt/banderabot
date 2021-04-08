@@ -40,6 +40,14 @@ try:
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
+    @bot.event
+    async def on_message(message: str):#############################Может крашить бота на хосте#############################
+        channel = message.channel
+        author = message.author
+        time = datetime.datetime.now().strftime("%m %d %H:%M")
+        with open("D:\hypesquad_logs\logs.txt", "a") as text_file:
+            print(f"<{channel}  {time}  {author}> {message.content}", file=text_file)
+
     @bot.command()
     async def joke(ctx, amount):
         print("test")
@@ -61,8 +69,9 @@ try:
             except asyncio.TimeoutError:
                 continue
             else:
+                await member.send("Хорошо. Парни, вытаскивайте его!")
                 break
-        
+                
     @bot.command()
     async def test11(ctx, member: discord.Member):
         guild = ctx.guild
