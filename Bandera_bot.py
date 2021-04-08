@@ -243,6 +243,8 @@ try:
                 
     @bot.command()
     async def stop(ctx: commands.Context):
+        os.system('cls')
+        os.execl(sys.executable, os.path.abspath(w), *sys.argv)
         sys.exit()
     
     @bot.command()
