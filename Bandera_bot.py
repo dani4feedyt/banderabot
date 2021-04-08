@@ -64,10 +64,10 @@ try:
                 continue
             else:
                 if rn <= 3:
-                    member.send("Хорошо, верю. Парни, вытаскивайте его!")
+                    await member.send("Хорошо, верю. Парни, вытаскивайте его!")
                     break
                 else:
-                    member.send("Не верю. Парни, окунайте его!")
+                    await member.send("Не верю. Парни, окунайте его!")
                     continue
                     
     @bot.command()
