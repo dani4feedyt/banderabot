@@ -79,12 +79,17 @@ try:
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
     @bot.command()
-    async def invite(ctx, member: discord.Member, age = 5000):
+    async def invite_beta(ctx, member: discord.Member, age = 5000):
         guild = ctx.guild
         message = discord.Message
         author = ctx.message.author
         link = await ctx.channel.create_invite(max_age = age)
         await member.send(f"{author.mention}запрошує вас на сервер {ctx.guild.name}!\n{link}")
+
+    @bot.command()
+    async def invite(ctx, age = 5000):
+        link = await ctx.channel.create_invite(max_age = age)
+        await member.send(f"Посилання для запрошення ваших друзів на {age} хвилин!\n{link}")
 
     @bot.command()
     async def slava_ukraine(ctx):
@@ -102,12 +107,14 @@ try:
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
         embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери")
         embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха")
-        embed.add_field(name=f"**b!kick (Нікнейм)**{zaha_emoji}", value=f"Заслання до Сибіру")
+        embed.add_field(name=f"**b!kick @(Нікнейм)**{zaha_emoji}", value=f"Заслання до Сибіру")
         embed.add_field(name=f"**b!clear (Кількість повідомлень)**{zaha_emoji}", value=f"Видалення повідомлень")
         embed.add_field(name=f"**b!quote**", value=f"Надішлю вам випадковий вислів Степана Андрійовича")
         embed.add_field(name=f"**b!pasta (Number 1-4)**", value=f'Один з крилатих висловів про так званий "Колюмбокс"')
         embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми")
         embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute")
+        embed.add_field(name=f"**b!invite**", value=f"Створює запрошення на сервер")
+        embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про покарання методом занурення до канави")
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
@@ -167,9 +174,15 @@ try:
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
-    async def mute_info(ctx):
-        await ctx.send("Щоб накласти мут, введіть ім'я користувача, час муту та причину у форматі: **b!mute (Нікнейм) (Час у хвилинах) (Причина)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 Порушення порядку на сервері*||")
+    async def kanava_info(ctx):
+        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його ім'я та кількість занурень у форматі: **b!kanava @(Нікнейм) (Кількість)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
+    @bot.command()
+    @commands.has_permissions(manage_messages=True)
+    async def mute_info(ctx):
+        await ctx.send("Щоб накласти мут, введіть ім'я користувача, час муту та причину у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Причина)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 Порушення порядку на сервері*||")
+
+    
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, *, reason=None):
@@ -198,6 +211,7 @@ try:
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
+    @commands.has_permissions(manage_messages=True)
     async def clear(ctx, amount = 100):
         if 11<=amount<=14:
             sfx = "ь"
