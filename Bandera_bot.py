@@ -43,7 +43,7 @@ try:
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
     @bot.command()
-    async def govno(ctx):
+    async def rg8421(ctx):
         print("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
@@ -89,7 +89,7 @@ try:
     @bot.command()
     async def invite(ctx, age = 5000):
         link = await ctx.channel.create_invite(max_age = age)
-        await member.send(f"Посилання для запрошення ваших друзів на {age} хвилин!\n{link}")
+        await ctx.send(f"Посилання для запрошення ваших друзів на {age} хвилин!\n{link}")
 
     @bot.command()
     async def slava_ukraine(ctx):
@@ -116,6 +116,7 @@ try:
         embed.add_field(name=f"**b!invite**", value=f"Створює запрошення на сервер")
         embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про покарання методом занурення до канави")
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
+        embed.add_field(name=f"**b!rg8421**", value=f"???")
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
         await ctx.send(embed=embed)
