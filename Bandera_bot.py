@@ -47,9 +47,9 @@ try:
     @bot.command()
     async def kanava(ctx, member: discord.Member, t = 10):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
-        channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")                             
+        channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
+        rn = randint(0, 10)
         for i in range(t):
-            rn = randint(0, 10)
             await member.edit(voice_channel=channel1)
             time.sleep(0.5)
             await member.edit(voice_channel=channel2)
