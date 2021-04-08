@@ -61,7 +61,6 @@ try:
             except asyncio.TimeoutError:
                 continue
             else:
-                await member.send("Хорошо. Парни, вытаскивайте его!")
                 break
                 
     @bot.command()
