@@ -44,7 +44,7 @@ try:
 
     @bot.command()
     async def rg8421(ctx):
-        print("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
+        await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
     async def kanava(ctx, member: discord.Member, t = 10):
