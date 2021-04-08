@@ -9,6 +9,7 @@ try:
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes
     from Bandera_PyChton_quotes import Quotes1
+    from sys import argv, executable
     import json
     import requests
     import os
@@ -244,7 +245,7 @@ try:
     @bot.command()
     async def stop(ctx: commands.Context):
         os.system('cls')
-        os.execl(sys.executable, os.path.abspath(w), *sys.argv)
+        os.execl(executable, os.path.abspath(w), *argv)
         sys.exit()
     
     @bot.command()
