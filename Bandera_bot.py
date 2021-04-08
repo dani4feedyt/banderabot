@@ -244,9 +244,8 @@ try:
                 
     @bot.command()
     async def stop(ctx: commands.Context):
-        os.system('cls')
-        os.execl(executable, os.path.abspath(w), *argv)
-        sys.exit()
+        Process.Start(Application.ExecutablePath)
+        Close()
     
     @bot.command()
     async def ping(ctx):       
