@@ -49,6 +49,7 @@ try:
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")                             
         for i in range(t):
+            rn = randint(0, 10)
             await member.edit(voice_channel=channel1)
             time.sleep(0.5)
             await member.edit(voice_channel=channel2)
@@ -61,8 +62,12 @@ try:
             except asyncio.TimeoutError:
                 continue
             else:
-                break
-                
+                if rn <= 3:
+                    member.send("Хорошо, верю. Парни, вытаскивайте его!")
+                    break
+                else:
+                    member.send("Не верю. Парни, окунайте его!")
+                    
     @bot.command()
     async def test11(ctx, member: discord.Member):
         guild = ctx.guild
