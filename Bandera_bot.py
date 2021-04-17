@@ -56,7 +56,7 @@ try:
             time.sleep(0.5)
             await member.edit(voice_channel=channel2)
             time.sleep(0.5)
-            await member.send("Бомбы, рупии есть?" + message)
+            await member.send("Бомбы, рупии есть? " + message)
             def check(m):
                 return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
