@@ -41,13 +41,13 @@ try:
         guild = ctx.guild
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
-
+    
     @bot.command()
     async def rg8421(ctx):
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
-    async def kanava(ctx, member: discord.Member, t = 10):
+    async def kanava(ctx, member: discord.Member, t = 10, message=''):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         for i in range(t):
@@ -56,18 +56,18 @@ try:
             time.sleep(0.5)
             await member.edit(voice_channel=channel2)
             time.sleep(0.5)
-            await member.send("Бомбы, рупии есть?")
+            await member.send("Бомбы, рупии есть?" + message)
             def check(m):
                 return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
-                m = await bot.wait_for("message", check=check, timeout = 1)
+                m = await bot.wait_for("message", check=check, timeout = 1.5)
             except asyncio.TimeoutError:
                 continue
             else:
-                if rn <= 3:
+                if rn <= 4:
                     await member.send("Хорошо, верю. Парни, вытаскивайте его!")
                     break
-                elif rn > 3:
+                elif rn > 4:
                     await member.send("Не верю. Парни, окунайте его!")
                     continue
         await member.send("Ладно уж, иди своей дорогой")
@@ -118,7 +118,7 @@ try:
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
         embed.add_field(name=f"**b!rg8421**", value=f"???")
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.3*")
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.4*")
         await ctx.send(embed=embed)
         
     @bot.command()
@@ -176,7 +176,7 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
-        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його ім'я та кількість занурень у форматі: **b!kanava @(Нікнейм) (Кількість)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його ім'я, кількість занурень та повідомелення за бажанням у форматі: **b!kanava @(Нікнейм) (Кількість) (Повідомлення)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
