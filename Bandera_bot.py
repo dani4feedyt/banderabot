@@ -35,11 +35,6 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
-
-    @bot.event
-    async def on_command_error(ctx, error):
-        if isinstance(error, commands.CommandNotFound):
-            await ctx.send("Помилка. Даної команди не існує")
     
     @bot.event
     async def on_member_join(ctx, member):
@@ -273,13 +268,15 @@ try:
         
  ###############################################ErrorHandling###############################################
 
+    @bot.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send("Помилка. Даної команди не існує")
+
     @kanava.error
     async def kanava_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Повідомлення)**||")
-
-    @kanava.error
-    async def kanava_error(ctx, error):
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
@@ -287,9 +284,6 @@ try:
     async def kick_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kick @(Нікнейм) (Причина)**||")
-
-    @kick.error
-    async def kick_error(ctx, error):
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
@@ -302,9 +296,6 @@ try:
     async def mute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Причина)**||")
-
-    @mute.error
-    async def mute_error(ctx, error):
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
@@ -312,9 +303,6 @@ try:
     async def unmute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Помилка. Будь ласка, введіть нікнейм користувача")
-
-    @unmute.error
-    async def unmute_error(ctx, error):
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
