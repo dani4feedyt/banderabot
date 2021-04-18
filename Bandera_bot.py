@@ -41,11 +41,6 @@ try:
         guild = ctx.guild
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
-
-    @bot.event
-    async def on_command_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Будь ласка, введіть усі необхідні параметри")
     
     @bot.command()
     async def rg8421(ctx):
@@ -123,7 +118,7 @@ try:
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
         embed.add_field(name=f"**b!rg8421**", value=f"???")
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.4*")
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.4.2*")
         await ctx.send(embed=embed)
         
     @bot.command()
@@ -271,6 +266,25 @@ try:
     async def ping(ctx):       
         await ctx.send(f'Моя затримка складає {round(bot.latency, 3)} мс')
         
+ ###############################################Ошибки###############################################
+        
+    @bot.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Будь ласка, введіть усі необхідні параметри")
+
+    @bot.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send("Помилка. Користувача з таким ім'ям не будо знайдено. Можливо, ім'я будо введено некоректно")
+
+    @bot.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send("Помилка. Даної команди не існує")
+    
+  ###############################################Ошибки###############################################      
+
     st = ("--- %s секунд ---" % round((time.time() - start_time), 3))
     
     @bot.command()
