@@ -89,7 +89,7 @@ try:
     @bot.command()
     async def invite(ctx, age: int = 60):
         link = await ctx.channel.create_invite(max_age = age*60)
-        await ctx.send(f"Посилання для запрошення ваших друзів на {age} хвилин!\n{link}")
+        await ctx.send(f"Посилання для запрошення ваших друзів на {age} хв!\n{link}")
 
     @bot.command()
     async def slava_ukraine(ctx):
