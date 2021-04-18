@@ -118,7 +118,7 @@ try:
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій")
         embed.add_field(name=f"**b!rg8421**", value=f"???")
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.4.2*")
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.4.6*")
         await ctx.send(embed=embed)
         
     @bot.command()
@@ -158,7 +158,7 @@ try:
 
     @bot.command()
     async def pasta(ctx, pa: int):
-        if pa < 5:
+        if 1 <= pa < 5:
             await ctx.send(Quotes1[pa])
         else:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
@@ -176,12 +176,12 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
-        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його ім'я, кількість занурень та повідомелення за бажанням у форматі: **b!kanava @(Нікнейм) (Кількість) (Повідомлення)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його нікнейм, кількість занурень та повідомелення за бажанням у форматі: **b!kanava @(Нікнейм) (Кількість) (Повідомлення)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def mute_info(ctx):
-        await ctx.send("Щоб накласти мут, введіть ім'я користувача, час муту та причину у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Причина)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 Порушення порядку на сервері*||")
+        await ctx.send("Щоб накласти мут, введіть нікнейм користувача, час муту та причину у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Причина)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 Порушення порядку на сервері*||")
 
     
     @bot.command(pass_context = True)
@@ -239,7 +239,7 @@ try:
             
     @bot.command()
     async def spam_info(ctx):
-        await ctx.send("Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Швидкість відправки в секундах) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
+        await ctx.send("Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
 
     @bot.command()
     async def spam(ctx, intr: float = 1, count: int = 10, *ar):
@@ -266,24 +266,64 @@ try:
     async def ping(ctx):       
         await ctx.send(f'Моя затримка складає {round(bot.latency, 3)} мс')
         
- ###############################################Ошибки###############################################
-        
+ ###############################################ErrorHandling###############################################
+
     @bot.event
     async def on_command_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Будь ласка, введіть усі необхідні параметри")
-
-    @bot.event
-    async def on_command_error2(ctx, error2):
-        if isinstance(error2, commands.MemberNotFound):
-            await ctx.send("Помилка. Користувача з таким ім'ям не будо знайдено. Можливо, ім'я будо введено некоректно")
-
-    @bot.event
-    async def on_command_error3(ctx, error3):
-        if isinstance(error3, commands.CommandNotFound):
+        if isinstance(error, commands.CommandNotFound):
             await ctx.send("Помилка. Даної команди не існує")
+
+    @kanava.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Повідомлення)**||")
+
+    @kanava.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+
+    @kick.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kick @(Нікнейм) (Причина)**||")
+
+    @kick.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+
+    @pasta.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Помилка. Будь ласка, введіть номер бажаної пасти")
+
+    @mute.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Причина)**||")
+
+    @mute.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+
+    @unmute.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Помилка. Будь ласка, введіть нікнейм користувача")
+
+    @unmute.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+
+    @spam.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри\n||**b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**||")
     
-  ###############################################Ошибки###############################################      
+  ###############################################ErrorHandling###############################################      
 
     st = ("--- %s секунд ---" % round((time.time() - start_time), 3))
     
