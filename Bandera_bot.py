@@ -274,12 +274,12 @@ try:
             await ctx.send("Будь ласка, введіть усі необхідні параметри")
 
     @bot.event
-    async def on_command_error(ctx, error2):
+    async def on_command_error2(ctx, error2):
         if isinstance(error2, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким ім'ям не будо знайдено. Можливо, ім'я будо введено некоректно")
 
     @bot.event
-    async def on_command_error(ctx, error3):
+    async def on_command_error3(ctx, error3):
         if isinstance(error3, commands.CommandNotFound):
             await ctx.send("Помилка. Даної команди не існує")
     
