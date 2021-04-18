@@ -35,6 +35,11 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
+
+    @bot.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send("Помилка. Даної команди не існує")
     
     @bot.event
     async def on_member_join(ctx, member):
@@ -267,11 +272,6 @@ try:
         await ctx.send(f'Моя затримка складає {round(bot.latency, 3)} мс')
         
  ###############################################ErrorHandling###############################################
-
-    @bot.event
-    async def on_command_error(ctx, error):
-        if isinstance(error, commands.CommandNotFound):
-            await ctx.send("Помилка. Даної команди не існує")
 
     @kanava.error
     async def kanava_error(ctx, error):
