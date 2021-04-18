@@ -41,6 +41,11 @@ try:
         guild = ctx.guild
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
+
+    @bot.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Будь ласка, введіть усі необхідні параметри")
     
     @bot.command()
     async def rg8421(ctx):
