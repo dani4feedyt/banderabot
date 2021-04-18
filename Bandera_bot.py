@@ -264,7 +264,7 @@ try:
     
     @bot.command()
     async def ping(ctx):       
-        await ctx.send(f'Моя затримка складає {round(bot.latency, 3)} мс')
+        await ctx.send(f'Моя затримка складає {round(bot.latency, 3)} с')
         
  ###############################################ErrorHandling###############################################
 
