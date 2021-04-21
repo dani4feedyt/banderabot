@@ -47,12 +47,12 @@ try:
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
-    async def kanava(ctx, member: discord.Member, t = 10, message='', chance: int = 30):
+    async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         for i in range(t):
             rn = randint(0, 10)
-            ch = math.floor(chance/100)
+            ch = round(chance/10)
             await member.edit(voice_channel=channel1)
             time.sleep(0.5)
             await member.edit(voice_channel=channel2)
