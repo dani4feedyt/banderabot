@@ -47,11 +47,12 @@ try:
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
-    async def kanava(ctx, member: discord.Member, t = 10, message=''):
+    async def kanava(ctx, member: discord.Member, t = 10, message='', chance: int = 30):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         for i in range(t):
             rn = randint(0, 10)
+            ch = math.floor(chance/100)
             await member.edit(voice_channel=channel1)
             time.sleep(0.5)
             await member.edit(voice_channel=channel2)
@@ -64,14 +65,14 @@ try:
             except asyncio.TimeoutError:
                 continue
             else:
-                if rn <= 4:
+                if rn <= ch:
                     await member.send("Хорошо, верю. Парни, вытаскивайте его!")
                     break
-                elif rn > 4:
+                elif rn > ch:
                     await member.send("Не верю. Парни, окунайте его!")
                     continue
         await member.send("Ладно уж, иди своей дорогой")
-
+###################################################################Допил Паузы в канаве############################################################################################
     @bot.command()
     async def test11(ctx, member: discord.Member):
         guild = ctx.guild
@@ -176,7 +177,7 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
-        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його нікнейм, кількість занурень та повідомелення за бажанням у форматі: **b!kanava @(Нікнейм) (Кількість) (Повідомлення)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його нікнейм, кількість занурень та довірливість бота за бажанням у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
@@ -276,7 +277,7 @@ try:
     @kanava.error
     async def kanava_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Повідомлення)**||")
+            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Довіра бота)**||")
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
