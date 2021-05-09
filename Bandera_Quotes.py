@@ -24,6 +24,5 @@ while c1 <= c[" "]:
     if ' ' in _dict:
         _dict.remove(' ')
     c1 += 1
-_dict.remove('Сповіщення: ')
 _dict.remove('Коментарі закриті.')
 quotes = _dict

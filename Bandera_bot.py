@@ -185,7 +185,7 @@ try:
         else:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
-    @bot.command(name="quote")
+    @bot.command()
     async def quote(ctx: commands.Context):
         await ctx.send((f'Випадковий вислів Бандери: \n\n')+(random.choice(quotes)))
         
