@@ -346,5 +346,5 @@ try:
     print(st)
     bot.run(settings['token'])
     
-except Exception:
+except GeneratorExit:
     print("Error12")
