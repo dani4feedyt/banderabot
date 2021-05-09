@@ -51,6 +51,15 @@ try:
     async def rg8421(ctx):
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
+    @bot.event
+    async def on_message(message: str):#############################Может крашить бота на хосте#############################
+        channel = message.channel
+        author = message.author
+        time = datetime.datetime.now().strftime("%m %d %H:%M")
+        with open("D:\hypesquad_logs\logs.txt", "a") as text_file:
+            print(f"<{channel}  {time}  {author}> {message.content}", file=text_file)
+        await bot.process_commands(message)
+
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
