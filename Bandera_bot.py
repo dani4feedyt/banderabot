@@ -185,9 +185,10 @@ try:
         else:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
-    @bot.command()
+    @bot.command()#####################Сайт поставил адгвард, временно не работает##########################
     async def quote(ctx: commands.Context):
-        await ctx.send((f'Випадковий вислів Бандери: \n\n')+(random.choice(quotes)))
+        await ctx.send ('Команда тимчасово не працює, прошу вибачення за незручності. Для детальної інформації зверніться до dani4feedyt#5200')
+        #await ctx.send((f'Випадковий вислів Бандери: \n\n')+(random.choice(quotes)))
         
     @bot.command(aliases=['myroles'])
     async def _myroles(ctx):
