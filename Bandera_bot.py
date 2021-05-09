@@ -56,7 +56,7 @@ try:
         channel = message.channel
         author = message.author
         time = datetime.datetime.now().strftime("%m %d %H:%M")
-        with open("D:\hypesquad_logs\logs.txt", "a") as text_file:
+        with open("C:\Users\Dan\Desktop\Творчество\Питон\Banderabot\hypesquad_logs.txt", "a") as text_file:
             print(f"<{channel}  {time}  {author}> {message.content}", file=text_file)
         await bot.process_commands(message)
 
