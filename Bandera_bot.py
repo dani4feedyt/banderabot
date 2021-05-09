@@ -41,36 +41,58 @@ try:
         guild = ctx.guild
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
-    
+        
+    @bot.event
+    async def on_ready():
+        await bot.change_presence(activity = discord.Game('очке своим пальчиком'))
+        print('Success')
+        
     @bot.command()
     async def rg8421(ctx):
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
-    @bot.command()
+    @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
-        for i in range(t):
-            rn = randint(0, 10)
-            ch = round(chance/10)
-            await member.edit(voice_channel=channel1)
-            time.sleep(0.5)
-            await member.edit(voice_channel=channel2)
-            time.sleep(0.5)
-            await member.send("Бомбы, рупии есть? " + message)
-            def check(m):
-                return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
-            try:
-                m = await bot.wait_for("message", check=check, timeout = 1.5)
-            except asyncio.TimeoutError:
-                continue
-            else:
-                if rn <= ch:
-                    await member.send("Хорошо, верю. Парни, вытаскивайте его!")
-                    break
-                elif rn > ch:
-                    await member.send("Не верю. Парни, окунайте его!")
-                    continue
+        print('1')
+        bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance, message)
+        
+    @bot.event
+    async def on_kanava_command(ctx, channel1, channel2, member, t, chance, message):
+        if member.voice is None:
+            for nt in range(25):
+                time.sleep(1)
+                if member.voice is not None:
+                    return
+        else:
+            for i in range(t):
+                if member.voice is not None:
+                    rn = randint(0, 10)
+                    ch = round(chance/10)
+                    await member.edit(voice_channel=channel1)
+                    time.sleep(0.5)
+                    await member.edit(voice_channel=channel2)
+                    time.sleep(0.5)
+                    await member.send("Бомбы, рупии есть? " + message)
+                    def check(m):
+                        return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                    try:
+                        m = await bot.wait_for("message", check=check, timeout = 1.5)
+                    except asyncio.TimeoutError:
+                        continue
+                    else:
+                        if rn <= ch:
+                            await member.send("Хорошо, верю. Парни, вытаскивайте его!")
+                            break
+                        elif rn > ch:
+                            await member.send("Не верю. Парни, окунайте его!")
+                            continue
+                if member.voice is None:
+                    for nt in range(35):
+                        if member.voice is not None:
+                            break
+                    
         await member.send("Ладно уж, иди своей дорогой")
 
     @bot.command()
@@ -87,7 +109,7 @@ try:
         link = await ctx.channel.create_invite(max_age = age*60)
         await member.send(f"{author.mention}запрошує вас на сервер {ctx.guild.name}!\n{link}")
 
-    @bot.command()
+    @bot.command(name="invite")
     async def invite(ctx, age: int = 60):
         link = await ctx.channel.create_invite(max_age = age*60)
         await ctx.send(f"Посилання для запрошення ваших друзів на {age} хв!\n{link}")
@@ -102,7 +124,7 @@ try:
         await ctx.send(msg)
         await ctx.message.delete()
 
-    @bot.command()
+    @bot.command(name="info")
     async def info(ctx: commands.Context, inline=False):
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
@@ -122,7 +144,7 @@ try:
         embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.4.7*", inline=inline)
         await ctx.send(embed=embed)
         
-    @bot.command()
+    @bot.command(name="birb")
     async def birb(ctx):
         response = requests.get("https://some-random-api.ml/img/birb")
         json_data = json.loads(response.text)
@@ -157,14 +179,14 @@ try:
             await ctx.send(f"{user} залишив сервер")
             await user.kick(reason = reason)
 
-    @bot.command()
+    @bot.command(name="pasta")
     async def pasta(ctx, pa: int):
         if 1 <= pa < 5:
             await ctx.send(Quotes1[pa])
         else:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
-    @bot.command()
+    @bot.command(name="quote")
     async def quote(ctx: commands.Context):
         await ctx.send((f'Випадковий вислів Бандери: \n\n')+(random.choice(quotes)))
         
@@ -280,6 +302,8 @@ try:
             await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Довіра бота)**||")
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+        if isinstance(error, discord.HTTPException):
+            await ctx.send("Помилка. Користувач не знаходиться в голосовому каналі")
 
     @kick.error
     async def kick_error(ctx, error):
@@ -324,4 +348,4 @@ try:
     bot.run(settings['token'])
     
 except Exception:
-    print("Error")
+    print("Error12")
