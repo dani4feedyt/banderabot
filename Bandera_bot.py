@@ -44,7 +44,7 @@ try:
         
     @bot.event
     async def on_ready():
-        await bot.change_presence(activity = discord.Game('очке своим пальчиком'))
+        await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
         
     @bot.command()
     async def rg8421(ctx):
