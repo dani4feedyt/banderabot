@@ -131,7 +131,7 @@ try:
         embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха", inline=inline)
         embed.add_field(name=f"**b!kick @(Нікнейм)**{zaha_emoji}", value=f"Заслання до Сибіру")
         embed.add_field(name=f"**b!clear (Кількість повідомлень)**{zaha_emoji}", value=f"Видалення повідомлень", inline=inline)
-        embed.add_field(name=f"**b!quote** (Тимчасово не працює)", value=f"Надішлю вам випадковий вислів Степана Андрійовича", inline=inline)
+        embed.add_field(name=f"**b!quote** ||(Тимчасово не працює)||", value=f"Надішлю вам випадковий вислів Степана Андрійовича", inline=inline)
         embed.add_field(name=f"**b!pasta (Number 1-4)**", value=f'Один з крилатих висловів про так званий "Колюмбокс"', inline=inline)
         embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми", inline=inline)
         embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute", inline=inline)
