@@ -8,7 +8,7 @@ try:
     from discord.ext import commands
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes
-    from Bandera_PyChton_quotes import Quotes1
+    from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
     import requests
@@ -177,7 +177,14 @@ try:
         else:
             await ctx.send(f"{user} залишив сервер")
             await user.kick(reason = reason)
-
+     
+    @bot.command(name="rule")
+    async def rule(ctx, num: int):
+        if 1 <= num <= 30:
+            await ctx.send(links[num])
+        else:
+            await ctx.send("**Помилка.** Правила під таким номером не існує")    
+            
     @bot.command(name="pasta")
     async def pasta(ctx, pa: int):
         if 1 <= pa < 5:
