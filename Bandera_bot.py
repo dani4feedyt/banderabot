@@ -229,7 +229,7 @@ try:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
         embed = discord.Embed(title="Мут", description=f"{member.mention} відлетів до муту на **{time}** хвилин", colour=discord.Colour.light_gray())
         embed.add_field(name="порушення:", value=reason, inline=False)
-        embed.add_field(name="порушене правило:", value='**№{rule_n}**', inline=False)
+        embed.add_field(name="порушене правило:", value=f'**№{rule_n}**', inline=False)
         embed.set_image(url = rule)
         await ctx.send(embed=embed)
         await member.add_roles(mutedRole, reason=reason)
