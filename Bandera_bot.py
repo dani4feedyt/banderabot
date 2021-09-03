@@ -211,7 +211,7 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def mute_info(ctx):
-        await ctx.send("Щоб накласти мут, введіть нікнейм користувача, час муту та причину у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Причина)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 Порушення порядку на сервері*||")
+        await ctx.send("Щоб накласти мут, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 Порушення порядку на сервері*||")
 
     
     @bot.command(pass_context = True)
@@ -228,22 +228,23 @@ try:
             for channel in guild.channels:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
         embed = discord.Embed(title="Мут", description=f"{member.mention} відлетів до муту на **{time}** хвилин", colour=discord.Colour.light_gray())
-        embed.add_field(name="причина:", value=reason, inline=False)
+        embed.add_field(name="порушення:", value=reason, inline=False)
         embed.add_field(name="порушене правило:", value=f'rule', inline=False)
         await ctx.send(embed=embed)
         await member.add_roles(mutedRole, reason=reason)
         await member.edit(voice_channel=None)
-        await member.send(f"На вас було накладено мут на сервері {guild.name} на {time} хвилин, за причиною: {reason}\n{rule}")
+        await member.send(f'На вас було накладено мут на сервері {guild.name} на {time} хвилин, за причиною: "{reason}"\n{rule}')
         await asyncio.sleep(time * 60)
         await member.remove_roles(mutedRole)
+        await member.send(f"Час муту на сервері {ctx.guild.name} вийшов. Ви можете вільно продовжити спілкування!")
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(mutedRole)
-        await member.send(f"З вас було знято мут на сервері: - {ctx.guild.name}")
-        embed = discord.Embed(title="Мут знято", description=f" Було знято мут з -{member.mention}", colour=discord.Colour.light_gray())
+        await member.send(f"З вас було знято мут на сервері {ctx.guild.name}")
+        embed = discord.Embed(title="Мут знято", description=f" Було знято мут з {member.mention}", colour=discord.Colour.light_gray())
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
