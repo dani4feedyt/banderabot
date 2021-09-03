@@ -32,6 +32,6 @@ links = {1:'https://tenor.com/view/no-genshin-impact-discord-rules-gif-20700280'
          26:'https://tenor.com/view/curtain-lonnie-howwie-discord-rules-lon-gif-22730453',
          27:'https://tenor.com/view/rule27-gif-21989177',
          28:'https://tenor.com/view/sussy-faxball-gif-21459760',
-         29:'@dani4feedyt#5200 попрохав не відображати це правило',
+         29:'@dani4feedyt#5200 попрохав не відображати це правило...',
          30:'https://tenor.com/view/rule-rule30-shut-up-monster-dragging-gif-22280127',
         }

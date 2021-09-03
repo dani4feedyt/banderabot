@@ -216,7 +216,11 @@ try:
     
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
-    async def mute(ctx, member: discord.Member, time: int, *, reason=None):
+    async def mute(ctx, member: discord.Member, time: int, *, reason=None, rule_n: int):
+        if 1 <= rule_n <= 30:
+            rule = (links[rule_n])
+        else:
+            rule = None
         guild = ctx.guild
         mutedRole = discord.utils.get(guild.roles, name="Muted")
         if not mutedRole:
@@ -225,10 +229,11 @@ try:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
         embed = discord.Embed(title="Мут", description=f"{member.mention} відлетів до муту на **{time}** хвилин", colour=discord.Colour.light_gray())
         embed.add_field(name="причина:", value=reason, inline=False)
+        embed.add_field(name=f"rule", value=None, inline=False)
         await ctx.send(embed=embed)
         await member.add_roles(mutedRole, reason=reason)
         await member.edit(voice_channel=None)
-        await member.send(f"На вас було накладено мут на сервері {guild.name} на {time} хвилин, по причині: {reason}")
+        await member.send(f"На вас було накладено мут на сервері {guild.name} на {time} хвилин, за причиною: {reason}/n{rule}")
         await asyncio.sleep(time * 60)
         await member.remove_roles(mutedRole)
             
