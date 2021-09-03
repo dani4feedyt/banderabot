@@ -140,7 +140,7 @@ try:
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.4.9*", inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.5.1*", inline=inline)
         await ctx.send(embed=embed)
         
     @bot.command(name="birb")
@@ -164,7 +164,7 @@ try:
         else:
             await channel.send("Підтверджено")
                 
-    @bot.command(pass_context = True)
+    @bot.command(pass_context = True) ###########################################Доработать отправку в лс при кике###########################################
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, *, reason = None):
         await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?", delete_after=60)
@@ -229,21 +229,21 @@ try:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
         embed = discord.Embed(title="Мут", description=f"{member.mention} відлетів до муту на **{time}** хвилин", colour=discord.Colour.light_gray())
         embed.add_field(name="порушення:", value=reason, inline=False)
-        embed.add_field(name="порушене правило:", value=f'rule', inline=False)
+        embed.add_field(name="порушене правило:", value=f'{rule}', inline=False)
         await ctx.send(embed=embed)
         await member.add_roles(mutedRole, reason=reason)
         await member.edit(voice_channel=None)
-        await member.send(f'На вас було накладено мут на сервері {guild.name} на {time} хвилин, за причиною: "{reason}"\n{rule}')
+        await member.send(f'На вас було накладено мут на сервері **{guild.name}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
         await asyncio.sleep(time * 60)
         await member.remove_roles(mutedRole)
-        await member.send(f"Час муту на сервері {ctx.guild.name} вийшов. Ви можете вільно продовжити спілкування!")
+        await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(mutedRole)
-        await member.send(f"З вас було знято мут на сервері {ctx.guild.name}")
+        await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
         embed = discord.Embed(title="Мут знято", description=f" Було знято мут з {member.mention}", colour=discord.Colour.light_gray())
         await ctx.send(embed=embed)
     
