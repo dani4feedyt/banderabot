@@ -178,8 +178,8 @@ try:
             await user.kick(reason = reason)
      
     @bot.command(name="rule")
-    async def rule(ctx, num: None):
-        if 1 <= int(num) <= 30:
+    async def rule(ctx, num: int):
+        if 1 <= num <= 30:
             await ctx.send(links[num])
         else:
             await ctx.send("**Помилка.** Правила під таким номером не існує")    
@@ -215,9 +215,9 @@ try:
     
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
-    async def mute(ctx, member: discord.Member, time: int, rule_n: None, *, reason=None):
-        if 1 <= int(rule_n) <= 30:
-            rule = (links[int(rule_n)])
+    async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
+        if 1 <= rule_n <= 30:
+            rule = (links[rule_n])
         else:
             rule = None
         guild = ctx.guild
