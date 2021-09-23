@@ -96,6 +96,7 @@ try:
     @bot.command()
     async def test11(ctx, member: discord.Member):
         guild = ctx.guild
+        await ctx.send(f'{member}')
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
@@ -166,6 +167,8 @@ try:
     @bot.command(pass_context = True) ###########################################Доработать отправку в лс при кике###########################################
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, *, reason = None):
+        guild = ctx.guild
+        author = ctx.message.author
         await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
@@ -176,6 +179,7 @@ try:
         else:
             await ctx.send(f"{user} залишив сервер")
             await user.kick(reason = reason)
+            await member.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, за причиною: **"{reason}"**')
      
     @bot.command(name="rule")
     async def rule(ctx, num: int):
@@ -221,22 +225,25 @@ try:
         else:
             rule = None
         guild = ctx.guild
+        author = ctx.message.author
         mutedRole = discord.utils.get(guild.roles, name="Muted")
         if not mutedRole:
             mutedRole = await guild.create_role(name="Muted")
             for channel in guild.channels:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
-        embed = discord.Embed(title="Мут", description=f"{member.mention} відлетів до муту на **{time}** хвилин", colour=discord.Colour.light_gray())
+        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{authoк.mention}** на **{time}** хвилин", colour=discord.Colour.light_gray())
         embed.add_field(name="порушення:", value=reason, inline=False)
         embed.add_field(name="порушене правило:", value=f'**№{rule_n}**', inline=False)
         await ctx.send(embed=embed)
         await ctx.send(rule)
         await member.add_roles(mutedRole, reason=reason)
         await member.edit(voice_channel=None)
-        await member.send(f'На вас було накладено мут на сервері **{guild.name}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
+        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{authoк.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
         await asyncio.sleep(time * 60)
         await member.remove_roles(mutedRole)
         await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
+        embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", colour=discord.Colour.light_gray())
+        await ctx.send(embed=embed)
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
@@ -244,7 +251,7 @@ try:
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(mutedRole)
         await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
-        embed = discord.Embed(title="Мут знято", description=f" Було знято мут з {member.mention}", colour=discord.Colour.light_gray())
+        embed = discord.Embed(title="Мут знято", description=f"**{authoк.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=discord.Colour.light_gray())
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
