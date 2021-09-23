@@ -231,19 +231,20 @@ try:
             mutedRole = await guild.create_role(name="Muted")
             for channel in guild.channels:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
-        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author.mention}** на **{time}** хвилин", colour=discord.Colour.light_gray())
-        embed.add_field(name="порушення:", value=reason, inline=False)
-        embed.add_field(name="порушене правило:", value=f'**№{rule_n}**', inline=False)
+        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author.mention}** на **{time}** хвилин", colour=discord.Colour.dark_red())
+        embed.add_field(name="Порушення:", value=reason, inline=False)
+        embed.add_field(name="Порушене правило:", value=f'**№{rule_n}**', inline=False)
         await ctx.send(embed=embed)
         await ctx.send(rule)
         await member.add_roles(mutedRole, reason=reason)
         await member.edit(voice_channel=None)
         await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
         await asyncio.sleep(time * 60)
-        await member.remove_roles(mutedRole)
-        await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
-        embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", colour=discord.Colour.light_gray())
-        await ctx.send(embed=embed)
+        if mutedRole:
+            await member.remove_roles(mutedRole)
+            await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
+            embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", colour=discord.Colour.dark_red())
+            await ctx.send(embed=embed)
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
@@ -252,7 +253,7 @@ try:
         author = ctx.message.author
         await member.remove_roles(mutedRole)
         await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
-        embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=discord.Colour.light_gray())
+        embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=discord.Colour.dark_red())
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
