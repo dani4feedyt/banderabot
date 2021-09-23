@@ -169,7 +169,7 @@ try:
     async def kick(ctx, user: discord.Member, *, reason = None):
         guild = ctx.guild
         author = ctx.message.author
-        await ctx.send(f"Ви дійсно бажаєте вигнати {user} з сереверу?", delete_after=60)
+        await ctx.send(f"Ви дійсно бажаєте вигнати **{user}** з сереверу?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -263,7 +263,7 @@ try:
             sfx = "ня"
         else:
             sfx = "ь"
-        await ctx.send(f"Ви дійсно бажаєте очистити {amount} повідомлен{sfx}?", delete_after=60)
+        await ctx.send(f"Ви дійсно бажаєте очистити **{amount}** повідомлен{sfx}?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -276,7 +276,7 @@ try:
                 if int(amount) >= 100:
                     amount = 'дуууууже багато'
                 time.sleep(0.75)    
-                await ctx.send(f'Будо видалено {amount} повідомлен{sfx}!', delete_after=60)
+                await ctx.send(f'Будо видалено **{amount}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
             
@@ -340,7 +340,7 @@ try:
     @mute.error
     async def mute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Причина)**||")
+            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Порушене правило) (Причина)**||")
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
