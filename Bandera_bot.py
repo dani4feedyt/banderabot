@@ -249,6 +249,7 @@ try:
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
+        author = ctx.message.author
         await member.remove_roles(mutedRole)
         await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
         embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=discord.Colour.light_gray())
