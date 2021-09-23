@@ -74,7 +74,7 @@ try:
                     time.sleep(0.5)
                     await member.send("Бомбы, рупии есть? " + message)
                     def check(m):
-                        return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                        return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так')
                     try:
                         m = await bot.wait_for("message", check=check, timeout = 1.5)
                     except asyncio.TimeoutError:
