@@ -240,9 +240,10 @@ try:
         await member.edit(voice_channel=None)
         await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
         await asyncio.sleep(time * 60)
-        mutedRole = discord.utils.get(guild.roles, name="Muted")
-        if mutedRole in member.roles:
-            await member.remove_roles(mutedRole)
+        role = discord.utils.find(lambda r: r.name == 'Muted', ctx.message.guild.roles)
+        if role in member.roles:
+            print('1')
+            await member.remove_roles(role)
             await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
             embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", color=0x013ADF)
             await ctx.send(embed=embed)
