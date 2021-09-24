@@ -140,7 +140,7 @@ try:
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.5.2*", inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.6.0*", inline=inline)
         await ctx.send(embed=embed)
         
     @bot.command(name="birb")
@@ -231,7 +231,7 @@ try:
             mutedRole = await guild.create_role(name="Muted")
             for channel in guild.channels:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
-        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author.mention}** на **{time}** хвилин", colour=discord.Colour.dark_red())
+        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author.mention}** на **{time}** хвилин", color=0x013ADF)
         embed.add_field(name="Порушення:", value=reason, inline=False)
         embed.add_field(name="Порушене правило:", value=f'**№{rule_n}**', inline=False)
         await ctx.send(embed=embed)
@@ -243,7 +243,7 @@ try:
         if member.has_role(mutedRole):
             await member.remove_roles(mutedRole)
             await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
-            embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", colour=discord.Colour.dark_red())
+            embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", color=0x013ADF)
             await ctx.send(embed=embed)
             
     @bot.command(pass_context = True)
@@ -253,7 +253,7 @@ try:
         author = ctx.message.author
         await member.remove_roles(mutedRole)
         await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
-        embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=discord.Colour.dark_red())
+        embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", color=0x013ADF)
         await ctx.send(embed=embed)
     
     @bot.command(pass_context=True)
