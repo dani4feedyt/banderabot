@@ -220,34 +220,41 @@ try:
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
-        if 1 <= rule_n <= 30:
-            rule = (links[rule_n])
-        else:
-            rule = None
-        guild = ctx.guild
-        author = ctx.message.author
-        mutedRole = discord.utils.get(guild.roles, name="Muted")
-        if not mutedRole:
-            mutedRole = await guild.create_role(name="Muted")
-            for channel in guild.channels:
-                await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
-        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author.mention}** на **{time}** хвилин", color=0x013ADF)
-        embed.add_field(name="Порушення:", value=reason, inline=False)
-        embed.add_field(name="Порушене правило:", value=f'**№{rule_n}**', inline=False)
-        await ctx.send(embed=embed)
-        await ctx.send(rule)
-        await member.add_roles(mutedRole, reason=reason)
-        await asyncio.sleep(1)
-        await member.edit(voice_channel=None)
-        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
-        print(member.roles)
-        await asyncio.sleep(time * 60)
-        if mutedRole in member.roles:
-            print('1')
-            await member.remove_roles(mutedRole)
-            await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
-            embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", color=0x013ADF)
+        for rp in range (2): #####################ПЛОТНО НАСРАНО ПОФИКСИТЬ##################
+            if 1 <= rule_n <= 30:
+                rule = (links[rule_n])
+            else:
+                rule = None
+            guild = ctx.guild
+            author = ctx.message.author
+            mutedRole = discord.utils.get(guild.roles, name="Muted")
+            if not mutedRole:
+                mutedRole = await guild.create_role(name="Muted")
+                for channel in guild.channels:
+                    await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
+            embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author.mention}** на **{time}** хвилин", color=0x013ADF)
+            embed.add_field(name="Порушення:", value=reason, inline=False)
+            embed.add_field(name="Порушене правило:", value=f'**№{rule_n}**', inline=False)
             await ctx.send(embed=embed)
+            await ctx.send(rule)
+            await member.add_roles(mutedRole)
+            await asyncio.sleep(1)
+            await member.edit(voice_channel=None)
+            await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
+            print(member.roles, mutedRole)
+            await asyncio.sleep(time * 60)
+            if mutedRole in member.roles:
+                print('1')
+                await member.remove_roles(mutedRole)
+                await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
+                embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", color=0x013ADF)
+                await ctx.send(embed=embed)
+
+    @bot.command()
+    @commands.has_permissions(manage_messages=True)
+    async def roles(ctx, member: discord.Member):
+        await ctx.send(member.roles)
+    
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
