@@ -183,7 +183,7 @@ try:
      
     @bot.command(name="rule")
     async def rule(ctx, num: int):
-        if 1 <= num <= 30:
+        if 1 <= num <= 31:
             await ctx.send(links[num])
         else:
             await ctx.send("**Помилка.** Правила під таким номером не існує")    
@@ -221,7 +221,7 @@ try:
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
         for rp in range (2): #####################ПЛОТНО НАСРАНО ПОФИКСИТЬ##################
-            if 1 <= rule_n <= 30:
+            if 1 <= rule_n <= 31:
                 rule = (links[rule_n])
             else:
                 rule = None
