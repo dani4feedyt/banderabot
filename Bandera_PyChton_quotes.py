@@ -35,4 +35,7 @@ links = {1:'https://tenor.com/view/no-genshin-impact-discord-rules-gif-20700280'
          29:'@dani4feedyt#5200 попрохав не відображати це правило...',
          30:'https://tenor.com/view/rule-rule30-shut-up-monster-dragging-gif-22280127',
          31:'https://tenor.com/view/rule31-minecraft-dungeons-gif-22630176',
+         32:'https://cdn.discordapp.com/attachments/883030868321505300/891755183963504650/ezgif.com-gif-maker.gif',
+         33:'https://cdn.discordapp.com/attachments/883030868321505300/891757140216254466/voevoda.gif',
+         34:'https://tenor.com/view/giga-chad-gif-23044971',
         }
