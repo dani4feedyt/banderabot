@@ -6,7 +6,7 @@ Quotes1 = {1:'Язык программирования:computer::computer::comp
 
 links = {1:'https://tenor.com/view/no-genshin-impact-discord-rules-gif-20700280',
          2:'https://tenor.com/view/davy-enardo-discord-gif-19344074',
-         3:'https://discord.com/channels/695715313911857186/883030868321505300/883031033216385065',
+         3:'https://tenor.com/view/cringetopia-rule3-gif-20196348',
          4:'https://tenor.com/view/dimden-dimdem-discord-rules-discord-meme-gif-22604752',
          5:'https://tenor.com/view/rule5-rule-dominic-bully-no_bully-gif-20706308',
          6:'https://tenor.com/view/goku-rule6-discord-dbz-gif-22504372',
