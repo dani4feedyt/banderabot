@@ -220,8 +220,6 @@ try:
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
-        if not len(time):
-            await ctx.send("Не вистачає одного або більше аргументів")
         if 1 <= rule_n <= len(links):#####################ПЛОТНО НАСРАНО, ПОФИКСИТЬ##################
             rule = (links[rule_n])
         else:
