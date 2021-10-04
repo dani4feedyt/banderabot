@@ -28,3 +28,9 @@ while c1 <= c[" "]:
 ####_dict.remove('Сповіщення: ')
 ####_dict.remove('Коментарі закриті.')
 quotes = _dict
+
+page1 = requests.get('https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/')
+tree = html.fromstring(page.content)
+_dict1 = (tree.xpath('//p(contains(text(),"Свої для своїх про своє"))/text()'))
+rates = _dict1
+
