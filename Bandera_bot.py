@@ -52,7 +52,7 @@ try:
 
     @bot.command()
     async def rates(ctx: commands.Context):
-        await ctx.send("rates")
+        await ctx.send(_dict1)
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
