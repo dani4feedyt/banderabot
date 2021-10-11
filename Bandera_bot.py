@@ -8,7 +8,7 @@ try:
     from discord.ext import commands
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes
-    from Bandera_Quotes import rates
+    from Bandera_Quotes import _dict1
     from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
