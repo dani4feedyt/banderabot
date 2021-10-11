@@ -5,6 +5,9 @@ from lxml import etree
 from lxml import html
 import random
 from collections import Counter
+from selenium import webdriver
+from BeautifulSoup import BeautifulSoup
+import pandas as pd
 a1 = 1
 b1 = 1
 c1 = 1
@@ -29,7 +32,13 @@ while c1 <= c[" "]:
 ####_dict.remove('Коментарі закриті.')
 quotes = _dict
 
+_dict1=[]
 page1 = requests.get('https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily')
 tree = html.fromstring(page.content)
-_dict1 = (tree.xpath('//div/converter-display__value/text()'))
-print(_dict1)
+soup = BeautifulSoup(tree)
+for a in soup.findAll(soup, attrs={'class':'plr-0-767 indicators-top_item-value indicators-top_item-value--plus'}):
+    name=a.find('td', attrs={'class':'plr-0-767 indicators-top_item-value indicators-top_item-value--plus'})
+    _dict1.append(name.text)
+
+#####_dict1 = (tree.xpath('//div/converter-display__value/text()'))
+#####print(_dict1)
