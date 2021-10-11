@@ -29,8 +29,7 @@ while c1 <= c[" "]:
 ####_dict.remove('Коментарі закриті.')
 quotes = _dict
 
-page1 = requests.get('https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/')
+page1 = requests.get('https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily')
 tree = html.fromstring(page.content)
-_dict1 = (tree.xpath('//p(contains(text(),"Свої для своїх про своє"))/text()'))
-rates = _dict1
-
+_dict1 = (tree.xpath('//div/converter-display__value/text()'))
+print(_dict1)

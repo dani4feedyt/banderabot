@@ -8,6 +8,7 @@ try:
     from discord.ext import commands
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes
+    from Bandera_Quotes import rates
     from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
@@ -50,8 +51,8 @@ try:
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
-    async def rates(ctx):
-        await ctx.send('f{_dict1}')
+    async def rates(ctx: commands.Context):
+        await ctx.send("rates")
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
