@@ -35,5 +35,7 @@ quotes = _dict
 page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
 soup = BeautifulSoup(page1.content, 'html.parser')
 _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[6].get_text()
+_dict1 = round(float(_dict1.replace(',', '.')),2)
+
 print(_dict1)
 

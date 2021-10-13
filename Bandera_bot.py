@@ -52,7 +52,7 @@ try:
 
     @bot.command()
     async def rates(ctx: commands.Context):
-        await ctx.send('Козаче, курс одного долару становить ' round(int(_dict1), 2)'грн!')
+        await ctx.send(f"Козаче, курс одного долару становить **{_dict1}** грн!")
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
