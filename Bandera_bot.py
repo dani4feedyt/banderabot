@@ -52,7 +52,7 @@ try:
 
     @bot.command()
     async def rates(ctx: commands.Context):
-        await ctx.send(f"Козаче, курс одного долару становить **{_dict1}** грн!")
+        await ctx.send(f"Козаче, курс долару становить **{_dict1}** грн!")
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
@@ -142,10 +142,11 @@ try:
         embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute", inline=inline)
         embed.add_field(name=f"**b!invite**", value=f"Створює запрошення на сервер", inline=inline)
         embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про покарання методом занурення до канави", inline=inline)
+        embed.add_field(name=f"**b!rates**", value=f"Найактуальніший курс валют", inline=inline)
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.6.0*", inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.9.1*", inline=inline)
         await ctx.send(embed=embed)
         
     @bot.command(name="birb")
