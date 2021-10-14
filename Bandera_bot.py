@@ -67,11 +67,13 @@ try:
             name = ("рубля")
         else:
             await ctx.send("Курс даної валюти ще не було внесено до бази даних")
-        if amount is not None:
-            rt = val * amount 
-            await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
-        else:
-            await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
+
+        ##if amount is None:
+            #print('1')
+        await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
+        #else:
+           #rt = val * amount 
+            #await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
