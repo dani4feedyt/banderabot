@@ -56,13 +56,13 @@ try:
         if rate == ("долар") or rate == ("доллар") or rate == ("usd"):
             val = _dict1
             name = ("долару")
-        if rate == ("євро") or rate == ("евро") or rate == ("eur"):
+        elif rate == ("євро") or rate == ("евро") or rate == ("eur"):
             val = _dict2
             name = ("євро")
-        if rate ==("шекель") or rate == ("ils"):
+        elif rate ==("шекель") or rate == ("ils"):
             val = _dict2
             name = ("шекеля")
-        if rate == ("рубль") or rate == ("rub"):
+        elif rate == ("рубль") or rate == ("rub"):
             val = _dict2
             name = ("рубля")
         else:
