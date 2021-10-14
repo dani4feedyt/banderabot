@@ -36,6 +36,12 @@ page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&pe
 soup = BeautifulSoup(page1.content, 'html.parser')
 _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[6].get_text()
 _dict1 = round(float(_dict1.replace(',', '.')),2)
+_dict2 = soup.find_all('td', {"data-label":"Офіційний курс"})[7].get_text()
+_dict2 = round(float(_dict2.replace(',', '.')),2)
+_dict3 = soup.find_all('td', {"data-label":"Офіційний курс"})[16].get_text()
+_dict3 = round(float(_dict3.replace(',', '.')),2)
+_dict4 = soup.find_all('td', {"data-label":"Офіційний курс"})[20].get_text()
+_dict4 = round(float(_dict4.replace(',', '.'))/10,2)
+print(_dict1, _dict2, _dict3, _dict4)
 
-print(_dict1)
-
+################Если не будет корректно обновлеться, перенести в основной код#####################

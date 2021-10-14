@@ -8,7 +8,7 @@ try:
     from discord.ext import commands
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes
-    from Bandera_Quotes import _dict1
+    from Bandera_Quotes import _dict1, _dict2, _dict3, _dict4
     from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
@@ -51,8 +51,23 @@ try:
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
     @bot.command()
-    async def rates(ctx: commands.Context):
-        await ctx.send(f"Козаче, курс долару становить **{_dict1}** грн!")
+    async def rates(ctx, rate):
+        rate = rate.lower()
+        if rate == ("долар") or rate == ("доллар") or rate == ("usd"):
+            val = _dict1
+            name = ("долару")
+        if rate == ("євро") or rate == ("евро") or rate == ("eur"):
+            val = _dict2
+            name = ("євро")
+        if rate ==("шекель") or rate == ("ils"):
+            val = _dict2
+            name = ("шекеля")
+        if rate == ("рубль") or rate == ("rub"):
+            val = _dict2
+            name = ("рубля")
+        else:
+            await ctx.send("Курс даної валюти ще не було внесено до бази даних")
+        await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
