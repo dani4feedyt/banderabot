@@ -60,10 +60,10 @@ try:
             val = _dict2
             name = ("євро")
         elif rate ==("шекель") or rate == ("ils"):
-            val = _dict2
+            val = _dict3
             name = ("шекеля")
         elif rate == ("рубль") or rate == ("rub"):
-            val = _dict2
+            val = _dict4
             name = ("рубля")
         else:
             await ctx.send("Курс даної валюти ще не було внесено до бази даних")
