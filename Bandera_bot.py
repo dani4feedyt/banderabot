@@ -157,7 +157,7 @@ try:
         embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute", inline=inline)
         embed.add_field(name=f"**b!invite**", value=f"Створює запрошення на сервер", inline=inline)
         embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про покарання методом занурення до канави", inline=inline)
-        embed.add_field(name=f"**b!rates**", value=f"Найактуальніший курс валют", inline=inline)
+        embed.add_field(name=f"**b!rates (Валюта)**", value=f"Найактуальніший курс валют", inline=inline)
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
@@ -322,7 +322,7 @@ try:
         ar = (' '.join(ar))
         a = 0
         if intr < 0.5:
-            await ctx.send('Увага! За швидкості спаму меншої ніж 0.5 секунд, деякі повідомлення можуть надсилатися з затримкою')
+            await ctx.send('Увага! За швидкості спаму більшої за одне слово у 0.5 секунд, деякі повідомлення можуть надсилатися з затримкою')
             time.sleep(2)
         await ctx.send(attention)
         time.sleep(5)
@@ -347,7 +347,12 @@ try:
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send("Помилка. Даної команди не існує")
-
+    
+    @rates.error
+    async def kanava_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Помилка. Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс Долару, Євро, Шекеля та Рубля\n||**b!kanava (Валюта)**||")
+            
     @kanava.error
     async def kanava_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
