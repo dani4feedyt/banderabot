@@ -55,7 +55,7 @@ try:
         rate = rate.lower()
         if rate == ("долар") or rate == ("доллар") or rate == ("usd"):
             val = _dict1
-            name = ("долару")
+            name = ("долар")
         elif rate == ("євро") or rate == ("евро") or rate == ("eur"):
             val = _dict2
             name = ("євро")
@@ -67,7 +67,11 @@ try:
             name = ("рубля")
         else:
             await ctx.send("Курс даної валюти ще не було внесено до бази даних")
-        await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
+        if amount is not None:
+            rt = val * amount 
+            await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
+        else:
+            await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
