@@ -55,7 +55,7 @@ try:
         rate = rate.lower()
         if rate == ("долар") or rate == ("доллар") or rate == ("usd"):
             val = _dict1
-            name = ("долар")
+            name = ("долару")
         elif rate == ("євро") or rate == ("евро") or rate == ("eur"):
             val = _dict2
             name = ("євро")
@@ -167,7 +167,7 @@ try:
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.9.1*", inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.9.5*", inline=inline)
         await ctx.send(embed=embed)
         
     @bot.command(name="birb")
