@@ -53,16 +53,16 @@ try:
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
         rate = rate.lower()
-        if rate == ("долар") or rate == ("доллар") or rate == ("usd"):
+        if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
             val = _dict1
             name = ("долару")
-        elif rate == ("євро") or rate == ("евро") or rate == ("eur"):
+        elif rate == ("євро") or rate == ("евро") or rate == ("eur") or rate == ("euro"):
             val = _dict2
             name = ("євро")
-        elif rate ==("шекель") or rate == ("ils"):
+        elif rate ==("шекель") or rate ==("шекелей") or rate ==("шекеля") or rate ==("шекелів") or rate ==("шекелі") or rate == ("ils"):
             val = _dict3
             name = ("шекеля")
-        elif rate == ("рубль") or rate == ("rub"):
+        elif rate == ("рубль") or rate ==("рубля") or rate ==("рублей") or rate ==("рублі") or rate ==("рублів") or rate == ("rub") or rate == ("ruble") or rate == ("rubles"):
             val = _dict4
             name = ("рубля")
         else:
