@@ -50,8 +50,8 @@ try:
     async def rg8421(ctx):
         await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
 
-    @bot.command()
-    async def rates(ctx, rate):
+    @bot.command(name='rates')
+    async def rates(ctx, rate, amount=None):
         rate = rate.lower()
         if rate == ("долар") or rate == ("доллар") or rate == ("usd"):
             val = _dict1
@@ -67,13 +67,17 @@ try:
             name = ("рубля")
         else:
             await ctx.send("Курс даної валюти ще не було внесено до бази даних")
-
-        ##if amount is None:
-            #print('1')
-        await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
-        #else:
-           #rt = val * amount 
-            #await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
+        bot.dispatch('rates_command', ctx, val, name, amount, rate)
+    
+    @bot.event
+    async def on_rates_command(ctx, val, name, amount, rate):
+        if amount is None:
+            print('1')
+            await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
+        
+        else:
+            rt = float(val) * float(amount)
+            await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
 
     @bot.command(name='kanava')
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
@@ -163,11 +167,11 @@ try:
         embed.add_field(name=f"**b!mute_info**{zaha_emoji}", value=f"Інформація про використання b!mute", inline=inline)
         embed.add_field(name=f"**b!invite**", value=f"Створює запрошення на сервер", inline=inline)
         embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про покарання методом занурення до канави", inline=inline)
-        embed.add_field(name=f"**b!rates (Валюта)**", value=f"Найактуальніший курс валют", inline=inline)
+        embed.add_field(name=f"**b!rates (Валюта) (Кількість)**", value=f"Найактуальніший курс валют", inline=inline)
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.9.5*", inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver.1.9.7*", inline=inline)
         await ctx.send(embed=embed)
         
     @bot.command(name="birb")
@@ -355,9 +359,9 @@ try:
             await ctx.send("Помилка. Даної команди не існує")
     
     @rates.error
-    async def kanava_error(ctx, error):
+    async def rates_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс Долару, Євро, Шекеля та Рубля\n||**b!kanava (Валюта)**||")
+            await ctx.send("Помилка. Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс Долару, Євро, Шекеля та Рубля\n||**b!rates (Валюта)**||")
             
     @kanava.error
     async def kanava_error(ctx, error):
