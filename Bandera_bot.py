@@ -8,7 +8,6 @@ try:
     from discord.ext import commands
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes
-    from Bandera_Quotes import _dict1, _dict2, _dict3, _dict4
     from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
@@ -24,6 +23,9 @@ try:
     from collections import Counter
     import asyncio
     from asyncio import sleep
+    from selenium import webdriver
+    from bs4 import BeautifulSoup
+    import pandas as pd
     
     client = discord.Client()
     t12 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
@@ -52,7 +54,18 @@ try:
 
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
-        rate = rate.lower()
+        page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
+        soup = BeautifulSoup(page1.content, 'html.parser')
+        _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[6].get_text()
+        _dict1 = round(float(_dict1.replace(',', '.')),2)
+        _dict2 = soup.find_all('td', {"data-label":"Офіційний курс"})[7].get_text()
+        _dict2 = round(float(_dict2.replace(',', '.')),2)
+        _dict3 = soup.find_all('td', {"data-label":"Офіційний курс"})[16].get_text()
+        _dict3 = round(float(_dict3.replace(',', '.')),2)
+        _dict4 = soup.find_all('td', {"data-label":"Офіційний курс"})[20].get_text()
+        _dict4 = round(float(_dict4.replace(',', '.'))/10,2)
+        print(_dict1, _dict2, _dict3, _dict4)
+        rate = rate.lower() 
         if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
             val = _dict1
             name = ("долару")
@@ -74,9 +87,12 @@ try:
         if amount is None:
             print('1')
             await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
-        
         else:
             rt = float(val) * float(amount)
+            rt = round(rt, 2)
+            rt = str(rt)
+            if rt.endswith('0'):
+                rt = rt[:-2]
             await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
 
     @bot.command(name='kanava')
