@@ -96,6 +96,7 @@ try:
             await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
 
     @bot.command(name='kanava')
+    @commands.has_permissions(manage_messages=True)
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
