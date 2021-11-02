@@ -47,10 +47,15 @@ try:
     @bot.event
     async def on_ready():
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
+
+    @bot.command()
+    async def id(ctx, member: discord.User):
+        await ctx.send(member.id)
         
     @bot.command()
     async def rg8421(ctx):
-        await ctx.send("Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации")
+        author = ctx.message.author
+        await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " посягнул на великую тайну кала, и обнаружил рецепт сверхчистого говна:" + "\n||Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации||")
 
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
