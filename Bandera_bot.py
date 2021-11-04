@@ -1,4 +1,4 @@
-try:
+ try:
     import time
     
     start_time = time.time()
@@ -57,7 +57,7 @@ try:
         author = ctx.message.author
         await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " посягнул на великую тайну кала, и обнаружил рецепт сверхчистого говна:" + "\n||Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации||")
 
-    @bot.command(name='rates')
+    @bot.command(name='rates')################Добавить йены##############
     async def rates(ctx, rate, amount=None):
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
@@ -171,7 +171,7 @@ try:
         await ctx.send(f'Героям слава, {author.mention}!')
 
     @bot.command(pass_context = True)
-    async def test(ctx, *, msg):
+    async def echo(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
 
