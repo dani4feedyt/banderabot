@@ -1,4 +1,4 @@
- try:
+try:
     import time
     
     start_time = time.time()
@@ -171,7 +171,7 @@
         await ctx.send(f'Героям слава, {author.mention}!')
 
     @bot.command(pass_context = True)
-    async def test(ctx, *, msg):
+    async def echo(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
 
