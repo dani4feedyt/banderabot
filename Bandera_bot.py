@@ -171,7 +171,7 @@
         await ctx.send(f'Героям слава, {author.mention}!')
 
     @bot.command(pass_context = True)
-    async def echo(ctx, *, msg):
+    async def test(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
 
