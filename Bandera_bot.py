@@ -38,6 +38,7 @@ try:
     bot = commands.Bot(command_prefix = settings['prefix'])
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
+    fi = open("data.txt","w+")
     
     @bot.event
     async def on_member_join(member):
@@ -51,7 +52,13 @@ try:
     @bot.command()
     async def id(ctx, member: discord.User):
         await ctx.send(member.id)
-        
+
+    @bot.command()
+    async def log(ctx, *, msg):
+        fi = open("data.txt","w+")
+        fi.write(msg)
+        fi.close
+
     @bot.command()
     async def rg8421(ctx):
         author = ctx.message.author
