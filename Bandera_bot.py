@@ -60,6 +60,13 @@ try:
         fi.close
 
     @bot.command()
+    async def read(ctx)):
+        fi = open("data.txt", "r")
+        if fi.mode == 'r':
+            contents = f.read()
+            await ctx.send(contents)
+    
+    @bot.command()
     async def rg8421(ctx):
         author = ctx.message.author
         await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " посягнул на великую тайну кала, и обнаружил рецепт сверхчистого говна:" + "\n||Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации||")
