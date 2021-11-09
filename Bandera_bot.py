@@ -60,7 +60,7 @@ try:
         fi.close
 
     @bot.command()
-    async def read(ctx)):
+    async def read(ctx):
         fi = open("data.txt", "r")
         if fi.mode == 'r':
             contents = fi.read()
