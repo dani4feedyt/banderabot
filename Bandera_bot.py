@@ -63,7 +63,7 @@ try:
     async def read(ctx)):
         fi = open("data.txt", "r")
         if fi.mode == 'r':
-            contents = f.read()
+            contents = fi.read()
             await ctx.send(contents)
     
     @bot.command()
