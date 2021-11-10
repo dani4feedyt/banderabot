@@ -55,7 +55,7 @@ try:
 
     @bot.command()
     async def log(ctx, *, msg):
-        fi = open("data.txt","w+")
+        fi = open("data.txt","a+") ######Аппенд всместо написания######
         fi.write(msg)
         fi.close
 
