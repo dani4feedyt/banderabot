@@ -212,7 +212,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver 2.0.6*", inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver 2.2.0*", inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -293,7 +293,7 @@ try:
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
-        if 1 <= rule_n <= len(links):#####################ПЛОТНО НАСРАНО, ПОФИКСИТЬ##################
+        if 1 <= rule_n <= len(links):
             rule = (links[rule_n])
         else:
             rule = None
@@ -338,12 +338,18 @@ try:
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
+        id1 = member.id
+        user = await ctx.message.guild.query_members(user_ids=[id1])
+        user = user[0]
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         author = ctx.message.author
-        await member.remove_roles(mutedRole)
-        await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
-        embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=0x013ADF)
-        await ctx.send(embed=embed)
+        if mutedRole in user.roles:
+            await member.remove_roles(mutedRole)
+            await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
+            embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=0x013ADF)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("Помилка. Неможливо зняти мут з користувача, який його не має.")
     
     @bot.command(pass_context=True)
     @commands.has_permissions(manage_messages=True)
