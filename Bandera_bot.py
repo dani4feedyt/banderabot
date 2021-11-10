@@ -290,7 +290,7 @@ try:
         await ctx.send("Щоб накласти мут, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     
-    @bot.command(pass_context = True)
+    @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
         if 1 <= rule_n <= len(links):#####################ПЛОТНО НАСРАНО, ПОФИКСИТЬ##################
@@ -315,6 +315,10 @@ try:
         await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
         print(member.roles, mutedRole)
         await asyncio.sleep(time * 60)
+        bot.dispatch('mute_command', ctx, member, time, rule, rate, reason, mutedRole, guild)
+
+    @bot.event
+    async def on_mute_command(ctx, member, time, rule, rate, reason, mutedRole, guild):
         if mutedRole in member.roles:
             print('1')
             await member.remove_roles(mutedRole)
