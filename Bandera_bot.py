@@ -54,9 +54,9 @@ try:
         await ctx.send(member.id)
 
     @bot.command()
-    async def log(ctx, *, msg):
+    async def save(ctx, *, msg):
         fi = open("data.txt","a+") ######Аппенд всместо написания######
-        fi.write(msg)
+        fi.write(msg + " ")
         fi.close
 
     @bot.command()
@@ -66,6 +66,10 @@ try:
             contents = fi.read()
             await ctx.send(contents)
     
+    @bot.command()
+    async def c_save(ctx):
+        fi = open("filename", "w").close()
+            
     @bot.command()
     async def rg8421(ctx):
         author = ctx.message.author
