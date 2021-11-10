@@ -167,7 +167,7 @@ try:
     async def test11(ctx, member: discord.Member):
         guild = ctx.guild
         await ctx.send(f'{member}')
-        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
+        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
     @bot.command()
@@ -212,7 +212,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:*" + " " + '<@' + str(486176412953346049) + '>', value='*ver 2.2.12*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:*" + "**@dani4feedyt#5200**", value='*ver 2.2.11*', inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -276,7 +276,7 @@ try:
 
     @bot.command()#####################Сайт поставил адгвард, временно не работает##########################
     async def quote(ctx: commands.Context):
-        await ctx.send ('Команда тимчасово не працює, прошу вибачення за незручності. Для детальної інформації зверніться до dani4feedyt#5200')
+        await ctx.send ('Команда тимчасово не працює, прошу вибачення за незручності. Для детальної інформації зверніться до @dani4feedyt#5200')
         #await ctx.send((f'Випадковий вислів Бандери: \n\n')+(random.choice(quotes)))
         
     @bot.command(aliases=['myroles'])
