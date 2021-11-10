@@ -68,7 +68,7 @@ try:
     
     @bot.command()
     async def c_save(ctx):
-        fi = open("filename", "w").close()
+        fi = open("data.txt", "w").close()
             
     @bot.command()
     async def rg8421(ctx):
