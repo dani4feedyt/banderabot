@@ -257,7 +257,7 @@ try:
             print("Error")
         else:
             await ctx.send(f"{user} залишив сервер")
-            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reason{reasonA}}')
+            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reason}{reasonA}')
             await user.kick(reason = reason)
      
     @bot.command(name="rule")
