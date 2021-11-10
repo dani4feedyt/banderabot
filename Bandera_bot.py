@@ -314,13 +314,21 @@ try:
         await member.edit(voice_channel=None)
         await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
         print(member.roles, mutedRole)
-        await asyncio.sleep(time * 60)
-        bot.dispatch('mute_command', ctx, member, time, rule, rate, reason, mutedRole, guild)
+        await asyncio.sleep(time * 5)
+        bot.dispatch('mute_command', ctx, member, rule, reason, mutedRole, guild)
 
     @bot.event
-    async def on_mute_command(ctx, member, time, rule, rate, reason, mutedRole, guild):
-        if mutedRole in member.roles:
+    async def on_mute_command(ctx, member, rule, reason, mutedRole, guild):
+        id1 = member.id
+        user = await ctx.message.guild.query_members(user_ids=[id1])
+        user = user[0]
+        print(id1)
+        print('2')
+        print(user, mutedRole)
+        mutedRole = discord.utils.get(guild.roles, name="Muted")
+        if mutedRole in user.roles:
             print('1')
+            print(member.roles, mutedRole)
             await member.remove_roles(mutedRole)
             await member.send(f"Час муту на сервері **{ctx.guild.name}** вийшов. Ви можете вільно продовжити спілкування!")
             embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", color=0x013ADF)
