@@ -212,7 +212,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver 2.2.0*", inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value="*ver 2.2.1*", inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -242,6 +242,12 @@ try:
     async def kick(ctx, user: discord.Member, *, reason = None):
         guild = ctx.guild
         author = ctx.message.author
+        if reason == None:
+            reason = ("**без будь-якого приводу**")
+            reasonA = ('')
+        else:
+            reasonA = ('за причиною **{reason}**')
+            reason = ('')
         await ctx.send(f"Ви дійсно бажаєте вигнати **{user}** з сереверу?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
@@ -251,7 +257,7 @@ try:
             print("Error")
         else:
             await ctx.send(f"{user} залишив сервер")
-            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, за причиною: **"{reason}"**')
+            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reason{reasonA}}')
             await user.kick(reason = reason)
      
     @bot.command(name="rule")
@@ -282,12 +288,12 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
-        await ctx.send("Щоб почати занурювати користувача у канаву, введіть його нікнейм, кількість занурень та довірливість бота за бажанням у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\nЛюдина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+        await ctx.send("•Щоб почати занурювати користувача у канаву, введіть його нікнейм, кількість занурень та довірливість бота за бажанням у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, під впливом цієї команди, буде занурюватися в канаву та допрошуватися Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def mute_info(ctx):
-        await ctx.send("Щоб накласти мут, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\nЛюдина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\nДля зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
+        await ctx.send("•Щоб накласти мут, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів, і отримає особисте повідомлення з причиною муту\n•Для зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     
     @bot.command(name="mute")
@@ -379,7 +385,7 @@ try:
             
     @bot.command()
     async def spam_info(ctx):
-        await ctx.send("Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
+        await ctx.send("•Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
 
     @bot.command()
     async def spam(ctx, intr: float = 1, count: int = 10, *ar):
