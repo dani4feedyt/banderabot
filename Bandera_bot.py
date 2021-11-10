@@ -246,7 +246,7 @@ try:
             reason = ("**без будь-якого приводу**")
             reasonA = ('')
         else:
-            reasonA = ('за причиною **{reason}**')
+            reasonA = (f'за причиною **{reason}**')
             reason = ('')
         await ctx.send(f"Ви дійсно бажаєте вигнати **{user}** з сереверу?", delete_after=60)
         def check(m):
