@@ -189,6 +189,7 @@ try:
         await ctx.send(f'Героям слава, {author.mention}!')
 
     @bot.command(pass_context = True)
+    @commands.has_permissions(manage_messages=True)
     async def echo(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
@@ -237,7 +238,7 @@ try:
         else:
             await channel.send("Підтверджено")
                 
-    @bot.command(pass_context = True) ###########################################Доработать отправку в лс при кике###########################################
+    @bot.command(pass_context = True) ###########################################Доработать rule в кике###########################################
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, *, reason = None):
         guild = ctx.guild
@@ -394,7 +395,9 @@ try:
         a = 0
         if intr < 0.5:
             await ctx.send('Увага! За швидкості спаму більшої за одне слово у 0.5 секунд, деякі повідомлення можуть надсилатися з затримкою')
-            time.sleep(2)
+            if intr <= 0.3:
+                intr = 0.3
+        time.sleep(2)
         await ctx.send(attention)
         time.sleep(5)
         while a < count:
