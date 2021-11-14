@@ -380,7 +380,7 @@ try:
                 if int(amount) >= 100:
                     amount = 'дуууууже багато'
                 time.sleep(0.75)    
-                await ctx.send(f'Будо видалено **{amount}** повідомлен{sfx}!', delete_after=60)
+                await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
             
