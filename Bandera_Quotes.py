@@ -23,5 +23,5 @@ try:
             i += 1
             _dict0.append(dct1)
     print(_dict0)
-except IndexError as err:
-    print(err)
+except IndexError:
+    print("Oops!  That was no valid number.  Try again...")
