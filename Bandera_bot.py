@@ -90,7 +90,7 @@ try:
         _dict4 = soup.find_all('td', {"data-label":"Офіційний курс"})[20].get_text()
         _dict4 = round(float(_dict4.replace(',', '.'))/10,2)
         _dict5 = soup.find_all('td', {"data-label":"Офіційний курс"})[9].get_text()
-        _dict5 = round(float(_dict5.replace(',', '.'))2)
+        _dict5 = round(float(_dict5.replace(',', '.'))/10,2)
         print(_dict1, _dict2, _dict3, _dict4, _dict5)
         rate = rate.lower() 
         if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
