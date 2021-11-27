@@ -16,7 +16,7 @@ soup = BeautifulSoup(page.content, 'html.parser')
 _dict1 = soup.find_all('p')[5:37]
 i = 0
 _dict0 = []
-while i <= 31:
+while i <= 30:
     for dct in _dict1:
         dct1 = _dict1[i].get_text()
         i += 1
