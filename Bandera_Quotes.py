@@ -14,11 +14,11 @@ c1 = 1
 page = requests.get('https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/')
 soup = BeautifulSoup(page.content, 'html.parser')
 _dict1 = soup.find_all('p')[5:37]
-i = 0
+i = -1
 _dict0 = []
 while i <= 31:
     for dct in _dict1:
-        dct1 = _dict1[i].get_text()
+        dct1 = _dict1[i+1].get_text()
         i += 1
         _dict0.append(dct1)
 print(_dict0)
