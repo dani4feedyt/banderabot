@@ -20,7 +20,8 @@ try:
     while i <= 31:
         for dct in _dict1:
             dct1 = _dict1[i].get_text()
-            _dict0.append(dct1)
             i += 1
+            _dict0.append(dct1)
+    print(_dict0)
 except IndexError as err:
     pass
