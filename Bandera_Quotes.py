@@ -12,36 +12,14 @@ a1 = 1
 b1 = 1
 c1 = 1
 page = requests.get('https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/')
-tree = html.fromstring(page.content)
-_dict = (tree.xpath('//p[not(contains(text(),"Свої для своїх про своє"))]/text()'))
-c = Counter(_dict)
-while a1 <= c["\xa0"]:
-    if '\xa0' in _dict:
-        _dict.remove('\xa0')
-    a1 += 1
-while b1 <= c["\n"]:
-    if '\n' in _dict:
-        _dict.remove('\n')
-    b1 += 1
-while c1 <= c[" "]:
-    if ' ' in _dict:
-        _dict.remove(' ')
-    c1 += 1
-#############Сайт поставил адгвард, временно не работает. Для возвращения в рабочее состояние, разкомментить строки снизу#####################    
-####_dict.remove('Сповіщення: ')
-####_dict.remove('Коментарі закриті.')
-quotes = _dict
+soup = BeautifulSoup(page.content, 'html.parser')
+_dict1 = soup.find_all('p')[5:37]
+i = 0
+_dict0 = []
+while i <= 31:
+    for dct in _dict1:
+        dct1 = _dict1[i].get_text()
+        i += 1
+        _dict0.append(dct1) 
+print (random.choice(_dict0))
 
-page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
-soup = BeautifulSoup(page1.content, 'html.parser')
-_dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[6].get_text()
-_dict1 = round(float(_dict1.replace(',', '.')),2)
-_dict2 = soup.find_all('td', {"data-label":"Офіційний курс"})[7].get_text()
-_dict2 = round(float(_dict2.replace(',', '.')),2)
-_dict3 = soup.find_all('td', {"data-label":"Офіційний курс"})[16].get_text()
-_dict3 = round(float(_dict3.replace(',', '.')),2)
-_dict4 = soup.find_all('td', {"data-label":"Офіційний курс"})[20].get_text()
-_dict4 = round(float(_dict4.replace(',', '.'))/10,2)
-print(_dict1, _dict2, _dict3, _dict4)
-
-################Если не будет корректно обновлеться, перенести в основной код#####################

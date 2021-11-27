@@ -7,7 +7,7 @@ try:
     import discord
     from discord.ext import commands
     from Bandera_cfg import settings
-    from Bandera_Quotes import quotes
+    from Bandera_Quotes import _dict0
     from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
@@ -282,10 +282,10 @@ try:
         else:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
-    @bot.command()#####################Сайт поставил адгвард, временно не работает##########################
+    @bot.command()
     async def quote(ctx: commands.Context):
-        await ctx.send ('Команда тимчасово не працює, прошу вибачення за незручності. Для детальної інформації зверніться до @dani4feedyt#5200')
-        #await ctx.send((f'Випадковий вислів Бандери: \n\n')+(random.choice(quotes)))
+        _dict = random.choice(_dict0)
+        await ctx.send (f'Випадковий вислів Степана Андрійовича: \n*{_dict}*')
         
     @bot.command(aliases=['myroles'])
     async def _myroles(ctx):
@@ -432,7 +432,7 @@ try:
     @rates.error
     async def rates_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс Долару, Євро, Шекеля та Рубля\n||**b!rates (Валюта)**||")
+            await ctx.send("Помилка. Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
             
     @kanava.error
     async def kanava_error(ctx, error):
