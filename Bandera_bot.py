@@ -39,6 +39,7 @@ try:
     attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
+    data_filename = "data.txt"
     
     @bot.event
     async def on_member_join(member):
@@ -77,6 +78,7 @@ try:
 
     @bot.command(name='rates')################Добавить йены##############
     async def rates(ctx, rate, amount=None):
+        counter = 0
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
         _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[6].get_text()
@@ -87,11 +89,14 @@ try:
         _dict3 = round(float(_dict3.replace(',', '.')),2)
         _dict4 = soup.find_all('td', {"data-label":"Офіційний курс"})[20].get_text()
         _dict4 = round(float(_dict4.replace(',', '.'))/10,2)
-        print(_dict1, _dict2, _dict3, _dict4)
+        _dict5 = soup.find_all('td', {"data-label":"Офіційний курс"})[9].get_text()
+        _dict5 = round(float(_dict5.replace(',', '.'))2)
+        print(_dict1, _dict2, _dict3, _dict4, _dict5)
         rate = rate.lower() 
         if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
             val = _dict1
             name = ("долару")
+            counter = 1
         elif rate == ("євро") or rate == ("евро") or rate == ("eur") or rate == ("euro"):
             val = _dict2
             name = ("євро")
@@ -101,6 +106,9 @@ try:
         elif rate == ("рубль") or rate ==("рубля") or rate ==("рублей") or rate ==("рублі") or rate ==("рублів") or rate == ("rub") or rate == ("ruble") or rate == ("rubles"):
             val = _dict4
             name = ("рубля")
+        elif rate == ("єна") or rate == ("єни") or rate == ("єн") or rate == ("йена") or rate == ("йены") or rate == ("йен") or rate == ("jpy"):
+            val = _dict5
+            name = ("єни")
         else:
             await ctx.send("Курс даної валюти ще не було внесено до бази даних")
         bot.dispatch('rates_command', ctx, val, name, amount, rate)
@@ -109,7 +117,7 @@ try:
     async def on_rates_command(ctx, val, name, amount, rate):
         if amount is None:
             print('1')
-            await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")
+            await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")  
         else:
             rt = float(val) * float(amount)
             rt = round(rt, 2)
@@ -189,7 +197,6 @@ try:
         await ctx.send(f'Героям слава, {author.mention}!')
 
     @bot.command(pass_context = True)
-    @commands.has_permissions(manage_messages=True)
     async def echo(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
@@ -213,7 +220,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.12*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.3*', inline=inline)
         
         await ctx.send(embed=embed)
         
