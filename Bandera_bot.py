@@ -285,7 +285,7 @@ try:
     @bot.command()
     async def quote(ctx: commands.Context):
         _dict = random.choice(_dict0)
-        await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n*{_dict}*')
+        await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
         
     @bot.command(aliases=['myroles'])
     async def _myroles(ctx):

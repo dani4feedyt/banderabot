@@ -24,4 +24,4 @@ try:
             _dict0.append(dct1)
     print(_dict0)
 except IndexError as err:
-    pass
+    continue
