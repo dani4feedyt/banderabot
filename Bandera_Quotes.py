@@ -14,7 +14,7 @@ b1 = 1
 c1 = 1
 n_1 = 22
 pag = Request('https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/',  headers={'User-Agent': 'Mozilla/5.0'})
-webpage = urlopen(pag, delay = 1).read()
+webpage = urlopen(pag, timeout =10).read()
 page = webpage.decode('utf-8')
 print(page)
 soup = BeautifulSoup(page, 'html.parser')
