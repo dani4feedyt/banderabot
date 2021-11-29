@@ -7,7 +7,7 @@ try:
     import discord
     from discord.ext import commands
     from Bandera_cfg import settings
-    from Bandera_Quotes import _dict0
+    from Bandera_Quotes import _dict0, n_1
     from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
@@ -283,12 +283,8 @@ try:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
     @bot.command()
-    async def quote(ctx: commands.Context):
-        n = 22
-        page = requests.get('https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/')
-        soup = BeautifulSoup(page.content, 'html.parser')
-        _dict0 = soup.find_all('p', text=True)[5:22]
-        _dict = _dict0[randint(0, 22)].get_text()
+    async def quote(ctx: commands.Context): ####################################ПЛОТНО НАСРАНО, ПОФИКСИТЬ#######################################
+        _dict = _dict0[randint(0, n_1)].get_text()
         await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
         
     @bot.command(aliases=['myroles'])
