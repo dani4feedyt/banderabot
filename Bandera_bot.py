@@ -8,7 +8,7 @@ try:
     from discord.ext import commands
     from Bandera_cfg import settings
     from Bandera_Quotes import _dict0, n_1
-    from Bandera_PyChton_quotes import Quotes1, links
+    from Bandera_PyChton_quotes import Quotes1, links, Quotes2
     from sys import argv, executable
     import json
     import requests
@@ -220,7 +220,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.4*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.5*', inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -283,8 +283,8 @@ try:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
     @bot.command()
-    async def quote(ctx: commands.Context): ####################################ПЛОТНО НАСРАНО, ПОФИКСИТЬ#######################################
-        _dict = _dict0[randint(0, n_1)].get_text()
+    async def quote(ctx: commands.Context):
+        _dict = random.choice(Quotes2)
         await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
         
     @bot.command(aliases=['myroles'])
