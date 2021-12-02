@@ -20,9 +20,8 @@ _dict0 = soup.find_all('p', text=True)[5:n_1]
 
 _dict0 = 0
 
-print(_dict0)
-if _dict0 != []:
-    print('1')
-if _dict0 == []:
-    print('2')
+##if _dict0 != []:
+##    print('1')
+##if _dict0 == []:
+##    print('2')
     

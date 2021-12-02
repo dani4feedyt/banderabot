@@ -76,7 +76,7 @@ try:
         author = ctx.message.author
         await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " посягнул на великую тайну кала, и обнаружил рецепт сверхчистого говна:" + "\n||Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации||")
 
-    @bot.command(name='rates')################Добавить йены##############
+    @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
         counter = 0
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
@@ -247,16 +247,21 @@ try:
                 
     @bot.command(pass_context = True) ###########################################Доработать rule в кике###########################################
     @commands.has_permissions(kick_members=True)
-    async def kick(ctx, user: discord.Member, *, reason = None):
+    async def kick(ctx, user: discord.Member, rule_n = '-1', *, reason = None):
+        rule_n = int(rule_n)
+        if 1 <= rule_n <= len(links):
+            rule = (links[rule_n])
+        else:
+            rule = ''
         guild = ctx.guild
         author = ctx.message.author
         if reason == None:
             reason = ("**без будь-якого приводу**")
             reasonA = ('')
         else:
-            reasonA = (f'за причиною **{reason}**')
+            reasonA = (f'за причиною **{reason}**{rule}')
             reason = ('')
-        await ctx.send(f"Ви дійсно бажаєте вигнати **{user}** з сереверу?", delete_after=60)
+        await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -264,8 +269,8 @@ try:
         except asyncio.TimeoutError:
             print("Error")
         else:
-            await ctx.send(f'{user} був виключений з серверу модератором **{author.mention}**, {reason}{reasonA}')
-            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reason}{reasonA}')
+            await ctx.send(f'{user} був виключений з серверу модератором **{author.mention}**, {reason}{reasonA}{rule}')
+            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reason}{reasonA}{rule}')
             await user.kick(reason = reason)
      
     @bot.command(name="rule")
