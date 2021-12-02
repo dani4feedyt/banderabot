@@ -220,7 +220,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.5*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.6*', inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -247,29 +247,28 @@ try:
                 
     @bot.command(pass_context = True) ###########################################Доработать rule в кике###########################################
     @commands.has_permissions(kick_members=True)
-    async def kick(ctx, user: discord.Member, rule_n: None, *, reason = None):
-        reasonT = None
-        reasonA = None
-        if rule_n == None:
+    async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
+        reasonT = 0
+        reasonA = 0
+        author = ctx.message.author
+        guild = ctx.guild
+        if rule_n is None:
             rule_n = 0
         rule_n = int(rule_n)
         if 1 <= rule_n <= len(links):
             rule = (links[rule_n])
             ruleA = (f'**№{rule_n}**')
         else:
-            rule = ''
-            ruleA = None
+            rule = '⁣'
+            ruleA = 'None'
         guild = ctx.guild
         author = ctx.message.author
         if reason == None:
-            reasonT = ("**без будь-якого приводу**")
-            reasonA = ''
+            reasonT = ("**Без будь-якого приводу**")
+            reasonA = '⁣'
         else:
             reasonT = 'Порушення:'
             reasonA = reason
-        embed = discord.Embed(title="Вигнання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
-        embed.add_field(name=reasonT, value=reasonA, inline=False)
-        embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
         await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
@@ -278,11 +277,14 @@ try:
         except asyncio.TimeoutError:
             print("Error")
         else:
-            await user.kick(reason = reason)
+            embed = discord.Embed(title="Вигнання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
+            embed.add_field(name=reasonT, value=reasonA, inline=False)
+            embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
             await ctx.send(embed=embed)
             await ctx.send(rule)
-            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reasonT} {reasonA}')
+            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}')
             await user.send(rule)
+            await user.kick(reason = reason)
      
     @bot.command(name="rule")
     async def rule(ctx, num: int):
