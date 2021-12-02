@@ -247,20 +247,27 @@ try:
                 
     @bot.command(pass_context = True) ###########################################Доработать rule в кике###########################################
     @commands.has_permissions(kick_members=True)
-    async def kick(ctx, user: discord.Member, rule_n = '-1', *, reason = None):
+    async def kick(ctx, user: discord.Member, rule_n: '0', *, reason = None):
+        reasonT = None
+        reasonA = None
         rule_n = int(rule_n)
         if 1 <= rule_n <= len(links):
             rule = (links[rule_n])
+            ruleA = (f'**№{rule_n}**')
         else:
             rule = ''
+            ruleA = None
         guild = ctx.guild
         author = ctx.message.author
         if reason == None:
-            reason = ("**без будь-якого приводу**")
-            reasonA = ('')
+            reasonT = ("**без будь-якого приводу**")
+            reasonA = ''
         else:
-            reasonA = (f'за причиною **{reason}**{rule}')
-            reason = ('')
+            reasonT = 'Порушення:'
+            reasonA = reason
+        embed = discord.Embed(title="Вигнання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
+        embed.add_field(name=reasonT, value=reasonA, inline=False)
+        embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
         await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
@@ -269,9 +276,11 @@ try:
         except asyncio.TimeoutError:
             print("Error")
         else:
-            await ctx.send(f'{user} був виключений з серверу модератором **{author.mention}**, {reason}{reasonA}{rule}')
-            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reason}{reasonA}{rule}')
             await user.kick(reason = reason)
+            await ctx.send(embed=embed)
+            await ctx.send(rule)
+            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, {reasonT} {reasonA}')
+            await user.send(rule)
      
     @bot.command(name="rule")
     async def rule(ctx, num: int):
