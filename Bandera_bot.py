@@ -247,9 +247,11 @@ try:
                 
     @bot.command(pass_context = True) ###########################################Доработать rule в кике###########################################
     @commands.has_permissions(kick_members=True)
-    async def kick(ctx, user: discord.Member, rule_n: '0', *, reason = None):
+    async def kick(ctx, user: discord.Member, rule_n: None, *, reason = None):
         reasonT = None
         reasonA = None
+        if rule_n == None:
+            rule_n = 0
         rule_n = int(rule_n)
         if 1 <= rule_n <= len(links):
             rule = (links[rule_n])
