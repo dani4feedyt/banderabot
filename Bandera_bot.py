@@ -162,14 +162,14 @@ try:
                             await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаеш волю. Хлопці, витягайте його!")
                             break
                         elif rn > ch:
-                            await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!" + "\n||https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933||")
+                            await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!" + "\nhttps://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
                             continue
                 if member.voice is None:
                     for nt in range(35):
                         if member.voice is not None:
                             break
                     
-        await member.send("Ладно уж, иди своей дорогой")
+        await member.send("Ти вільний, хлопче. Іди по своїм справам.")
 
     @bot.command()
     async def test11(ctx, member: discord.Member):
