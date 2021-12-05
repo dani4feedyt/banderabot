@@ -150,19 +150,19 @@ try:
                     time.sleep(0.5)
                     await member.edit(voice_channel=channel2)
                     time.sleep(0.5)
-                    await member.send("Бомбы, рупии есть? " + message)
+                    await member.send("**АНУ, СЕПАРАТЮГА, ТИ КАЄШСЯ В СВОЇХ ЗЛОЧИНАХ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?** " + message)
                     def check(m):
-                        return (m.content.lower() == 'есть' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так')
+                        return (m.content.lower() == 'да' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так' or m.content.lower() == 'ні' or m.content.lower() == 'нет' or m.content.lower() == 'no')
                     try:
                         m = await bot.wait_for("message", check=check, timeout = 1.5)
                     except asyncio.TimeoutError:
                         continue
                     else:
                         if rn <= ch:
-                            await member.send("Хорошо, верю. Парни, вытаскивайте его!")
+                            await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаеш волю. Хлопці, витягайте його!")
                             break
                         elif rn > ch:
-                            await member.send("Не верю. Парни, окунайте его!")
+                            await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!" + "\n||https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933||")
                             continue
                 if member.voice is None:
                     for nt in range(35):
