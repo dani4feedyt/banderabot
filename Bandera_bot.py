@@ -28,18 +28,11 @@ try:
     import pandas as pd
     
     client = discord.Client()
-    t12 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
-    sfx = "ь"
-    t11 = ['Випадковий птах для тебе' + random.choice(t12),
-           'Тримай птаха' + random.choice(t12), 'Випадковий птах, як ти й просив' + random.choice(t12),
-           'Світлина випадкового птаха' + random.choice(t12), 'Світлина птаха, як ти й просив' + random.choice(t12),
-           'Тримай пташку' + random.choice(t12), 'Тримай світлину птаха' + random.choice(t12), 'Птах, як ти й побажав' + random.choice(t12),
-           'Світлина птаха' + random.choice(t12)]
     bot = commands.Bot(command_prefix = settings['prefix'])
-    attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
+    attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     
     @bot.event
     async def on_member_join(member):
@@ -162,7 +155,8 @@ try:
                             await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаеш волю. Хлопці, витягайте його!")
                             break
                         elif rn > ch:
-                            await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!" + "\nhttps://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
+                            await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!")
+                            await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
                             continue
                 if member.voice is None:
                     for nt in range(35):
@@ -220,12 +214,18 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.6C*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.7*', inline=inline)
         
         await ctx.send(embed=embed)
         
     @bot.command(name="birb")
     async def birb(ctx):
+        t12 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
+        t11 = ['Випадковий птах для тебе' + random.choice(t12),
+               'Тримай птаха' + random.choice(t12), 'Випадковий птах, як ти й просив' + random.choice(t12),
+               'Світлина випадкового птаха' + random.choice(t12), 'Світлина птаха, як ти й просив' + random.choice(t12),
+               'Тримай пташку' + random.choice(t12), 'Тримай світлину птаха' + random.choice(t12), 'Птах, як ти й побажав' + random.choice(t12),
+               'Світлина птаха' + random.choice(t12)]
         response = requests.get("https://some-random-api.ml/img/birb")
         json_data = json.loads(response.text)
         embed = discord.Embed(color = 0x013ADF, title = (random.choice(t11)) + ":") 
@@ -245,7 +245,7 @@ try:
         else:
             await channel.send("Підтверджено")
                 
-    @bot.command(pass_context = True) ###########################################Доработать rule в кике###########################################
+    @bot.command(pass_context = True)
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
         reasonT = 0
@@ -298,7 +298,7 @@ try:
         if 1 <= pa < 5:
             await ctx.send(Quotes1[pa])
         else:
-            await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. *Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
+            await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. \n*Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
     @bot.command()
     async def quote(ctx: commands.Context):
@@ -344,7 +344,8 @@ try:
         await member.add_roles(mutedRole)
         await asyncio.sleep(1)
         await member.edit(voice_channel=None)
-        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**\n{rule}')
+        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**')
+        await member.send(rule)
         print(member.roles, mutedRole)
         await asyncio.sleep(time * 60)
         bot.dispatch('mute_command', ctx, member, rule, reason, mutedRole, guild)
@@ -365,7 +366,6 @@ try:
     @commands.has_permissions(manage_messages=True)
     async def roles(ctx, member: discord.Member):
         await ctx.send(member.roles)
-    
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
@@ -386,6 +386,7 @@ try:
     @bot.command(pass_context=True)
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, amount = 100):
+        sfx = "ь"
         if 11<=amount<=14:
             sfx = "ь"
         elif (str(amount).endswith("1") or str(amount).endswith("2") or str(amount).endswith("3") or str(amount).endswith("4")):
