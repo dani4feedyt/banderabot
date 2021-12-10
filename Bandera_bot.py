@@ -121,14 +121,14 @@ try:
 
     @bot.command(name='kanava')
     @commands.has_permissions(manage_messages=True)
-    async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30, *, message = ''):
+    async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         print('1')
-        bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance, message)
+        bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance)
         
     @bot.event
-    async def on_kanava_command(ctx, channel1, channel2, member, t, chance, message):
+    async def on_kanava_command(ctx, channel1, channel2, member, t, chance):
         if member.voice is None:
             for nt in range(25):
                 time.sleep(1)
@@ -143,7 +143,7 @@ try:
                     time.sleep(0.5)
                     await member.edit(voice_channel=channel2)
                     time.sleep(0.5)
-                    await member.send("**АНУ, СЕПАРАТЮГА, ТИ КАЄШСЯ В СВОЇХ ЗЛОЧИНАХ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?** " + message)
+                    await member.send("**АНУ, СЕПАРАТЮГА, ТИ КАЄШСЯ В СВОЇХ ЗЛОЧИНАХ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                     def check(m):
                         return (m.content.lower() == 'да' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так' or m.content.lower() == 'ні' or m.content.lower() == 'нет' or m.content.lower() == 'no')
                     try:
