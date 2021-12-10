@@ -164,6 +164,7 @@ try:
                             break
                     
         await member.send("Ти вільний, хлопче. Іди по своїм справам.")
+        await member.send("https://cdn.discordapp.com/attachments/695715314696061072/918857137189433375/kolovrat1.gif")
 
     @bot.command()
     async def test11(ctx, member: discord.Member):
