@@ -28,16 +28,21 @@ try:
     import pandas as pd
     
     client = discord.Client()
-    bot = commands.Bot(command_prefix = settings['prefix'])
+    bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
-    attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
     
-    @bot.event
+    @bot.event ########################ОН ДЖОИН НОРМАЛЬНЫЙ##############################
     async def on_member_join(member):
-        await member.send(f"Вітаємо вас на сервері!\nЯ - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
-        await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
+        guild = bot.get_guild(695715313911857186)
+        member_count = len(guild.members)
+        await member.send(f"**Вітаємо вас на сервері {guild.name}**!" +
+                          "\n•Я - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу." +
+                          "\n•Для отримання більш розгорнутої інформації щодо мого функціоналу перейдіть до каналу **#info**" +
+                          "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
+        await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
+        await bot.get_channel(695715314696061072).send(f"Ласкаво просимо на сервер**{guild.name}**, {member.mention}. Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
         
     @bot.event
     async def on_ready():
@@ -49,7 +54,7 @@ try:
 
     @bot.command()
     async def save(ctx, *, msg):
-        fi = open("data.txt","a+") ######Аппенд всместо написания######
+        fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
         fi.write(msg + " ")
         fi.close
 
@@ -164,7 +169,7 @@ try:
                             break
                     
         await member.send("Ти вільний, хлопче. Іди по своїм справам.")
-        await member.send("https://cdn.discordapp.com/attachments/695715314696061072/918857137189433375/kolovrat1.gif")
+        await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
 
     @bot.command()
     async def test11(ctx, member: discord.Member):
@@ -215,7 +220,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.7A*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.8*', inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -417,6 +422,7 @@ try:
             
     @bot.command()
     async def spam(ctx, intr: float = 1, count: int = 10, *ar):
+        attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
         ar = list(ar)
         ar = (' '.join(ar))
         a = 0
