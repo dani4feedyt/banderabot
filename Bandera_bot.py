@@ -215,21 +215,22 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.7*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.7A*', inline=inline)
         
         await ctx.send(embed=embed)
         
     @bot.command(name="birb")
     async def birb(ctx):
-        t12 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
-        t11 = ['Випадковий птах для тебе' + random.choice(t12),
-               'Тримай птаха' + random.choice(t12), 'Випадковий птах, як ти й просив' + random.choice(t12),
-               'Світлина випадкового птаха' + random.choice(t12), 'Світлина птаха, як ти й просив' + random.choice(t12),
-               'Тримай пташку' + random.choice(t12), 'Тримай світлину птаха' + random.choice(t12), 'Птах, як ти й побажав' + random.choice(t12),
-               'Світлина птаха' + random.choice(t12)]
+        t1 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
+        t2 = ['Випадковий птах для тебе',
+               'Тримай птаха', 'Випадковий птах, як ти й просив',
+               'Світлина випадкового птаха', 'Світлина птаха, як ти й просив',
+               'Тримай пташку', 'Тримай світлину птаха', 'Птах, як ти й побажав',
+               'Світлина птаха']
+        t = random.choice(t2) + random.choice(t1)
         response = requests.get("https://some-random-api.ml/img/birb")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color = 0x013ADF, title = (random.choice(t11)) + ":") 
+        embed = discord.Embed(color = 0x013ADF, title = t + ":") 
         embed.set_image(url = json_data["link"])
         await ctx.send(embed = embed)
 
@@ -322,6 +323,9 @@ try:
     async def mute_info(ctx):
         await ctx.send("•Щоб накласти мут, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів і отримає особисте повідомлення з причиною муту\n•При закінченні терміну дії, мут буде автоматично знято\n•Для дострокового зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
+    @bot.command()
+    async def spam_info(ctx):
+        await ctx.send("•Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
     
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
@@ -411,10 +415,6 @@ try:
             else:
                 await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
             
-    @bot.command()
-    async def spam_info(ctx):
-        await ctx.send("•Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
-
     @bot.command()
     async def spam(ctx, intr: float = 1, count: int = 10, *ar):
         ar = list(ar)
