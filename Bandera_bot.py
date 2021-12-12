@@ -253,7 +253,6 @@ try:
             await channel.send("Підтверджено")
                 
     @bot.command(pass_context = True)
-    @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
         if user != message.author:
             reasonT = 0
