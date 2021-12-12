@@ -253,6 +253,7 @@ try:
             await channel.send("Підтверджено")
                 
     @bot.command(pass_context = True)
+    @commands.has_permissions(kick_user = True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
         if user == ctx.message.author:
             await ctx.send("**Помилка.** Ви не можете виключити себе.")
