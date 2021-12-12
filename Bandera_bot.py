@@ -255,44 +255,47 @@ try:
     @bot.command(pass_context = True)
     @commands.has_permissions(kick_members=True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
-        reasonT = 0
-        reasonA = 0
-        author = ctx.message.author
-        guild = ctx.guild
-        if rule_n is None:
-            rule_n = 0
-        rule_n = int(rule_n)
-        if 1 <= rule_n <= len(links):
-            rule = (links[rule_n])
-            ruleA = (f'**№{rule_n}**')
+        if user != message.author:
+            reasonT = 0
+            reasonA = 0
+            author = ctx.message.author
+            guild = ctx.guild
+            if rule_n is None:
+                rule_n = 0
+            rule_n = int(rule_n)
+            if 1 <= rule_n <= len(links):
+                rule = (links[rule_n])
+                ruleA = (f'**№{rule_n}**')
+            else:
+                rule = '⁣'
+                ruleA = 'None'
+            guild = ctx.guild
+            author = ctx.message.author
+            if reason == None:
+                reasonT = ("**Без будь-якого приводу**")
+                reasonA = '⁣'
+            else:
+                reasonT = 'Порушення:'
+                reasonA = reason
+            await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
+            def check(m):
+                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+            try:
+                m = await bot.wait_for("message", check=check, timeout = 30)
+            except asyncio.TimeoutError:
+                print("Error")
+            else:
+                embed = discord.Embed(title="Вигнання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
+                embed.add_field(name=reasonT, value=reasonA, inline=False)
+                embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
+                await ctx.send(embed=embed)
+                await ctx.send(rule)
+                await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}')
+                await user.send(rule)
+                await user.kick(reason = reason)
         else:
-            rule = '⁣'
-            ruleA = 'None'
-        guild = ctx.guild
-        author = ctx.message.author
-        if reason == None:
-            reasonT = ("**Без будь-якого приводу**")
-            reasonA = '⁣'
-        else:
-            reasonT = 'Порушення:'
-            reasonA = reason
-        await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
-        def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
-        try:
-            m = await bot.wait_for("message", check=check, timeout = 30)
-        except asyncio.TimeoutError:
-            print("Error")
-        else:
-            embed = discord.Embed(title="Вигнання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
-            embed.add_field(name=reasonT, value=reasonA, inline=False)
-            embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
-            await ctx.send(embed=embed)
-            await ctx.send(rule)
-            await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}')
-            await user.send(rule)
-            await user.kick(reason = reason)
-     
+            await ctx.send("**Помилка.** Ви не можете виключити себе")
+            
     @bot.command(name="rule")
     async def rule(ctx, num: int):
         if 1 <= num <= len(links):
