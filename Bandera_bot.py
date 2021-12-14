@@ -431,8 +431,8 @@ try:
         ar = (' '.join(ar))
         a = 0
         if intr < 0.5:
-            await ctx.send('**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.', delete_after=35)
-            await ctx.send('Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**', delete_after=35)
+            await ctx.send('**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.', delete_after=29)
+            await ctx.send('Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**', delete_after=29)
             def check(m):
                 return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
