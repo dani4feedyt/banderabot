@@ -434,7 +434,7 @@ try:
             await ctx.send('Увага! За швидкості спаму більшої за одне слово у 0.5 секунд, деякі повідомлення можуть надсилатися некоректно')
             await ctx.send('Бажаєте продовжити операцію? Швидкість буде змінена на 0.5')
             def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
                 m = await bot.wait_for("message", check=check, timeout = 30)
             except asyncio.TimeoutError:
