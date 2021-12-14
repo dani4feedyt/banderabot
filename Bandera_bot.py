@@ -431,18 +431,18 @@ try:
         ar = (' '.join(ar))
         a = 0
         if intr < 0.5:
-            await ctx.send('Увага! За швидкості спаму більшої за одне слово у 0.5 секунд, деякі повідомлення можуть надсилатися некоректно')
-            await ctx.send('Бажаєте продовжити операцію? Швидкість буде змінена на 0.5')
+            await ctx.send('**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.')
+            await ctx.send('Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**')
             def check(m):
                 return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
                 m = await bot.wait_for("message", check=check, timeout = 30)
             except asyncio.TimeoutError:
-                print("TimeoutError")
+                os.system('python "Bandera_bot.py"')
+                quit()
             else:
                 if intr <= 0.3:
                     intr = 0.3
-        time.sleep(2)
         await ctx.send(attention)
         time.sleep(5)
         while a < count:
