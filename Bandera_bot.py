@@ -33,7 +33,7 @@ try:
     fi = open("data.txt","w+")
     data_filename = "data.txt"
     
-    @bot.event ########################ОН ДЖОИН НОРМАЛЬНЫЙ##############################
+    @bot.event
     async def on_member_join(member):
         guild = bot.get_guild(695715313911857186)
         member_count = len(guild.members)
@@ -220,7 +220,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.8B*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.8C*', inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -248,7 +248,7 @@ try:
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
         except asyncio.TimeoutError:
-            print("Error")
+            print("TimeoutError")
         else:
             await channel.send("Підтверджено")
                 
@@ -285,7 +285,7 @@ try:
             try:
                 m = await bot.wait_for("message", check=check, timeout = 30)
             except asyncio.TimeoutError:
-                print("Error")
+                print("TimeoutError")
             else:
                 embed = discord.Embed(title="Вигнання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
                 embed.add_field(name=reasonT, value=reasonA, inline=False)
@@ -413,7 +413,7 @@ try:
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
         except asyncio.TimeoutError:
-            print("Error")
+            print("TimeoutError")
         else:
             if int(amount) <= 150:
                 await ctx.channel.purge(limit=int(amount+3))
@@ -431,9 +431,17 @@ try:
         ar = (' '.join(ar))
         a = 0
         if intr < 0.5:
-            await ctx.send('Увага! За швидкості спаму більшої за одне слово у 0.5 секунд, деякі повідомлення можуть надсилатися з затримкою')
-            if intr <= 0.3:
-                intr = 0.3
+            await ctx.send('Увага! За швидкості спаму більшої за одне слово у 0.5 секунд, деякі повідомлення можуть надсилатися некоректно')
+            await ctx.send('Бажаєте продовжити операцію? Швидкість буде змінена на 0.5')
+            def check(m):
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+            try:
+                m = await bot.wait_for("message", check=check, timeout = 30)
+            except asyncio.TimeoutError:
+                print("TimeoutError")
+            else:
+                if intr <= 0.3:
+                    intr = 0.3
         time.sleep(2)
         await ctx.send(attention)
         time.sleep(5)
