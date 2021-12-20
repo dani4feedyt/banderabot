@@ -43,7 +43,7 @@ try:
                           "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await bot.get_channel(695715314696061072).send(f"Ласкаво просимо на сервер **{guild.name}**, {member.mention}. Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
-        
+    
     @bot.event
     async def on_ready():
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
@@ -400,7 +400,31 @@ try:
             await ctx.send(embed=embed)
         else:
             await ctx.send("Помилка. Неможливо зняти мут з користувача, який його не має.")
-    
+            
+    @bot.command()####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
+    async def time_1(ctx):
+        timestamp = ctx.message.created_at
+        timestamp = str(timestamp)[:-10]
+        timestamp = timestamp.replace(' ', '')
+        
+        date = timestamp[:10]
+        date = date.replace('-', '')
+        date_y = int(date[:4])
+        date_m = int((date[4:])[:-2])
+        date_d = int(date[:2])
+
+        date_f = (str(date_d) + ' ' + str(date_m) + ' ' + str(date_y))
+        
+        time_0 = timestamp[10:]
+        time_0 = time_0.replace(':', '')
+        time_h = int(time_0[:2]) + 1
+        time_mi = int(time_0[2:])
+
+        time_f = (str(time_h) + ' ' + str(time_mi))
+        
+        print(date, time_0)
+        await ctx.send(date_f + ' ' + time_f)
+        
     @bot.command(pass_context=True)
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, amount = 100):
