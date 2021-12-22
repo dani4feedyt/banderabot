@@ -489,7 +489,7 @@ try:
         except asyncio.TimeoutError:
             print("TimeoutError")
         else:
-            await ctx.channel.purge(limit=int(amount)+3)
+            await ctx.channel.purge(limit=int(amount)+2)
             await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
     
     @bot.command()
