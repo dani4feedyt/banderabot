@@ -26,6 +26,7 @@ try:
     from selenium import webdriver
     from bs4 import BeautifulSoup
     import pandas as pd
+    from datetime import date
     
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
@@ -224,7 +225,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.8F*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.9*', inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -404,6 +405,7 @@ try:
     @bot.command()####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
     async def time_1(ctx):
         timestamp = ctx.message.created_at
+        print(timestamp)
         timestamp = str(timestamp)[:-10]
         timestamp = timestamp.replace(' ', '')
         
@@ -421,9 +423,18 @@ try:
         time_mi = int(time_0[2:])
 
         time_f = (str(time_h) + ' ' + str(time_mi))
-        
-        print(date, time_0)
+        date12 = datetime.datetime.now()
+        print(date, time_0, date12)
         await ctx.send(date_f + ' ' + time_f)
+
+    @bot.command()
+    async def test213(ctx, d: int, m: int, h: int, mi: int):
+        count = 0
+        h-=2
+        date = datetime.datetime(year = 2021, month=m, day=d, hour=h, minute=mi)
+        async for message in ctx.channel.history(limit = None, after=date):
+            count += 1
+        await ctx.send(count)
         
     @bot.command(pass_context=True)
     @commands.has_permissions(manage_messages=True)
@@ -451,7 +462,36 @@ try:
                 await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
-            
+
+    @bot.command(pass_context=True)
+    @commands.has_permissions(manage_messages=True)
+    async def clear_t(ctx, d: str, m: str, h: str, mi: str):
+        today = datetime.date.today()
+        ye = today.year
+        count = 0
+        ho=int(h)-2
+        date = datetime.datetime(year = int(today.year), month=int(m), day=int(d), hour=int(ho), minute=int(mi))
+        async for message in ctx.channel.history(limit = None, after=date):
+            count += 1
+        amount = count
+        sfx = "ь"
+        if 11<=amount<=14:
+            sfx = "ь"
+        elif (str(amount).endswith("1") or str(amount).endswith("2") or str(amount).endswith("3") or str(amount).endswith("4")):
+            sfx = "ня"
+        else:
+            sfx = "ь"
+        await ctx.send(f"Ви дійсно бажаєте очистити усі повідомлення починаючи з **{h}:{mi} {d} {m} {ye}**?", delete_after=60)
+        def check(m):
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+        try:
+            m = await bot.wait_for("message", check=check, timeout = 30)
+        except asyncio.TimeoutError:
+            print("TimeoutError")
+        else:
+            await ctx.channel.purge(limit=int(amount)+3)
+            await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
+    
     @bot.command()
     async def spam(ctx, intr: float = 1, count: int = 10, *ar):
         attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
@@ -493,52 +533,59 @@ try:
     @bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send("Помилка. Даної команди не існує")
+            await ctx.send("**Помилка.** Даної команди не існує")
     
     @rates.error
     async def rates_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
+            await ctx.send("**Помилка.** Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
             
     @kanava.error
     async def kanava_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Довіра бота)**||")
+            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Довіра бота)**||")
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
         if isinstance(error, discord.HTTPException):
-            await ctx.send("Помилка. Користувач не знаходиться в голосовому каналі")
+            await ctx.send("**Помилка.** Користувач не знаходиться в голосовому каналі")
 
+    @clear_t.error
+    async def clear_t_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("**Помилка.** Будь ласка, введіть дату та час у коректному форматі.\n||**b!clear_t (День) (Місяць) (Години) (Хвилини)**||")
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send("**Помилка.** Введена дата некоректна.")
+    
     @kick.error
     async def kick_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!kick @(Нікнейм) (Причина)**||")
+            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kick @(Нікнейм) (Причина)**||")
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері")
 
     @pasta.error
     async def pasta_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть номер бажаної пасти")
+            await ctx.send("**Помилка.** Будь ласка, введіть номер бажаної пасти")
 
     @mute.error
     async def mute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Порушене правило) (Причина)**||")
+            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Порушене правило) (Причина)**||")
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
     @unmute.error
     async def unmute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть нікнейм користувача")
+            await ctx.send("**Помилка.** Будь ласка, введіть нікнейм користувача")
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send("Помилка. Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
     @spam.error
     async def spam_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Помилка. Будь ласка, введіть усі необхідні параметри\n||**b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**||")
+            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри\n||**b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**||")
     
   ###############################################ErrorHandling###############################################      
 
