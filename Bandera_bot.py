@@ -456,7 +456,7 @@ try:
             print("TimeoutError")
         else:
             if int(amount) <= 150:
-                await ctx.channel.purge(limit=int(amount+2))
+                await ctx.channel.purge(limit=int(amount+3))
                 if int(amount) >= 100:
                     amount = 'дуууууже багато'
                 time.sleep(0.75)    
@@ -492,7 +492,7 @@ try:
             print("TimeoutError")
         else:
             if int(amount) <= 500:
-                await ctx.channel.purge(limit=int(amount)+3)
+                await ctx.channel.purge(limit=int(amount)+2)
                 await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
