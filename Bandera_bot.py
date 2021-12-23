@@ -113,7 +113,7 @@ try:
             val = _dict5
             name = ("єни")
         else:
-            await ctx.send("Курс даної валюти ще не було внесено до бази даних")
+            await ctx.send("**Помилка.** Курс даної валюти ще не було внесено до бази даних")
         bot.dispatch('rates_command', ctx, val, name, amount, rate)
     
     @bot.event
@@ -173,7 +173,7 @@ try:
                         if member.voice is not None:
                             break
                     
-        await member.send("Ти вільний, хлопче. Іди по своїм справам.")
+        await member.send("Ти вільний, хлопче. Іди по своїx справаx.")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
 
     @bot.command()
@@ -189,7 +189,7 @@ try:
         message = discord.Message
         author = ctx.message.author
         link = await ctx.channel.create_invite(max_age = age*60)
-        await member.send(f"{author.mention}запрошує вас на сервер {ctx.guild.name}!\n{link}")
+        await member.send(f"{author.mention}запрошує вас на сервер **{ctx.guild.name}!**\n{link}")
 
     @bot.command(name="invite")
     async def invite(ctx, age: int = 60):
@@ -199,7 +199,7 @@ try:
     @bot.command()
     async def slava_ukraine(ctx):
         author = ctx.message.author
-        await ctx.send(f'Героям слава, {author.mention}!')
+        await ctx.send(f"**Героям слава, {author.mention}!**")
 
     @bot.command(pass_context = True)
     async def echo(ctx, *, msg):
@@ -225,7 +225,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.2.9A*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.0A*', inline=inline)
         
         await ctx.send(embed=embed)
         
@@ -330,16 +330,16 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
-        await ctx.send("•Щоб почати занурювати користувача у канаву, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допрошуватися особисто Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+        await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допрошуватися особисто Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def mute_info(ctx):
-        await ctx.send("•Щоб накласти мут, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів і отримає особисте повідомлення з причиною муту\n•При закінченні терміну дії, мут буде автоматично знято\n•Для дострокового зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
+        await ctx.send("•Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів і отримає особисте повідомлення з причиною муту\n•При закінченні терміну дії, мут буде автоматично знято\n•Для дострокового зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     @bot.command()
     async def spam_info(ctx):
-        await ctx.send("•Щоб розпочати спам, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
+        await ctx.send("•Щоб розпочати **спам**, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
     
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
@@ -400,7 +400,7 @@ try:
             embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=0x013ADF)
             await ctx.send(embed=embed)
         else:
-            await ctx.send("Помилка. Неможливо зняти мут з користувача, який його не має.")
+            await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
             
     @bot.command()####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
     async def time_1(ctx):
@@ -461,9 +461,9 @@ try:
                 time.sleep(0.75)    
                 await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
             else:
-                await ctx.send("Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
+                await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
 
-    @bot.command(pass_context=True)
+    @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ#########################
     @commands.has_permissions(manage_messages=True)
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
         today = datetime.date.today()
@@ -489,18 +489,21 @@ try:
         except asyncio.TimeoutError:
             print("TimeoutError")
         else:
-            await ctx.channel.purge(limit=int(amount)+2)
-            await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
+            if int(amount) <= 500:
+                await ctx.channel.purge(limit=int(amount)+2)
+                await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
+            else:
+                await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
     
     @bot.command()
     async def spam(ctx, intr: float = 1, count: int = 10, *ar):
-        attention = ("\n///Спам розпочнеться через 5 секунд, для завершення - введіть **b!stop**")
+        attention = ("\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**")
         ar = list(ar)
         ar = (' '.join(ar))
         a = 0
         if intr < 0.5:
-            await ctx.send('**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.', delete_after=29)
-            await ctx.send('Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**', delete_after=29)
+            await ctx.send("**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.", delete_after=29)
+            await ctx.send("Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**", delete_after=29)
             def check(m):
                 return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
@@ -517,7 +520,7 @@ try:
             await ctx.send(ar)
             time.sleep(intr)
             a+=1
-        await ctx.send("///Спам було завершено")       
+        await ctx.send("**Спам** було завершено")       
                 
     @bot.command()
     async def stop(ctx: commands.Context):
@@ -526,7 +529,7 @@ try:
     
     @bot.command()
     async def ping(ctx):       
-        await ctx.send(f'Моя затримка складає {round(bot.latency, 3)} с')
+        await ctx.send(f'Моя затримка складає **{round(bot.latency, 3)}** с')
         
  ###############################################ErrorHandling###############################################
 
@@ -593,7 +596,7 @@ try:
     
     @bot.command()
     async def start_time(ctx):       
-        await ctx.send(f'Цього разу, час мого запуску склав ' + st)
+        await ctx.send(f'Цього разу, час мого запуску склав' + ' ' + st)
         
     print(st)
     bot.run(settings['token'])
