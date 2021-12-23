@@ -456,7 +456,7 @@ try:
             print("TimeoutError")
         else:
             if int(amount) <= 150:
-                await ctx.channel.purge(limit=int(amount+3))
+                await ctx.channel.purge(limit=int(amount+2))
                 if int(amount) >= 100:
                     amount = 'дуууууже багато'
                 time.sleep(0.75)    
