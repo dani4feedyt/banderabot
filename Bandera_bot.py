@@ -206,7 +206,7 @@ try:
         await ctx.send(msg)
         await ctx.message.delete()
 
-    @bot.command(name="info")
+    @bot.command(name="info") ################################Намутить описание для clear_t, мб даже как спойлер для клира################################
     async def info(ctx: commands.Context, inline=False):
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
@@ -471,6 +471,7 @@ try:
         count = 0
         ho=int(h)-2
         date = datetime.datetime(year = int(today.year), month=int(m), day=int(d), hour=int(ho), minute=int(mi))
+        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=60)
         async for message in ctx.channel.history(limit = None, after=date):
             count += 1
         amount = count
@@ -481,7 +482,7 @@ try:
             sfx = "ня"
         else:
             sfx = "ь"
-        await ctx.send(f"Ви дійсно бажаєте очистити усі повідомлення починаючи з **{h}:{mi} {d}-{m}-{ye}**?", delete_after=60)
+        await ctx.send(f"Ви дійсно бажаєте очистити **{amount}** повідомлень починаючи з **{h}:{mi} {d}-{m}-{ye}**?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -490,7 +491,7 @@ try:
             print("TimeoutError")
         else:
             if int(amount) <= 500:
-                await ctx.channel.purge(limit=int(amount)+2)
+                await ctx.channel.purge(limit=int(amount)+3)
                 await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
