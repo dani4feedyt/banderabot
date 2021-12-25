@@ -283,7 +283,8 @@ try:
                     await pfp_u.delete()
                 if c == 9:
                     await pfp_t.delete()
-            await ctx.send("**Доступ відхилено.**")
+                    print('6')
+                    await ctx.send("**Доступ відхилено.**")
             
     @bot.command(name="birb")
     async def birb(ctx):
