@@ -220,16 +220,32 @@ try:
         embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми", inline=inline)
         embed.add_field(name=f"**b!mute_info** {zaha_emoji}", value=f"Інформація про використання b!mute", inline=inline)
         embed.add_field(name=f"**b!invite**", value=f"Створити запрошення на сервер для ваших друзів", inline=inline)
+        embed.add_field(name=f"**b!pfp @(Нікнейм)**", value=f"Отримати аватар зазначеного користувача", inline=inline)
         embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про покарання методом занурення до канави", inline=inline)
         embed.add_field(name=f"**b!rates (Валюта) (Кількість)**", value=f"Найактуальніший курс валют", inline=inline)
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.0B*', inline=inline)
-        
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.1*', inline=inline)
         await ctx.send(embed=embed)
-        
+
+    @bot.command()
+    async def pfp(ctx, member: discord.Member):
+        print(member.id)
+        if member.id == 783069117602857031:
+            pfp = "**Традиція і Порядок!**"
+        else:
+            t3 = ["Сподіваюся що він гарненький!",
+               "Аніме на аві - здоров'я мамі!", "Йой, хлопче, да ти ж красунчик!",
+               "Маєш привабливу фотокартку!", "Одразу видно, справжнісінький українець!",
+               "Йой, як файно!", "Де ж бо такі красунчики родяться?", "11/10!"]
+            pfp = random.choice(t3)
+        avatarUrl = member.avatar_url
+        await ctx.send(f"Аватар користувача {member.mention}:")
+        await ctx.send(avatarUrl)
+        await ctx.send(pfp)
+    
     @bot.command(name="birb")
     async def birb(ctx):
         t1 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
