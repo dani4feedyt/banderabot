@@ -265,7 +265,7 @@ try:
             pfp = random.choice(t3)
         avatarUrl = member.avatar_url
         pfp_a = await ctx.send(f"Аватар користувача {member.mention}:")
-        pfp_u = 4861
+        pfp_u = await ctx.send(avatarUrl)
         pfp_t = await ctx.send(pfp)
         if member.id == 486176412953346049:
             print('1')
