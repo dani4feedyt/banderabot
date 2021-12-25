@@ -227,7 +227,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.1*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.1A*', inline=inline)
         await ctx.send(embed=embed)
 
     @bot.command()
@@ -559,7 +559,7 @@ try:
     @rates.error
     async def rates_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("**Помилка.** Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступний курс: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
+            await ctx.send("**Помилка.** Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступні курси: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
             
     @kanava.error
     async def kanava_error(ctx, error):
@@ -576,6 +576,13 @@ try:
             await ctx.send("**Помилка.** Будь ласка, введіть дату та час у коректному форматі.\n||**b!clear_t (День) (Місяць) (Години) (Хвилини)**||")
         if isinstance(error, commands.CommandInvokeError):
             await ctx.send("**Помилка.** Введена дата некоректна.")
+
+    @pfp.error
+    async def pfp_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("**Помилка.** Необхідний нікнейм користувача.")
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
     
     @kick.error
     async def kick_error(ctx, error):
