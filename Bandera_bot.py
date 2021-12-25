@@ -233,8 +233,11 @@ try:
     @bot.command()
     async def pfp(ctx, member: discord.Member):
         print(member.id)
+        c = 0
         if member.id == 783069117602857031:
             pfp = "**Традиція і Порядок!**"
+        elif member.id == 486176412953346049:
+            pfp = ("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО ТВОРЦЯ! Проводжу екстренне видалення даних")
         else:
             t3 = ["Сподіваюся що він гарненький!",
                "Аніме на аві - здоров'я мамі!", "Йой, хлопче, да ти ж красунчик!",
@@ -242,10 +245,26 @@ try:
                "Йой, як файно!", "Де ж бо такі красунчики родяться?", "11/10!"]
             pfp = random.choice(t3)
         avatarUrl = member.avatar_url
-        await ctx.send(f"Аватар користувача {member.mention}:")
-        await ctx.send(avatarUrl)
-        await ctx.send(pfp)
-    
+        pfp_a = await ctx.send(f"Аватар користувача {member.mention}:")
+        pfp_u = await ctx.send(avatarUrl)
+        pfp_t = await ctx.send(pfp)
+        if member.id == 486176412953346049:
+            print('1')
+            while c <= 9:
+                await asyncio.sleep(0.5)
+                await pfp_t.edit(content="О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО Т̶̲̏̐͛В̴̞̯̄О̵̢̩̠̦̳͉̾̋̏͛̕͝Р̴̛̟̱̦͉̭̹̱͖̓͆̀͐́̕͝Ц̴̳̞̍̋Я̷͚̣͉́̚! Проводжу екстренне ~~видалення~~ даних.")
+                await asyncio.sleep(0.5)
+                await pfp_t.edit(content="О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО Т̶̖̳͙̦̰̘̐̊͗́̓̒̊̆̑В̶̢̬͈̗̙̒̆̆̊͛͠ͅО̶̜̗̲̙̝̝̪͊̂͗̔̾̈̄̚̚̚Р̸͖̒͛̊̓͊̄̑̿͝Ц̴̡̛̺̹̮͓̥̟͈̦͙̗̪̽́͋̿͌͌̇̇̌͠Я̵̫̤̞̽̾̈́͠! Проводжу екстренне видалення даних..")
+                await asyncio.sleep(0.5)
+                await pfp_t.edit(content="О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО Т̷͕͍͓̼̓̈В̷̪̳̩̯͑О̸̧̛̞͓̪̳̗͉̟Р̵̛̱̺̌̐̀͂̉̊͝Ц̸̱͎̦̘͈̈͋͛͆̒̄ͅͅЯ̷̢̇̐̇̈̄̏! Проводжу екстренне ~~видалення~~ даних...")
+                c += 1
+                if c == 3:
+                    await pfp_a.delete()
+                if c == 6:
+                    await pfp_u.delete()
+                if c == 9:
+                    await pfp_t.delete()
+            
     @bot.command(name="birb")
     async def birb(ctx):
         t1 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
