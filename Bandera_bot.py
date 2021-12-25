@@ -30,6 +30,7 @@ try:
     
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
+    version = '*release 2.3.2A*'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
@@ -48,6 +49,24 @@ try:
     @bot.event
     async def on_ready():
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
+
+    @bot.event
+    async def on_message(message):
+        if "бандер" in message.content.lower():
+            if message.author.id == 783069117602857031:
+                await bot.process_commands(message)
+            else:
+                await message.channel.send("Мене хтось кликав?")
+                def check(m):
+                    return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                try:
+                    m = await bot.wait_for("message", check=check, timeout = 30)
+                except asyncio.TimeoutError:
+                    await message.channel.send("Гаразд, мені певно здалося...")
+                else:
+                    await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
+        else:
+            await bot.process_commands(message)
 
     @bot.command()
     async def id(ctx, member: discord.User):
@@ -73,7 +92,7 @@ try:
     @bot.command()
     async def rg8421(ctx):
         author = ctx.message.author
-        await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " посягнул на великую тайну кала, и обнаружил рецепт сверхчистого говна:" + "\n||Гавно + Гавно - Гавно + Капелька поноса и три капельки говна высокой концентрации||")
+        await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " зазіхнув на головну тайну калу, та дізнався рецепт надчистого лайна:" + "\n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
 
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
@@ -227,7 +246,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.1B*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value=version, inline=inline)
         await ctx.send(embed=embed)
 
     @bot.command()
