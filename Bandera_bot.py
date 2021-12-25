@@ -50,7 +50,7 @@ try:
     async def on_ready():
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
 
-    @bot.event
+    @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
     async def on_message(message):
         if "бандер" in message.content.lower():
             if message.author.id == 783069117602857031:
@@ -265,7 +265,7 @@ try:
             pfp = random.choice(t3)
         avatarUrl = member.avatar_url
         pfp_a = await ctx.send(f"Аватар користувача {member.mention}:")
-        pfp_u = await ctx.send(avatarUrl)
+        pfp_u = 4861
         pfp_t = await ctx.send(pfp)
         if member.id == 486176412953346049:
             print('1')
@@ -283,6 +283,7 @@ try:
                     await pfp_u.delete()
                 if c == 9:
                     await pfp_t.delete()
+            await ctx.send("**Доступ відхилено.**")
             
     @bot.command(name="birb")
     async def birb(ctx):
@@ -518,7 +519,7 @@ try:
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
 
-    @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ#########################
+    @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится теперешнее время#########################
     @commands.has_permissions(manage_messages=True)
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
         today = datetime.date.today()
