@@ -78,9 +78,6 @@ try:
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
         counter = 0
-        if ',' in amount:
-            amount = str(amount).replace(',', '.')
-        amount = float(amount)
         print('1')
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
@@ -122,6 +119,9 @@ try:
             print('1')
             await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")  
         else:
+            if ',' in amount:
+                amount = str(amount).replace(',', '.')
+            amount = float(amount)
             rt = float(val) * float(amount)
             rt = round(rt, 2)
             rt = str(rt)
@@ -206,7 +206,7 @@ try:
         await ctx.send(msg)
         await ctx.message.delete()
 
-    @bot.command(name="info") ################################Намутить описание для clear_t, мб даже как спойлер для клира################################
+    @bot.command(name="info")
     async def info(ctx: commands.Context, inline=False):
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
@@ -227,7 +227,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.1A*', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value='*ver 2.3.1B*', inline=inline)
         await ctx.send(embed=embed)
 
     @bot.command()
@@ -487,7 +487,13 @@ try:
         ye = today.year
         count = 0
         ho=int(h)-2
-        date = datetime.datetime(year = int(today.year), month=int(m), day=int(d), hour=int(ho), minute=int(mi))
+        if ho == -2:############Может возникнуть проблема нулевого дня из-за разницы часовых поясов#########################
+            ho = 22
+            da = int(d)-1
+        if ho == -1:
+            ho = 23
+            da = int(d)-1
+        date = datetime.datetime(year = int(today.year), month=int(m), day=int(da), hour=int(ho), minute=int(mi))
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=60)
         async for message in ctx.channel.history(limit = None, after=date):
             count += 1
