@@ -65,10 +65,11 @@ try:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
                     a_list = [0, 1]
-                    distribution = [.5, .5]
+                    distribution = [.9, .1]
                     rand = random.choices(a_list, distribution)
+                    print(rand)
                     await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
-                    if rand == 1:
+                    if rand == [1]:
                         await message.channel.send(file=discord.File('b1.png'))
         else:
             await bot.process_commands(message)
