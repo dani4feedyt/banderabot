@@ -524,6 +524,14 @@ try:
     @commands.has_permissions(manage_messages=True)
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
         today = datetime.date.today()
+        try:
+            d = int(d)#########################Допилить шоб ставило 00 00 в часах и минутах при отсутствии значений
+        except ValueError:
+            d = today.day
+        try:
+            m = int(m)
+        except ValueError:
+            m = today.month
         ye = today.year
         count = 0
         ho=int(h)-2
