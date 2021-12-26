@@ -30,7 +30,7 @@ try:
     
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = '*release 2.3.2A*'
+    version = '*release 2.3.3*'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
@@ -60,7 +60,7 @@ try:
                 def check(m):
                     return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
                 try:
-                    m = await bot.wait_for("message", check=check, timeout = 30)
+                    m = await bot.wait_for("message", check=check, timeout = 15)
                 except asyncio.TimeoutError:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
