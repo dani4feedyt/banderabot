@@ -65,7 +65,7 @@ try:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
                     a_list = [0, 1]
-                    distribution = [.9, .1]
+                    distribution = [.5, .5]
                     rand = random.choices(a_list, distribution)
                     await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
                     if rand == 1:
