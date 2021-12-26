@@ -64,7 +64,12 @@ try:
                 except asyncio.TimeoutError:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
+                    a_list = [0, 1]
+                    distribution = [.9, .1]
+                    rand = random.choices(a_list, distribution)
                     await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
+                    if rand == 1:
+                        await message.channel.send(file=discord.File('b1.png'))
         else:
             await bot.process_commands(message)
 
@@ -265,7 +270,7 @@ try:
             pfp = random.choice(t3)
         avatarUrl = member.avatar_url
         pfp_a = await ctx.send(f"Аватар користувача {member.mention}:")
-        pfp_u = await ctx.send(avatarUrl)
+        pfp_u = await ctx.send(avatarUrl) ##################Конвертер с webp в png
         pfp_t = await ctx.send(pfp)
         if member.id == 486176412953346049:
             print('1')
