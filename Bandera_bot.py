@@ -537,6 +537,7 @@ try:
     @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится теперешнее время#########################
     @commands.has_permissions(manage_messages=True)####'today' - Global var####
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
+        mi = int(mi)
         try:
             d = int(d)#########################Допилить шоб ставило 00 00 в часах и минутах при отсутствии значений
         except ValueError:
@@ -547,7 +548,8 @@ try:
             m = today.month
         ye = today.year
         count = 0
-        ho=int(h)-2
+        h = int(h)
+        ho = h-2
         da = int(d)
         mo = int(m)
         if ho == -2:
@@ -562,6 +564,8 @@ try:
         if mo == 0:
             mo = 12
             ye -= 1
+        h = str(h)
+        mi = str(mi)
         d = str(d)
         m = str(m)
         date = datetime.datetime(year = int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(mi))
