@@ -31,7 +31,7 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.3.3A'
+    version = 'release 2.3.3B'
     patch_note = '•minor bug fixes; •added patch notes'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
@@ -549,6 +549,7 @@ try:
         count = 0
         ho=int(h)-2
         da = int(d)
+        mo = int(m)
         if ho == -2:
             ho = 22
             da = int(d)-1
@@ -556,12 +557,14 @@ try:
             ho = 23
             da = int(d)-1
         if da == 0:
-            m -= 1
-            da = list(months.values())[m-1]
-        if m == 0:
-            m = 12
+            mo -= 1
+            da = list(months.values())[mo-1]
+        if mo == 0:
+            mo = 12
             ye -= 1
-        date = datetime.datetime(year = int(ye), month=int(m), day=int(da), hour=int(ho), minute=int(mi))
+        d = str(d)
+        m = str(m)
+        date = datetime.datetime(year = int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(mi))
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=60)
         async for message in ctx.channel.history(limit = None, after=date):
             count += 1
@@ -573,6 +576,14 @@ try:
             sfx = "ня"
         else:
             sfx = "ь"
+        if len(h) == 1:
+            h = '0' + h################Возможно заменить функцией?
+        if len(mi) == 1:
+            mi = '0' + mi
+        if len(d) == 1:
+            d = '0' + d
+        if len(m) == 1:
+            m = '0' + m
         await ctx.send(f"Ви дійсно бажаєте очистити **{amount}** повідомлен{sfx} починаючи з **{h}:{mi} {d}-{m}-{ye}**?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
