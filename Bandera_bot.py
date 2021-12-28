@@ -593,7 +593,7 @@ try:
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
-            m = await bot.wait_for("message", check=check, timeout = 30)
+            m = await bot.wait_for("message", check=check, timeout = 60)
         except asyncio.TimeoutError:
             print("TimeoutError")
         else:
