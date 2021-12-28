@@ -31,7 +31,7 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.3.3B'
+    version = 'release 2.3.3С'
     patch_note = '•minor bug fixes; •added patch notes'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
@@ -521,7 +521,7 @@ try:
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
-            m = await bot.wait_for("message", check=check, timeout = 30)
+            m = await bot.wait_for("message", check=check, timeout = 60)
         except asyncio.TimeoutError:
             print("TimeoutError")
         else:
@@ -534,12 +534,12 @@ try:
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
 
-    @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится теперешнее время#########################
+    @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
     @commands.has_permissions(manage_messages=True)####'today' - Global var####
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
         mi = int(mi)
         try:
-            d = int(d)#########################Допилить шоб ставило 00 00 в часах и минутах при отсутствии значений
+            d = int(d)
         except ValueError:
             d = today.day
         try:
@@ -717,4 +717,4 @@ try:
     bot.run(settings['token'])
     
 except GeneratorExit:
-    print("Error12")
+    print("Error_12.1")
