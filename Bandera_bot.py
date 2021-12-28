@@ -573,6 +573,7 @@ try:
         async for message in ctx.channel.history(limit = None, after=date):
             count += 1
         amount = count
+        print(amount)
         sfx = "ь"
         if 11<=amount<=14:
             sfx = "ь"
