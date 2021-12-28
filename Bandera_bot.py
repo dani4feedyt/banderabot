@@ -27,13 +27,20 @@ try:
     from bs4 import BeautifulSoup
     import pandas as pd
     from datetime import date
-    
+
+    ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = '*release 2.3.3*'
+    version = 'release 2.3.3A'
+    patch_note = '•minor bug fixes; •added patch notes'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
+    today = datetime.date.today()
+    months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
+    if today.year % 4 == 0:
+        months['feb'] = 29
+    ############Global var############
     
     @bot.event
     async def on_member_join(member):
@@ -78,20 +85,20 @@ try:
     async def id(ctx, member: discord.User):
         await ctx.send(member.id)
 
-    @bot.command()
+    @bot.command()####'fi' - Global var####
     async def save(ctx, *, msg):
         fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
         fi.write(msg + " ")
         fi.close
 
-    @bot.command()
+    @bot.command()####'fi' - Global var####
     async def read(ctx):
         fi = open("data.txt", "r")
         if fi.mode == 'r':
             contents = fi.read()
             await ctx.send(contents)
     
-    @bot.command()
+    @bot.command()####'fi' - Global var####
     async def c_save(ctx):
         fi = open("data.txt", "w").close()
             
@@ -202,14 +209,14 @@ try:
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
 
     @bot.command()
-    async def test11(ctx, member: discord.Member):
+    async def test_greeting(ctx, member: discord.Member):
         guild = ctx.guild
         await ctx.send(f'{member}')
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
     @bot.command()
-    async def invite_beta(ctx, member: discord.Member, age: int = 60):
+    async def test_invite(ctx, member: discord.Member, age: int = 60):
         guild = ctx.guild
         message = discord.Message
         author = ctx.message.author
@@ -252,7 +259,8 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value=version, inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value=(f'*{version}*\n||*{patch_note}*||'), inline=inline)
+        
         await ctx.send(embed=embed)
 
     @bot.command()
@@ -308,7 +316,7 @@ try:
         await ctx.send(embed = embed)
 
     @bot.command(pass_context = True)
-    async def test12(message):
+    async def test_check(message):
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
         def check(m):
@@ -466,7 +474,7 @@ try:
             await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
             
     @bot.command()####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
-    async def time_1(ctx):
+    async def test_time(ctx):
         timestamp = ctx.message.created_at
         print(timestamp)
         timestamp = str(timestamp)[:-10]
@@ -491,7 +499,7 @@ try:
         await ctx.send(date_f + ' ' + time_f)
 
     @bot.command()
-    async def test213(ctx, d: int, m: int, h: int, mi: int):
+    async def test_count(ctx, d: int, m: int, h: int, mi: int):
         count = 0
         h-=2
         date = datetime.datetime(year = 2021, month=m, day=d, hour=h, minute=mi)
@@ -527,9 +535,8 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
 
     @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится теперешнее время#########################
-    @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)####'today' - Global var####
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
-        today = datetime.date.today()
         try:
             d = int(d)#########################Допилить шоб ставило 00 00 в часах и минутах при отсутствии значений
         except ValueError:
@@ -542,13 +549,19 @@ try:
         count = 0
         ho=int(h)-2
         da = int(d)
-        if ho == -2:############Может возникнуть проблема нулевого дня из-за разницы часовых поясов#########################
+        if ho == -2:
             ho = 22
             da = int(d)-1
         if ho == -1:
             ho = 23
             da = int(d)-1
-        date = datetime.datetime(year = int(today.year), month=int(m), day=int(da), hour=int(ho), minute=int(mi))
+        if da == 0:
+            m -= 1
+            da = list(months.values())[m-1]
+        if m == 0:
+            m = 12
+            ye -= 1
+        date = datetime.datetime(year = int(ye), month=int(m), day=int(da), hour=int(ho), minute=int(mi))
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=60)
         async for message in ctx.channel.history(limit = None, after=date):
             count += 1
