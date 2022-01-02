@@ -31,15 +31,17 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.3.3С'
-    patch_note = '•minor bug fixes; •added patch notes'
+    version = 'release 2.3.4'
+    patch_note = '•minor bug fixes; •slightly improved AI'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
     today = datetime.date.today()
+    print(today)
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
         months['feb'] = 29
+    appeal = ["козаче", "хлопче", "друже", "вуйко", "брате", "дядьку"]
     ############Global var############
     
     @bot.event
@@ -64,23 +66,36 @@ try:
                 await bot.process_commands(message)
             else:
                 await message.channel.send("Мене хтось кликав?")
-                def check(m):
-                    return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                def check(m):############Ответ Да
+                    return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
                 try:
                     m = await bot.wait_for("message", check=check, timeout = 15)
                 except asyncio.TimeoutError:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
-                    a_list = [0, 1]
-                    distribution = [.9, .1]
-                    rand = random.choices(a_list, distribution)
-                    print(rand)
-                    await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
-                    if rand == [1]:
-                        await message.channel.send(file=discord.File('b1.png'))
+                    await message.channel.send("Що сталося?")
+                    def check(m):############Поздравление с др
+                        return (m.content.lower() == 'з днем народження' or m.content.lower() == 'с днем рождения' or m.content.lower() == 'с др' or m.content.lower() == 'з др')
+                    try:
+                        m = await bot.wait_for("message", check=check, timeout = 15)
+                    except asyncio.TimeoutError:
+                        a_list = [0, 1]
+                        distribution = [.9, .1]
+                        rand = random.choices(a_list, distribution)
+                        print(rand)
+                        await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
+                        if rand == [1]:
+                            await message.channel.send(file=discord.File('b1.png'))    
+                    else:
+                        if str(today) == "2022-01-01":
+                            await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
+                        else:
+                            await message.channel.send(f"Вельми дякую, але ти, певно, помилився. Мій день народження **1 січня**.")
+                        await asyncio.sleep(7)
+                        await message.channel.send("Гаразд, пішов я по своїх справах...")
         else:
             await bot.process_commands(message)
-
+    
     @bot.command()
     async def id(ctx, member: discord.User):
         await ctx.send(member.id)
@@ -149,7 +164,7 @@ try:
     async def on_rates_command(ctx, val, name, amount, rate):
         if amount is None:
             print('1')
-            await ctx.send(f"Козаче, курс {name} становить **{val}** грн!")  
+            await ctx.send(f"{random.choice(appeal).capitalize}, курс {name} становить **{val}** грн!")  
         else:
             if ',' in amount:
                 amount = str(amount).replace(',', '.')
@@ -187,14 +202,14 @@ try:
                     time.sleep(0.5)
                     await member.send("**АНУ, СЕПАРАТЮГА, ТИ КАЄШСЯ В СВОЇХ ЗЛОЧИНАХ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                     def check(m):
-                        return (m.content.lower() == 'да' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так' or m.content.lower() == 'ні' or m.content.lower() == 'нет' or m.content.lower() == 'no')
+                        return (m.content.lower() == 'да' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так' or m.content.lower() == 'ні' or m.content.lower() == 'нет' or m.content.lower() == 'no')
                     try:
                         m = await bot.wait_for("message", check=check, timeout = 1.5)
                     except asyncio.TimeoutError:
                         continue
                     else:
                         if rn <= ch:
-                            await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаеш волю. Хлопці, витягайте його!")
+                            await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаєш волю. Хлопці, витягайте його!")
                             break
                         elif rn > ch:
                             await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!")
@@ -205,7 +220,7 @@ try:
                         if member.voice is not None:
                             break
                     
-        await member.send("Ти вільний, хлопче. Іди по своїx справаx.")
+        await member.send("Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
 
     @bot.command()
@@ -302,16 +317,14 @@ try:
             
     @bot.command(name="birb")
     async def birb(ctx):
-        t1 = [", козаче", ", хлопче", ", друже", ", вуйко", ""]
         t2 = ['Випадковий птах для тебе',
                'Тримай птаха', 'Випадковий птах, як ти й просив',
                'Світлина випадкового птаха', 'Світлина птаха, як ти й просив',
                'Тримай пташку', 'Тримай світлину птаха', 'Птах, як ти й побажав',
                'Світлина птаха']
-        t = random.choice(t2) + random.choice(t1)
         response = requests.get("https://some-random-api.ml/img/birb")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color = 0x013ADF, title = t + ":") 
+        embed = discord.Embed(color = 0x013ADF, title = (f"{random.choice(t2)}, {random.choice(appeal)}:")) 
         embed.set_image(url = json_data["link"])
         await ctx.send(embed = embed)
 
@@ -320,7 +333,7 @@ try:
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
         try:
             m = await bot.wait_for("message", check=check, timeout = 30)
         except asyncio.TimeoutError:
@@ -357,7 +370,7 @@ try:
                 reasonA = reason
             await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
             def check(m):
-                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
                 m = await bot.wait_for("message", check=check, timeout = 30)
             except asyncio.TimeoutError:
@@ -519,7 +532,7 @@ try:
             sfx = "ь"
         await ctx.send(f"Ви дійсно бажаєте очистити **{amount}** повідомлен{sfx}?", delete_after=60)
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
             m = await bot.wait_for("message", check=check, timeout = 60)
         except asyncio.TimeoutError:
@@ -591,7 +604,7 @@ try:
             m = '0' + m
         await ctx.send(f"Ви дійсно бажаєте очистити **{amount}** повідомлен{sfx} починаючи з **{h}:{mi} {d}-{m}-{ye}**?", delete_after=60)
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
             m = await bot.wait_for("message", check=check, timeout = 60)
         except asyncio.TimeoutError:
@@ -613,7 +626,7 @@ try:
             await ctx.send("**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.", delete_after=29)
             await ctx.send("Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**", delete_after=29)
             def check(m):
-                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
             try:
                 m = await bot.wait_for("message", check=check, timeout = 30)
             except asyncio.TimeoutError:
