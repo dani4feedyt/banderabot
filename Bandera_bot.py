@@ -35,8 +35,8 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.3.4'
-    patch_note = '•minor bug fixes; •slightly improved AI'
+    version = 'release 2.3.5'
+    patch_note = '•added "Fetch" command'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
