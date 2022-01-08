@@ -28,6 +28,10 @@ try:
     import pandas as pd
     from datetime import date
 
+    #############################################__ИДЕИ__#############################################
+    #1. Сделать предварительный выбор языка в b!info
+    #############################################__ИДЕИ__#############################################
+
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
@@ -75,7 +79,7 @@ try:
                 else:
                     await message.channel.send("Що сталося?")
                     def check(m):############Поздравление с др
-                        return (m.content.lower() == 'з днем народження' or m.content.lower() == 'с днем рождения' or m.content.lower() == 'с др' or m.content.lower() == 'з др')
+                        return (m.content.lower() == 'з днем народження' or m.content.lower() == 'с днем рождения' or m.content.lower() == 'с др' or m.content.lower() == 'з др') #########################ДОПИЛИТЬ НОРМАЛЬНЫЙ КОНТЕНТ
                     try:
                         m = await bot.wait_for("message", check=check, timeout = 15)
                     except asyncio.TimeoutError:
@@ -99,6 +103,12 @@ try:
     @bot.command()
     async def id(ctx, member: discord.User):
         await ctx.send(member.id)
+
+    @bot.command()
+    async def fetch(ctx, msgID: int):
+        msg = await ctx.fetch_message(msgID)
+        timestamp = msg.created_at
+        await ctx.send(timestamp)
 
     @bot.command()####'fi' - Global var####
     async def save(ctx, *, msg):
@@ -730,4 +740,4 @@ try:
     bot.run(settings['token'])
     
 except GeneratorExit:
-    print("Error_12.1")
+    print("Error_12.1 (Generator_Error)")
