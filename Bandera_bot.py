@@ -430,8 +430,8 @@ try:
         await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
         
     @bot.command(aliases=['myroles'])
-    async def myroles(ctx):
-        print("Triggered... myroles; server: ctx.guild.name")
+    async def _myroles(ctx):
+        print("Triggered... _myroles; server: ctx.guild.name")
         member = ctx.message.author 
         member_roles = member.roles 
         await ctx.send(f"{member.mention} перелік твоїх ролей:\n{(member_roles).join(' ')}")
