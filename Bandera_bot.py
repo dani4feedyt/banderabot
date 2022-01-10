@@ -35,8 +35,8 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.3.5'
-    patch_note = '•added "Fetch" command'
+    version = 'release 2.3.5A'
+    patch_note = '•minor bug fixes; •improved crash reports'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
@@ -106,7 +106,7 @@ try:
         await ctx.send(member.id)
 
     @bot.command()
-    async def fetch(ctx, msgID: int):\
+    async def fetch(ctx, msgID: int):
         print("Triggered... fetch; server: ctx.guild.name")
         msg = await ctx.fetch_message(msgID)
         timestamp = msg.created_at
