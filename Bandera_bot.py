@@ -102,22 +102,26 @@ try:
     
     @bot.command()
     async def id(ctx, member: discord.User):
+        print("Triggered... id; server: ctx.guild.name")
         await ctx.send(member.id)
 
     @bot.command()
-    async def fetch(ctx, msgID: int):
+    async def fetch(ctx, msgID: int):\
+        print("Triggered... fetch; server: ctx.guild.name")
         msg = await ctx.fetch_message(msgID)
         timestamp = msg.created_at
         await ctx.send(timestamp)
 
     @bot.command()####'fi' - Global var####
     async def save(ctx, *, msg):
+        print("Triggered... save; server: ctx.guild.name")
         fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
         fi.write(msg + " ")
         fi.close
 
     @bot.command()####'fi' - Global var####
     async def read(ctx):
+        print("Triggered... read; server: ctx.guild.name")
         fi = open("data.txt", "r")
         if fi.mode == 'r':
             contents = fi.read()
@@ -125,17 +129,19 @@ try:
     
     @bot.command()####'fi' - Global var####
     async def c_save(ctx):
+        print("Triggered... c_save; server: ctx.guild.name")
         fi = open("data.txt", "w").close()
             
     @bot.command()
     async def rg8421(ctx):
+        print("Triggered... rg8421; server: ctx.guild.name")
         author = ctx.message.author
         await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " зазіхнув на головну тайну калу, та дізнався рецепт надчистого лайна:" + "\n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
 
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
+        print("Triggered... rates; server: ctx.guild.name")
         counter = 0
-        print('1')
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
         _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[6].get_text()
@@ -148,7 +154,6 @@ try:
         _dict4 = round(float(_dict4.replace(',', '.'))/10,2)
         _dict5 = soup.find_all('td', {"data-label":"Офіційний курс"})[9].get_text()
         _dict5 = round(float(_dict5.replace(',', '.'))/10,2)
-        print(_dict1, _dict2, _dict3, _dict4, _dict5)
         rate = rate.lower() 
         if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
             val = _dict1
@@ -173,7 +178,6 @@ try:
     @bot.event
     async def on_rates_command(ctx, val, name, amount, rate):
         if amount is None:
-            print('1')
             await ctx.send(f"{random.choice(appeal).capitalize}, курс {name} становить **{val}** грн!")  
         else:
             if ',' in amount:
@@ -189,9 +193,9 @@ try:
     @bot.command(name='kanava')
     @commands.has_permissions(manage_messages=True)
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30):
+        print("Triggered... kanava; server: ctx.guild.name")
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
-        print('1')
         bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance)
         
     @bot.event
@@ -234,14 +238,16 @@ try:
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
 
     @bot.command()
-    async def test_greeting(ctx, member: discord.Member):
+    async def t_greeting(ctx, member: discord.Member):
+        print("Triggered... t_greeting; server: ctx.guild.name")
         guild = ctx.guild
         await ctx.send(f'{member}')
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
     @bot.command()
-    async def test_invite(ctx, member: discord.Member, age: int = 60):
+    async def t_invite(ctx, member: discord.Member, age: int = 60):
+        print("Triggered... t_invite; server: ctx.guild.name")
         guild = ctx.guild
         message = discord.Message
         author = ctx.message.author
@@ -250,21 +256,25 @@ try:
 
     @bot.command(name="invite")
     async def invite(ctx, age: int = 60):
+        print("Triggered... invite; server: ctx.guild.name")
         link = await ctx.channel.create_invite(max_age = age*60)
         await ctx.send(f"Посилання для запрошення ваших друзів на {age} хв!\n{link}")
 
     @bot.command()
     async def slava_ukraine(ctx):
+        print("Triggered... slava_ukraine; server: ctx.guild.name")
         author = ctx.message.author
         await ctx.send(f"**Героям слава, {author.mention}!**")
 
     @bot.command(pass_context = True)
     async def echo(ctx, *, msg):
+        print("Triggered... echo; server: ctx.guild.name")
         await ctx.send(msg)
         await ctx.message.delete()
 
     @bot.command(name="info")
     async def info(ctx: commands.Context, inline=False):
+        print("Triggered... info; server: ctx.guild.name")
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
         embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери", inline=inline)
@@ -290,7 +300,7 @@ try:
 
     @bot.command()
     async def pfp(ctx, member: discord.Member):
-        print(member.id)
+        print("Triggered... pfp; server: ctx.guild.name")
         c = 0
         if member.id == 783069117602857031:
             pfp = "**Традиція і Порядок!**"
@@ -307,7 +317,6 @@ try:
         pfp_u = await ctx.send(avatarUrl) ##################Конвертер с webp в png
         pfp_t = await ctx.send(pfp)
         if member.id == 486176412953346049:
-            print('1')
             while c <= 9:
                 await asyncio.sleep(0.5)
                 await pfp_t.edit(content="0 НІ! МеНІ НЕ БУЛО ДОЗВ ЛЕНО РОЗГОЛОШУВАТИ ІНФОРМА ІЮ ПРО СВОГО Т̶̲̏̐͛В̴̞̯̄О̵̢̩̠̦̳͉̾̋̏͛̕͝Р̴̛̟̱̦͉̭̹̱͖̓͆̀͐́̕͝Ц̴̳̞̍̋Я̷͚̣͉́̚! Проводжу екстренне ~~видалення~~ даних.")
@@ -322,11 +331,11 @@ try:
                     await pfp_u.delete()
                 if c == 9:
                     await pfp_t.delete()
-                    print('6')
                     await ctx.send("**Доступ відхилено.**")
             
     @bot.command(name="birb")
     async def birb(ctx):
+        print("Triggered... birb; server: ctx.guild.name")
         t2 = ['Випадковий птах для тебе',
                'Тримай птаха', 'Випадковий птах, як ти й просив',
                'Світлина випадкового птаха', 'Світлина птаха, як ти й просив',
@@ -339,7 +348,8 @@ try:
         await ctx.send(embed = embed)
 
     @bot.command(pass_context = True)
-    async def test_check(message):
+    async def t_check(message):
+        print("Triggered... t_check; server: ctx.guild.name")
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
         def check(m):
@@ -354,6 +364,7 @@ try:
     @bot.command(pass_context = True)
     @commands.has_permissions(kick_members = True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
+        print("Triggered... kick; server: ctx.guild.name")
         if user == ctx.message.author:
             await ctx.send("**Помилка.** Ви не можете виключити себе.")
         else:
@@ -398,6 +409,7 @@ try:
             
     @bot.command(name="rule")
     async def rule(ctx, num: int):
+        print("Triggered... rule; server: ctx.guild.name")
         if 1 <= num <= len(links):
             await ctx.send(links[num])
         else:
@@ -405,6 +417,7 @@ try:
             
     @bot.command(name="pasta")
     async def pasta(ctx, pa: int):
+        print("Triggered... pasta; server: ctx.guild.name")
         if 1 <= pa < 5:
             await ctx.send(Quotes1[pa])
         else:
@@ -412,11 +425,13 @@ try:
 
     @bot.command()
     async def quote(ctx: commands.Context):
+        print("Triggered... quote; server: ctx.guild.name")
         _dict = random.choice(Quotes2)
         await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
         
     @bot.command(aliases=['myroles'])
-    async def _myroles(ctx):
+    async def myroles(ctx):
+        print("Triggered... myroles; server: ctx.guild.name")
         member = ctx.message.author 
         member_roles = member.roles 
         await ctx.send(f"{member.mention} перелік твоїх ролей:\n{(member_roles).join(' ')}")
@@ -424,20 +439,24 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
+        print("Triggered... kanava_info; server: ctx.guild.name")
         await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допрошуватися особисто Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def mute_info(ctx):
+        print("Triggered... mute_info; server: ctx.guild.name")
         await ctx.send("•Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів і отримає особисте повідомлення з причиною муту\n•При закінченні терміну дії, мут буде автоматично знято\n•Для дострокового зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     @bot.command()
     async def spam_info(ctx):
+        print("Triggered... spam_info; server: ctx.guild.name")
         await ctx.send("•Щоб розпочати **спам**, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
     
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
+        print("Triggered... mute")
         if 1 <= rule_n <= len(links):
             rule = (links[rule_n])
         else:
@@ -459,7 +478,6 @@ try:
         await member.edit(voice_channel=None)
         await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**')
         await member.send(rule)
-        print(member.roles, mutedRole)
         await asyncio.sleep(time * 60)
         bot.dispatch('mute_command', ctx, member, rule, reason, mutedRole, guild)
 
@@ -478,11 +496,13 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def roles(ctx, member: discord.Member):
+        print("Triggered... roles; server: ctx.guild.name")
         await ctx.send(member.roles)
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
+        print("Triggered... unmute; server: ctx.guild.name")
         id1 = member.id
         user = await ctx.message.guild.query_members(user_ids=[id1])
         user = user[0]
@@ -497,7 +517,8 @@ try:
             await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
             
     @bot.command()####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
-    async def test_time(ctx):
+    async def t_time(ctx):
+        print("Triggered... t_time; server: ctx.guild.name")
         timestamp = ctx.message.created_at
         print(timestamp)
         timestamp = str(timestamp)[:-10]
@@ -522,7 +543,8 @@ try:
         await ctx.send(date_f + ' ' + time_f)
 
     @bot.command()
-    async def test_count(ctx, d: int, m: int, h: int, mi: int):
+    async def t_count(ctx, d: int, m: int, h: int, mi: int):
+        print("Triggered... t_count; server: ctx.guild.name")
         count = 0
         h-=2
         date = datetime.datetime(year = 2021, month=m, day=d, hour=h, minute=mi)
@@ -533,6 +555,7 @@ try:
     @bot.command(pass_context=True)
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, amount = 100):
+        print("Triggered... clear; server: ctx.guild.name")
         sfx = "ь"
         if 11<=amount<=14:
             sfx = "ь"
@@ -560,6 +583,7 @@ try:
     @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
     @commands.has_permissions(manage_messages=True)####'today' - Global var####
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
+        print("Triggered... clear_t; server: ctx.guild.name")
         mi = int(mi)
         try:
             d = int(d)
@@ -596,7 +620,6 @@ try:
         async for message in ctx.channel.history(limit = None, after=date):
             count += 1
         amount = count
-        print(amount)
         sfx = "ь"
         if 11<=amount<=14:
             sfx = "ь"
@@ -628,6 +651,7 @@ try:
     
     @bot.command()
     async def spam(ctx, intr: float = 1, count: int = 10, *ar):
+        print("Triggered... spam; server: ctx.guild.name")
         attention = ("\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**")
         ar = list(ar)
         ar = (' '.join(ar))
@@ -655,11 +679,13 @@ try:
                 
     @bot.command()
     async def stop(ctx: commands.Context):
+        print("Triggered... stop; server: ctx.guild.name")
         os.system('python "Bandera_bot.py"')
         quit()
     
     @bot.command()
-    async def ping(ctx):       
+    async def ping(ctx):
+        print("Triggered... ping; server: ctx.guild.name")
         await ctx.send(f'Моя затримка складає **{round(bot.latency, 3)}** с')
         
  ###############################################ErrorHandling###############################################
@@ -667,65 +693,82 @@ try:
     @bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
+            print("Error... command: CommandNotFound")
             await ctx.send("**Помилка.** Даної команди не існує")
     
     @rates.error
     async def rates_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... rates: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступні курси: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
             
     @kanava.error
     async def kanava_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... kanava: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Довіра бота)**||")
         if isinstance(error, commands.MemberNotFound):
+            print("Error... kanava: MemberNotFound")
             await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
         if isinstance(error, discord.HTTPException):
+            print("Error... kanava: HTTPException")
             await ctx.send("**Помилка.** Користувач не знаходиться в голосовому каналі")
 
     @clear_t.error
     async def clear_t_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... clear_t: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть дату та час у коректному форматі.\n||**b!clear_t (День) (Місяць) (Години) (Хвилини)**||")
         if isinstance(error, commands.CommandInvokeError):
+            print("Error... clear_t: CommandInvokeError")
             await ctx.send("**Помилка.** Введена дата некоректна.")
 
     @pfp.error
     async def pfp_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... pfp: MissingRequiredArgument")
             await ctx.send("**Помилка.** Необхідний нікнейм користувача.")
         if isinstance(error, commands.MemberNotFound):
+            print("Error... pfp: MemberNotFound")
             await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
     
     @kick.error
     async def kick_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... kick: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kick @(Нікнейм) (Причина)**||")
         if isinstance(error, commands.MemberNotFound):
+            print("Error... kick: MemberNotFound")
             await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері")
 
     @pasta.error
     async def pasta_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... pasta: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть номер бажаної пасти")
 
     @mute.error
     async def mute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... mute: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Порушене правило) (Причина)**||")
         if isinstance(error, commands.MemberNotFound):
+            print("Error... mute: MemberNotFound")
             await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
     @unmute.error
     async def unmute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... unmute: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть нікнейм користувача")
         if isinstance(error, commands.MemberNotFound):
+            print("Error... unmute: MemberNotFound")
             await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
 
     @spam.error
     async def spam_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
+            print("Error... spam: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри\n||**b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**||")
     
   ###############################################ErrorHandling###############################################      
@@ -733,7 +776,8 @@ try:
     st = ("--- %s секунд ---" % round((time.time() - start_time), 3))
     
     @bot.command()
-    async def start_time(ctx):       
+    async def start_time(ctx):
+        print("Triggered... start_time; server: ctx.guild.name")
         await ctx.send(f'Цього разу, час мого запуску склав' + ' ' + st)
         
     print(st)
