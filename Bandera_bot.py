@@ -650,7 +650,7 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
     
     @bot.command()
-    async def spam(ctx, intr: float = 1, count: int = 10, *ar):
+    async def spam(ctx, intr: float, count: int, *ar):
         print(f"Triggered... **spam**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         attention = ("\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**")
         ar = list(ar)
