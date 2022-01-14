@@ -35,8 +35,8 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.3.5A'
-    patch_note = '•minor bug fixes; •improved crash reports'
+    version = 'release 2.3.5B'
+    patch_note = '•minor bug fixes'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
@@ -140,6 +140,7 @@ try:
 
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
+        await ctx.send(f"*Підрахування...*")
         print(f"Triggered... **rates**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         counter = 0
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
@@ -178,7 +179,7 @@ try:
     @bot.event
     async def on_rates_command(ctx, val, name, amount, rate):
         if amount is None:
-            await ctx.send(f"{random.choice(appeal).capitalize}, курс {name} становить **{val}** грн!")  
+            await ctx.send(f"{random.choice(appeal).capitalize()}, курс {name} становить **{val}** грн!")  
         else:
             if ',' in amount:
                 amount = str(amount).replace(',', '.')
