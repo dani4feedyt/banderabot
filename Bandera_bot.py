@@ -64,6 +64,7 @@ try:
         print('1')
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
+        print(datetime.datetime.now().hour)
 
     @tasks.loop(hours=24)
     async def msg1():
