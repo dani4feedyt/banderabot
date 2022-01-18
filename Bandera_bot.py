@@ -87,7 +87,7 @@ try:
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
-            if datetime.datetime.now().hour == 20:
+            if datetime.datetime.now().hour == 20 - 2:
                 print('It is time')
                 return
             await asyncio.sleep(1)
