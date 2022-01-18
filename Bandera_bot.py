@@ -5,7 +5,7 @@ try:
 
     import datetime
     import discord
-    from discord.ext import commands
+    from discord.ext import commands, tasks
     from Bandera_cfg import settings
     from Bandera_Quotes import _dict0, n_1
     from Bandera_PyChton_quotes import Quotes1, links, Quotes2
@@ -35,7 +35,7 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.3.5B'
+    version = 'release 2.4.0A'
     patch_note = '•minor bug fixes'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
@@ -62,6 +62,33 @@ try:
     @bot.event
     async def on_ready():
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
+        msg1.start()
+
+    @tasks.loop(hours=24)
+    async def msg1():
+        message_channel = bot.get_channel(812366630062915616)
+        if str(datetime.datetime.today().weekday()) == '0':
+            await message_channel.send("test_0")
+        elif str(datetime.datetime.today().weekday()) == '1':
+            await message_channel.send("test_1")
+        elif str(datetime.datetime.today().weekday()) == '2':
+            await message_channel.send("test_2")
+        elif str(datetime.datetime.today().weekday()) == '3':
+            await message_channel.send("test_3")
+        elif str(datetime.datetime.today().weekday()) == '4':
+            await message_channel.send("test_4")
+        elif str(datetime.datetime.today().weekday()) == '5':
+            await message_channel.send("test_5")
+        elif str(datetime.datetime.today().weekday()) == '6':
+            await message_channel.send("test_6")
+
+    @msg1.before_loop
+    async def before_msg1():
+        for _ in range(60*60*24):
+            if datetime.datetime.now().hour == 20:
+                print('It is time')
+                return
+            await asyncio.sleep(1)
 
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
     async def on_message(message):
@@ -91,7 +118,7 @@ try:
                         if rand == [1]:
                             await message.channel.send(file=discord.File('b1.png'))    
                     else:
-                        if str(today) == "2022-01-01":
+                        if str(today) == f"{today.year}-01-01":
                             await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
                         else:
                             await message.channel.send(f"Вельми дякую, але ти, певно, помилився. Мій день народження **1 січня**.")
@@ -200,7 +227,7 @@ try:
         bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance)
         
     @bot.event
-    async def on_kanava_command(ctx, channel1, channel2, member, t, chance):
+    async def on_kanava_command(ctx, channel1, channel2, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
         if member.voice is None:
             for nt in range(25):
                 time.sleep(1)
