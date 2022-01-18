@@ -61,6 +61,7 @@ try:
     
     @bot.event
     async def on_ready():
+        print('1')
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
 
