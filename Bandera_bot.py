@@ -87,10 +87,10 @@ try:
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
-            if datetime.datetime.now().hour == 20 - 2:
+            if str(datetime.datetime.now().hour) == '11' and str(datetime.datetime.now().minute) == '50':
                 print('It is time')
                 return
-            await asyncio.sleep(1)
+            await asyncio.sleep(30)
 
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
     async def on_message(message):
@@ -133,12 +133,14 @@ try:
     async def id(ctx, member: discord.User):
         print(f"Triggered... **id**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send(member.id)
+        await ctx.send(datetime.datetime.now().time())
 
     @bot.command()
     async def fetch(ctx, msgID: int):
         print(f"Triggered... **fetch**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         msg = await ctx.fetch_message(msgID)
         timestamp = msg.created_at
+        timestamp = timestamp + datetime.timedelta(hours=2)
         await ctx.send(timestamp)
 
     @bot.command()####'fi' - Global var####
