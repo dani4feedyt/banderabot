@@ -35,8 +35,8 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.4.0A'
-    patch_note = '•minor bug fixes'
+    version = 'release 2.4.1'
+    patch_note = '•minor bug fixes; •added daily pic dispatch'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
@@ -68,26 +68,26 @@ try:
 
     @tasks.loop(hours=24)
     async def msg1():
-        message_channel = bot.get_channel(812366630062915616)
+        message_channel = bot.get_channel(695715314696061072)
         if str(datetime.datetime.today().weekday()) == '0':
-            await message_channel.send("test_0")
+            await message.channel.send(file=discord.File('d_t0.png'))
         elif str(datetime.datetime.today().weekday()) == '1':
-            await message_channel.send("test_1")
+            await message.channel.send(file=discord.File('d_t1.png'))
         elif str(datetime.datetime.today().weekday()) == '2':
-            await message_channel.send("test_2")
+            await message.channel.send(file=discord.File('d_t2.png'))
         elif str(datetime.datetime.today().weekday()) == '3':
-            await message_channel.send("test_3")
+            await message.channel.send(file=discord.File('d_t3.png'))
         elif str(datetime.datetime.today().weekday()) == '4':
-            await message_channel.send("test_4")
+            await message.channel.send(file=discord.File('d_t4.png'))
         elif str(datetime.datetime.today().weekday()) == '5':
-            await message_channel.send("test_5")
+            await message.channel.send(file=discord.File('d_t5.png'))
         elif str(datetime.datetime.today().weekday()) == '6':
-            await message_channel.send("test_6")
+            await message.channel.send(file=discord.File('d_t6.png'))
 
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
-            if str(datetime.datetime.now().hour) == '9' and str(datetime.datetime.now().minute) == '50':
+            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '00':
                 print('It is time')
                 return
             await asyncio.sleep(30)
