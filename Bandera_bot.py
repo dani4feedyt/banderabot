@@ -68,7 +68,7 @@ try:
 
     @tasks.loop(hours=24)
     async def msg1():
-        message_channel = bot.get_channel(695715314696061072)
+        message_channel = bot.get_channel(812366630062915616)
         if str(datetime.datetime.today().weekday()) == '0':
             await message.channel.send(file=discord.File('d_t0.png'))
         elif str(datetime.datetime.today().weekday()) == '1':
@@ -87,7 +87,7 @@ try:
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
-            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '00':
+            if str(datetime.datetime.now().hour) == '17' and str(datetime.datetime.now().minute) == '13':
                 print('It is time')
                 return
             await asyncio.sleep(30)
