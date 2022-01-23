@@ -68,26 +68,26 @@ try:
 
     @tasks.loop(hours=24)
     async def msg1():
-        message_channel = bot.get_channel(812366630062915616)
+        message_channel = bot.get_channel(695715314696061072)
         if str(datetime.datetime.today().weekday()) == '0':
-            await message.channel.send(file=discord.File('d_t0.png'))
+            await message_channel.send(file=discord.File('d_t0.png'))
         elif str(datetime.datetime.today().weekday()) == '1':
-            await message.channel.send(file=discord.File('d_t1.png'))
+            await message_channel.send(file=discord.File('d_t1.png'))
         elif str(datetime.datetime.today().weekday()) == '2':
-            await message.channel.send(file=discord.File('d_t2.png'))
+            await message_channel.send(file=discord.File('d_t2.png'))
         elif str(datetime.datetime.today().weekday()) == '3':
-            await message.channel.send(file=discord.File('d_t3.png'))
+            await message_channel.send(file=discord.File('d_t3.png'))
         elif str(datetime.datetime.today().weekday()) == '4':
-            await message.channel.send(file=discord.File('d_t4.png'))
+            await message_channel.send(file=discord.File('d_t4.png'))
         elif str(datetime.datetime.today().weekday()) == '5':
-            await message.channel.send(file=discord.File('d_t5.png'))
+            await message_channel.send(file=discord.File('d_t5.png'))
         elif str(datetime.datetime.today().weekday()) == '6':
-            await message.channel.send(file=discord.File('d_t6.png'))
+            await message_channel.send(file=discord.File('d_t6.png'))
 
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
-            if str(datetime.datetime.now().hour) == '17' and str(datetime.datetime.now().minute) == '13':
+            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
                 print('It is time')
                 return
             await asyncio.sleep(30)
