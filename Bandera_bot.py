@@ -223,49 +223,36 @@ try:
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         print(channel2)
         if member.voice:
-            print(true)
-            channel3 = member.voice.channel.id
+            channel3 = member.voice.channel
         else:
             return
         print(channel3)
-        bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance)
+        bot.dispatch('kanava_command', ctx, channel1, channel2, channel3, member, t, chance)
         
     @bot.event
     async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
-        if member.voice is None:
-            for nt in range(25):
-                time.sleep(1)
-                if member.voice is not None:
-                    return
-        else:
-            for i in range(t):
-                if member.voice is not None:
-                    rn = randint(0, 10)
-                    ch = round(chance/10)
-                    await member.edit(voice_channel=channel1)
-                    time.sleep(0.5)
-                    await member.edit(voice_channel=channel2)
-                    time.sleep(0.5)
-                    await member.send("**АНУ, СЕПАРАТЮГА, ТИ КАЄШСЯ В СВОЇХ ЗЛОЧИНАХ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
-                    def check(m):
-                        return (m.content.lower() == 'да' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так' or m.content.lower() == 'ні' or m.content.lower() == 'нет' or m.content.lower() == 'no')
-                    try:
-                        m = await bot.wait_for("message", check=check, timeout = 1.5)
-                    except asyncio.TimeoutError:
-                        continue
-                    else:
-                        if rn <= ch:
-                            await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаєш волю. Хлопці, витягайте його!")
-                            break
-                        elif rn > ch:
-                            await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!")
-                            await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
-                            continue
-                if member.voice is None:
-                    for nt in range(35):
-                        if member.voice is not None:
-                            break
-                    
+        for i in range(t): 
+            rn = randint(0, 10)
+            ch = round(chance/10)
+            await member.edit(voice_channel=channel1)
+            time.sleep(0.5)
+            await member.edit(voice_channel=channel2)
+            time.sleep(0.5)
+            await member.send("**АНУ, СЕПАРАТЮГА, ТИ КАЄШСЯ В СВОЇХ ЗЛОЧИНАХ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
+            def check(m):
+                return (m.content.lower() == 'да' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так' or m.content.lower() == 'ні' or m.content.lower() == 'нет' or m.content.lower() == 'no')
+            try:
+                m = await bot.wait_for("message", check=check, timeout = 1.5)
+            except asyncio.TimeoutError:
+                continue
+            else:
+                if rn <= ch:
+                    await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаєш волю. Хлопці, витягайте його!")
+                    break
+                elif rn > ch:
+                    await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!")
+                    await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
+                    continue
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.edit(voice_channel=channel3)
