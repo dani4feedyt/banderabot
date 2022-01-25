@@ -221,10 +221,12 @@ try:
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
+        print(channel2)
         if member.voice:
             channel3 = member.voice.channel.id
         else:
             return
+        print(channel3)
         bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance)
         
     @bot.event
