@@ -223,6 +223,7 @@ try:
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         print(channel2)
         if member.voice:
+            print(true)
             channel3 = member.voice.channel.id
         else:
             return
@@ -230,7 +231,7 @@ try:
         bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance)
         
     @bot.event
-    async def on_kanava_command(ctx, channel1, channel2, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
+    async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
         if member.voice is None:
             for nt in range(25):
                 time.sleep(1)
