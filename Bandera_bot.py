@@ -4,6 +4,7 @@ try:
     start_time = time.time()
 
     import datetime
+    import inspect
     import discord
     from discord.ext import commands, tasks
     from Bandera_cfg import settings
@@ -35,8 +36,8 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.4.1'
-    patch_note = '•minor bug fixes; •added daily pic dispatch'
+    version = 'release 2.4.2'
+    patch_note = '•minor bug fixes; •more optimized logs'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
@@ -47,6 +48,10 @@ try:
         months['feb'] = 29
     appeal = ["козаче", "хлопче", "друже", "вуйко", "брате", "дядьку", "товаришу"]
     ############Global var############
+
+    @bot.event
+    async def on_command(ctx):
+        print(f"Triggered... <{ctx.command}>; server: <{ctx.guild.name}>; channel: <{ctx.channel.name}>; user: <{ctx.message.author}>")
     
     @bot.event
     async def on_member_join(member):
@@ -61,7 +66,6 @@ try:
     
     @bot.event
     async def on_ready():
-        print('1')
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
         print(datetime.datetime.now().hour)
@@ -69,20 +73,9 @@ try:
     @tasks.loop(hours=24)
     async def msg1():
         message_channel = bot.get_channel(695715314696061072)
-        if str(datetime.datetime.today().weekday()) == '0':
-            await message_channel.send(file=discord.File('d_t0.png'))
-        elif str(datetime.datetime.today().weekday()) == '1':
-            await message_channel.send(file=discord.File('d_t1.png'))
-        elif str(datetime.datetime.today().weekday()) == '2':
-            await message_channel.send(file=discord.File('d_t2.png'))
-        elif str(datetime.datetime.today().weekday()) == '3':
-            await message_channel.send(file=discord.File('d_t3.png'))
-        elif str(datetime.datetime.today().weekday()) == '4':
-            await message_channel.send(file=discord.File('d_t4.png'))
-        elif str(datetime.datetime.today().weekday()) == '5':
-            await message_channel.send(file=discord.File('d_t5.png'))
-        elif str(datetime.datetime.today().weekday()) == '6':
-            await message_channel.send(file=discord.File('d_t6.png'))
+        t = str(datetime.datetime.today().weekday())
+        await message_channel.send(file=discord.File(f'd_t{t}.png'))
+        
 
     @msg1.before_loop
     async def before_msg1():
@@ -131,13 +124,11 @@ try:
     
     @bot.command()
     async def id(ctx, member: discord.User):
-        print(f"Triggered... **id**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send(member.id)
         await ctx.send(datetime.datetime.now().time())
 
     @bot.command()
     async def fetch(ctx, msgID: int):
-        print(f"Triggered... **fetch**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         msg = await ctx.fetch_message(msgID)
         timestamp = msg.created_at
         timestamp = timestamp + datetime.timedelta(hours=2)
@@ -145,14 +136,12 @@ try:
 
     @bot.command()####'fi' - Global var####
     async def save(ctx, *, msg):
-        print(f"Triggered... **save**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
         fi.write(msg + " ")
         fi.close
 
     @bot.command()####'fi' - Global var####
     async def read(ctx):
-        print(f"Triggered... **read**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         fi = open("data.txt", "r")
         if fi.mode == 'r':
             contents = fi.read()
@@ -160,19 +149,16 @@ try:
     
     @bot.command()####'fi' - Global var####
     async def c_save(ctx):
-        print(f"Triggered... **c_save**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         fi = open("data.txt", "w").close()
             
     @bot.command()
     async def rg8421(ctx):
-        print(f"Triggered... **rg8421**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         author = ctx.message.author
         await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " зазіхнув на головну тайну калу, та дізнався рецепт надчистого лайна:" + "\n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
 
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
         await ctx.send(f"*Підрахування...*")
-        print(f"Triggered... **rates**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         counter = 0
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
@@ -222,12 +208,23 @@ try:
                 rt = rt[:-2]
             await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
 
+    @bot.command()
+    async def t_voice(ctx, member: discord.Member):
+        if member.voice:
+            channel_return = member.voice.channel.id
+        else:
+            return 
+        await ctx.send(channel_return)
+
     @bot.command(name='kanava')
-    @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)###############################При добавлении на другой серв - намутить мутку на мутку канала
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30):
-        print(f"Triggered... **kanava**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
+        if member.voice:
+            channel3 = member.voice.channel.id
+        else:
+            return
         bot.dispatch('kanava_command', ctx, channel1, channel2, member, t, chance)
         
     @bot.event
@@ -266,12 +263,12 @@ try:
                         if member.voice is not None:
                             break
                     
-        await member.send("Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
+        await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
+        await member.edit(voice_channel=channel3)
 
     @bot.command()
     async def t_greeting(ctx, member: discord.Member):
-        print(f"Triggered... **t_greeting**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         guild = ctx.guild
         await ctx.send(f'{member}')
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
@@ -279,7 +276,6 @@ try:
 
     @bot.command()
     async def t_invite(ctx, member: discord.Member, age: int = 60):
-        print(f"Triggered... **t_invite**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         guild = ctx.guild
         message = discord.Message
         author = ctx.message.author
@@ -288,25 +284,21 @@ try:
 
     @bot.command(name="invite")
     async def invite(ctx, age: int = 60):
-        print(f"Triggered... **invite**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         link = await ctx.channel.create_invite(max_age = age*60)
         await ctx.send(f"Посилання для запрошення ваших друзів на {age} хв!\n{link}")
 
     @bot.command()
     async def slava_ukraine(ctx):
-        print(f"Triggered... **slava_ukraine**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         author = ctx.message.author
         await ctx.send(f"**Героям слава, {author.mention}!**")
 
     @bot.command(pass_context = True)
     async def echo(ctx, *, msg):
-        print(f"Triggered... **echo**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send(msg)
         await ctx.message.delete()
 
     @bot.command(name="info")
     async def info(ctx: commands.Context, inline=False):
-        print(f"Triggered... **info**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
         embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери", inline=inline)
@@ -332,7 +324,6 @@ try:
 
     @bot.command()
     async def pfp(ctx, member: discord.Member):
-        print(f"Triggered... **pfp**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         c = 0
         if member.id == 783069117602857031:
             pfp = "**Традиція і Порядок!**"
@@ -367,7 +358,6 @@ try:
             
     @bot.command(name="birb")
     async def birb(ctx):
-        print(f"Triggered... **birb**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         t2 = ['Випадковий птах для тебе',
                'Тримай птаха', 'Випадковий птах, як ти й просив',
                'Світлина випадкового птаха', 'Світлина птаха, як ти й просив',
@@ -381,7 +371,6 @@ try:
 
     @bot.command(pass_context = True)
     async def t_check(message):
-        print(f"Triggered... **t_check**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
         def check(m):
@@ -396,7 +385,6 @@ try:
     @bot.command(pass_context = True)
     @commands.has_permissions(kick_members = True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
-        print(f"Triggered... **kick**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         if user == ctx.message.author:
             await ctx.send("**Помилка.** Ви не можете виключити себе.")
         else:
@@ -441,7 +429,6 @@ try:
             
     @bot.command(name="rule")
     async def rule(ctx, num: int):
-        print(f"Triggered... **rule**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         if 1 <= num <= len(links):
             await ctx.send(links[num])
         else:
@@ -449,7 +436,6 @@ try:
             
     @bot.command(name="pasta")
     async def pasta(ctx, pa: int):
-        print(f"Triggered... **pasta**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         if 1 <= pa < 5:
             await ctx.send(Quotes1[pa])
         else:
@@ -457,13 +443,11 @@ try:
 
     @bot.command()
     async def quote(ctx: commands.Context):
-        print(f"Triggered... **quote**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         _dict = random.choice(Quotes2)
         await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
         
     @bot.command(aliases=['myroles'])
     async def _myroles(ctx):
-        print(f"Triggered... **_myroles**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         member = ctx.message.author 
         member_roles = member.roles 
         await ctx.send(f"{member.mention} перелік твоїх ролей:\n{(member_roles).join(' ')}")
@@ -471,24 +455,20 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
-        print(f"Triggered... **kanava_info**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допрошуватися особисто Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def mute_info(ctx):
-        print(f"Triggered... **mute_info**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send("•Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів і отримає особисте повідомлення з причиною муту\n•При закінченні терміну дії, мут буде автоматично знято\n•Для дострокового зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     @bot.command()
     async def spam_info(ctx):
-        print(f"Triggered... **spam_info**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send("•Щоб розпочати **спам**, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
     
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
-        print(f"Triggered... **mute**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         if 1 <= rule_n <= len(links):
             rule = (links[rule_n])
         else:
@@ -528,13 +508,11 @@ try:
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def roles(ctx, member: discord.Member):
-        print(f"Triggered... **roles**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send(member.roles)
             
     @bot.command(pass_context = True)
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
-        print(f"Triggered... **unmute**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         id1 = member.id
         user = await ctx.message.guild.query_members(user_ids=[id1])
         user = user[0]
@@ -550,7 +528,6 @@ try:
             
     @bot.command()####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
     async def t_time(ctx):
-        print(f"Triggered... **t_time**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         timestamp = ctx.message.created_at
         print(timestamp)
         timestamp = str(timestamp)[:-10]
@@ -576,7 +553,6 @@ try:
 
     @bot.command()
     async def t_count(ctx, d: int, m: int, h: int, mi: int):
-        print(f"Triggered... **t_count**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         count = 0
         h-=2
         date = datetime.datetime(year = 2021, month=m, day=d, hour=h, minute=mi)
@@ -587,7 +563,6 @@ try:
     @bot.command(pass_context=True)
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, amount = 100):
-        print(f"Triggered... **clear**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         sfx = "ь"
         if 11<=amount<=14:
             sfx = "ь"
@@ -615,7 +590,6 @@ try:
     @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
     @commands.has_permissions(manage_messages=True)####'today' - Global var####
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
-        print(f"Triggered... **clear_t**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         mi = int(mi)
         try:
             d = int(d)
@@ -683,7 +657,6 @@ try:
     
     @bot.command()
     async def spam(ctx, intr: float, count: int, *ar):
-        print(f"Triggered... **spam**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         attention = ("\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**")
         ar = list(ar)
         ar = (' '.join(ar))
@@ -711,17 +684,14 @@ try:
                 
     @bot.command()
     async def stop(ctx: commands.Context):
-        print(f"Triggered... **stop**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         os.system('python "Bandera_bot.py"')
         quit()
     
     @bot.command()
     async def ping(ctx):
-        print(f"Triggered... **ping**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send(f'Моя затримка складає **{round(bot.latency, 3)}** с')
         
  ###############################################ErrorHandling###############################################
-
     @bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
@@ -809,7 +779,6 @@ try:
     
     @bot.command()
     async def start_time(ctx):
-        print(f"Triggered... **start_time**; server: **{ctx.guild.name}**; channel: **{ctx.channel.name}**; user: **{ctx.message.author}**")
         await ctx.send(f'Цього разу, час мого запуску склав' + ' ' + st)
         
     print(st)
