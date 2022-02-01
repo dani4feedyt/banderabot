@@ -36,7 +36,7 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.4.2'
+    version = 'release 2.4.2A'
     patch_note = '•minor bug fixes; •more optimized logs'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
@@ -72,16 +72,29 @@ try:
 
     @tasks.loop(hours=24)
     async def msg1():
+        global img_g
         message_channel = bot.get_channel(695715314696061072)
         t = str(datetime.datetime.today().weekday())
-        await message_channel.send(file=discord.File(f'd_t{t}.png'))
-        
+        img_g = await message_channel.send(file=discord.File(f'd_t{t}.png'))
+        msg_d.start()
 
+    @tasks.loop(hours=24)
+    async def msg_d():
+        await img_d.delete()
+        
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
             if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
-                print('It is time')
+                print('It is time to create')
+                return
+            await asyncio.sleep(30)
+
+    @msg_d.before_loop
+    async def before_msg_d():
+        for _ in range(60*60*24):
+            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
+                print('It is time to delete')
                 return
             await asyncio.sleep(30)
 
