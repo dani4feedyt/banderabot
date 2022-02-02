@@ -93,7 +93,7 @@ try:
     @msg_d.before_loop
     async def before_msg_d():
         for _ in range(60*60*24):
-            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '31':
+            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '29':
                 print('It is time to delete')
                 return
             await asyncio.sleep(30)
