@@ -234,19 +234,16 @@ try:
     async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
-        print(channel2)
         if member.voice:
             channel3 = member.voice.channel
         else:
             channel3 = None
-        print(channel3)
         bot.dispatch('kanava_command', ctx, channel1, channel2, channel3, member, t, chance)
         
     @bot.event
     async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
         for i in range(t):
             if member.voice is True:
-                print('1')
                 rn = randint(0, 10)
                 ch = round(chance/10)
                 await member.edit(voice_channel=channel1)
