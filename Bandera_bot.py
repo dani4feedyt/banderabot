@@ -36,8 +36,8 @@ try:
     ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
-    version = 'release 2.4.2A'
-    patch_note = '•minor bug fixes; •more optimized logs'
+    version = 'release 2.4.2B'
+    patch_note = '•minor bug fixes; •improved "kanava" command'
     w = ("Bandera_bot.py")
     fi = open("data.txt","w+")
     data_filename = "data.txt"
@@ -238,14 +238,15 @@ try:
         if member.voice:
             channel3 = member.voice.channel
         else:
-            return
+            channel3 = None
         print(channel3)
         bot.dispatch('kanava_command', ctx, channel1, channel2, channel3, member, t, chance)
         
     @bot.event
     async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
         for i in range(t):
-            if member.voice:
+            if member.voice is True:
+                print('1')
                 rn = randint(0, 10)
                 ch = round(chance/10)
                 await member.edit(voice_channel=channel1)
@@ -268,6 +269,7 @@ try:
                         await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
                         continue
             else:
+                await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів...")
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі пощастило...")
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")##########
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
@@ -702,7 +704,7 @@ try:
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
             print("Error... **GENERAL_COMMAND**: CommandNotFound")
-            await ctx.send("**Помилка.** Даної команди не існує")
+            await ctx.send("**Помилка.** Даної команди не існує.")
     
     @rates.error
     async def rates_error(ctx, error):
@@ -717,10 +719,7 @@ try:
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Довіра бота)**||")
         if isinstance(error, commands.MemberNotFound):
             print("Error... **kanava**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
-        if isinstance(error, discord.HTTPException):
-            print("Error... **kanava**: HTTPException")
-            await ctx.send("**Помилка.** Користувач не знаходиться в голосовому каналі")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
 
     @clear_t.error
     async def clear_t_error(ctx, error):
@@ -747,13 +746,13 @@ try:
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kick @(Нікнейм) (Причина)**||")
         if isinstance(error, commands.MemberNotFound):
             print("Error... **kick**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері.")
 
     @pasta.error
     async def pasta_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             print("Error... **pasta**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть номер бажаної пасти")
+            await ctx.send("**Помилка.** Будь ласка, введіть номер бажаної пасти.")
 
     @mute.error
     async def mute_error(ctx, error):
@@ -762,16 +761,16 @@ try:
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Порушене правило) (Причина)**||")
         if isinstance(error, commands.MemberNotFound):
             print("Error... **mute**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
 
     @unmute.error
     async def unmute_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             print("Error... **unmute**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть нікнейм користувача")
+            await ctx.send("**Помилка.** Будь ласка, введіть нікнейм користувача.")
         if isinstance(error, commands.MemberNotFound):
             print("Error... **unmute**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно")
+            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
 
     @spam.error
     async def spam_error(ctx, error):
