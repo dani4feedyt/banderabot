@@ -689,6 +689,7 @@ try:
                 
     @bot.command()
     async def stop(ctx: commands.Context):
+        await ctx.send("Мене було зупинено, але силу мого духу не спинити нікому!")
         os.system('python "Bandera_bot.py"')
         quit()
     
