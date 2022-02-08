@@ -243,7 +243,7 @@ try:
     @bot.event
     async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
         for i in range(t):
-            if member.voice is True:
+            if member.voice:
                 rn = randint(0, 10)
                 ch = round(chance/10)
                 await member.edit(voice_channel=channel1)
@@ -268,6 +268,7 @@ try:
             else:
                 await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів...")
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі пощастило...")
+                return
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")##########
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.edit(voice_channel=channel3)
