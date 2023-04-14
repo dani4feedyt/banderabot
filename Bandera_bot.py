@@ -568,15 +568,17 @@ try:
         
     @bot.command(pass_context=True)
     @commands.has_permissions(manage_messages=True)
-    async def clear(ctx, amount = 100):
+    async def clear(ctx, count = 100):
         sfx = "ь"
-        if 11<=amount<=14:
+        suff = ("1", "2", "3", "4")
+        if 11<=count<=14:
             sfx = "ь"
-        elif (str(amount).endswith("1") or str(amount).endswith("2") or str(amount).endswith("3") or str(amount).endswith("4")):
+        elif (str(count).endswith(suff)):
             sfx = "ня"
         else:
             sfx = "ь"
-        await ctx.send(f"Ви дійсно бажаєте очистити **{amount}** повідомлен{sfx}?", delete_after=60)
+            
+        await ctx.send(f"Ви дійсно бажаєте очистити **{count}** повідомлен{sfx}?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -584,14 +586,16 @@ try:
         except asyncio.TimeoutError:
             print("TimeoutError")
         else:
-            if int(amount) <= 150:
-                await ctx.channel.purge(limit=int(amount+3))
-                if int(amount) >= 100:
-                    amount = 'дуууууже багато'
+            if int(count) <= 150:
+                await ctx.channel.purge(limit=int(count+3))
+                if int(count) >= 100:
+                    count = 'дуууууже багато'
                 time.sleep(0.75)    
-                await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
+                await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
+
+
 
     @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
     @commands.has_permissions(manage_messages=True)####'today' - Global var####
@@ -611,6 +615,7 @@ try:
         ho = h-2
         da = int(d)
         mo = int(m)
+        
         if ho == -2:
             ho = 22
             da = int(d)-1
@@ -623,31 +628,32 @@ try:
         if mo == 0:
             mo = 12
             ye -= 1
-        h = str(h)
-        mi = str(mi)
-        d = str(d)
-        m = str(m)
-        date = datetime.datetime(year = int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(mi))
+            
+        date = [h, mi, d, m]
+        date_str = [str(i) for i in date]
+            
+        date_t = datetime.datetime(year = int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
+        
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=60)
-        async for message in ctx.channel.history(limit = None, after=date):
+        async for message in ctx.channel.history(limit = None, after=date_t):
             count += 1
-        amount = count
+            
         sfx = "ь"
-        if 11<=amount<=14:
+        suff = ("1", "2", "3", "4")
+        if 11<=count<=14:
             sfx = "ь"
-        elif (str(amount).endswith("1") or str(amount).endswith("2") or str(amount).endswith("3") or str(amount).endswith("4")):
+        elif (str(count).endswith(suff)):
             sfx = "ня"
         else:
             sfx = "ь"
-        if len(h) == 1:
-            h = '0' + h################Возможно заменить функцией?
-        if len(mi) == 1:
-            mi = '0' + mi
-        if len(d) == 1:
-            d = '0' + d
-        if len(m) == 1:
-            m = '0' + m
-        await ctx.send(f"Ви дійсно бажаєте очистити **{amount}** повідомлен{sfx} починаючи з **{h}:{mi} {d}-{m}-{ye}**?", delete_after=60)
+
+        a = 0
+        for i in date_str:
+            if len(i) == 1:
+                date_str[a] = '0' + i
+                a += 1
+            
+        await ctx.send(f"Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}**?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
         try:
@@ -655,11 +661,13 @@ try:
         except asyncio.TimeoutError:
             print("TimeoutError")
         else:
-            if int(amount) <= 500:
-                await ctx.channel.purge(limit=int(amount)+2)
-                await ctx.send(f'Було видалено **{amount}** повідомлен{sfx}!', delete_after=60)
+            if int(count) <= 500:
+                await ctx.channel.purge(limit=int(count)+2)
+                await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
+
+
     
     @bot.command()
     async def spam(ctx, intr: float, count: int, *ar):
@@ -687,12 +695,16 @@ try:
             time.sleep(intr)
             a+=1
         await ctx.send("**Спам** було завершено")       
+
+
                 
     @bot.command()
     async def stop(ctx: commands.Context):
         await ctx.send("Мене було зупинено, але силу мого духу не спинити нікому!")
         os.system('python "Bandera_bot.py"')
         quit()
+
+
     
     @bot.command()
     async def ping(ctx):
