@@ -9,9 +9,7 @@ from collections import Counter
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
-a1 = 1
-b1 = 1
-c1 = 1
+
 n_1 = 22
 page = requests.get("https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/",headers={'User-Agent': 'Chrome/23.0.1271.64'})
 soup = BeautifulSoup(page.content, 'html.parser')
