@@ -274,15 +274,15 @@ try:
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.edit(voice_channel=channel3)
 
-    @bot.command(name='greeting')
-    async def t_greeting(ctx, member: discord.Member):
+    @bot.command(name='t_greeting')
+    async def greeting(ctx, member: discord.Member):
         guild = ctx.guild
         await ctx.send(f'{member}')
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
-    @bot.command(name='invitation')
-    async def t_invite(ctx, member: discord.Member, age: int = 60):
+    @bot.command(name='t_invite')
+    async def invite(ctx, member: discord.Member, age: int = 60):
         guild = ctx.guild
         message = discord.Message
         author = ctx.message.author
@@ -299,7 +299,7 @@ try:
         author = ctx.message.author
         await ctx.send(f"**Героям слава, {author.mention}!**")
 
-    @bot.command(pass_context = True, name='fetch id')
+    @bot.command(pass_context = True, name='echo')
     async def echo(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
@@ -329,7 +329,7 @@ try:
         
         await ctx.send(embed=embed)
 
-    @bot.command()
+    @bot.command(name='pfp')
     async def pfp(ctx, member: discord.Member):
         c = 0
         if member.id == 783069117602857031:
@@ -376,7 +376,7 @@ try:
         embed.set_image(url = json_data["link"])
         await ctx.send(embed = embed)
 
-    @bot.command(pass_context = True)
+    @bot.command(pass_context = True, name='$check')
     async def t_check(message):
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
@@ -389,7 +389,7 @@ try:
         else:
             await channel.send("Підтверджено")
                 
-    @bot.command(pass_context = True)
+    @bot.command(pass_context = True, name='kick')
     @commands.has_permissions(kick_members = True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
         if user == ctx.message.author:
@@ -448,13 +448,13 @@ try:
         else:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. \n*Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
 
-    @bot.command()
+    @bot.command(name='quote')
     async def quote(ctx: commands.Context):
         _dict = random.choice(Quotes2)
         await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
         
-    @bot.command(aliases=['myroles'])
-    async def _myroles(ctx):
+    @bot.command(aliases=['myroles'], name='$myroles')
+    async def t_myroles(ctx):
         member = ctx.message.author 
         member_roles = member.roles 
         await ctx.send(f"{member.mention} перелік твоїх ролей:\n{(member_roles).join(' ')}")
@@ -512,12 +512,12 @@ try:
             embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов. Приємного спілкування!", color=0x013ADF)
             await ctx.send(embed=embed)
 
-    @bot.command()
+    @bot.command(name='$roles')
     @commands.has_permissions(manage_messages=True)
-    async def roles(ctx, member: discord.Member):
+    async def t_roles(ctx, member: discord.Member):
         await ctx.send(member.roles)
             
-    @bot.command(pass_context = True)
+    @bot.command(pass_context = True, name='unmute')
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
         id1 = member.id
@@ -533,7 +533,7 @@ try:
         else:
             await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
             
-    @bot.command()####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
+    @bot.command(name='$time')####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
     async def t_time(ctx):
         timestamp = ctx.message.created_at
         print(timestamp)
@@ -558,7 +558,7 @@ try:
         print(date, time_0, date12)
         await ctx.send(date_f + ' ' + time_f)
 
-    @bot.command()
+    @bot.command(name='$count')
     async def t_count(ctx, d: int, m: int, h: int, mi: int):
         count = 0
         h-=2
@@ -567,7 +567,7 @@ try:
             count += 1
         await ctx.send(count)
         
-    @bot.command(pass_context=True)
+    @bot.command(pass_context=True, name='clear')
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, count = 100):
         sfx = "ь"
@@ -598,7 +598,7 @@ try:
 
 
 
-    @bot.command(pass_context=True) ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
+    @bot.command(pass_context=True, name='clear_t') ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
     @commands.has_permissions(manage_messages=True)####'today' - Global var####
     async def clear_t(ctx, d: str, m: str, h: str, mi: str):
         mi = int(mi)
@@ -670,7 +670,7 @@ try:
 
 
     
-    @bot.command()
+    @bot.command(name='spam')
     async def spam(ctx, intr: float, count: int, *ar):
         attention = ("\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**")
         ar = list(ar)
@@ -699,7 +699,7 @@ try:
 
 
                 
-    @bot.command()
+    @bot.command(name='stop')
     async def stop(ctx: commands.Context):
         await ctx.send("Мене було зупинено, але силу мого духу не спинити нікому!")
         os.system('python "Bandera_bot.py"')
@@ -707,8 +707,8 @@ try:
 
 
     
-    @bot.command()
-    async def ping(ctx):
+    @bot.command(name='$ping')
+    async def t_ping(ctx):
         await ctx.send(f'Моя затримка складає **{round(bot.latency, 3)}** с')
         
  ###############################################ErrorHandling###############################################
@@ -794,8 +794,8 @@ try:
 
     st = ("--- %s секунд ---" % round((time.time() - start_time), 3))
     
-    @bot.command()
-    async def start_time(ctx):
+    @bot.command(name='$start_t')
+    async def t_start_time(ctx):
         await ctx.send(f'Цього разу, час мого запуску склав' + ' ' + st)
         
     print(st)
