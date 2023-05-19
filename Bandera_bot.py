@@ -575,17 +575,20 @@ try:
     async def clear(ctx, count = 100):
         sfx = "ь"
         suff = ("1", "2", "3", "4")
-        if 11<=count<=14:
+        suff2 = ("11", "12", "13", "14")
+        if str(count).endswith(suff2):
             sfx = "ь"
-        elif (str(count).endswith(suff)):
+        elif str(count).endswith(suff):
             sfx = "ня"
 
-        await ctx.send(f"Ви дійсно бажаєте очистити **{count}** повідомлен{sfx}?", delete_after=60)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx}? \n*Для підтверждення - напишіть "так" протягом 7 секунд* ', delete_after=60)
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+            if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                return m.content.lower()
         try:
-            m = await bot.wait_for("message", check=check, timeout = 60)
+            m = await bot.wait_for("message", check=check, timeout = 7)
         except asyncio.TimeoutError:
+            await ctx.send("Час очікування вичерпано, запит скасовано.")
             print("TimeoutError")
         else:
             if int(count) <= 150:
@@ -600,8 +603,8 @@ try:
 
 
     @bot.command(pass_context=True, name='clear_t') ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
-    @commands.has_permissions(manage_messages=True)####'today' - Global var####
-    async def clear_t(ctx, d: str, m: str, h: str, mi: str):
+    @commands.has_permissions(manage_messages=True)
+    async def clear_t(ctx, d: str, m: str, h=00, mi=00):
         mi = int(mi)
         try:
             d = int(d)
@@ -636,34 +639,37 @@ try:
 
         date_t = datetime.datetime(year = int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
 
-        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=60)
+        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=15)
         async for message in ctx.channel.history(limit = None, after=date_t):
             count += 1
 
         sfx = "ь"
         suff = ("1", "2", "3", "4")
-        if 11<=count<=14:
+        suff2 = ("11", "12", "13", "14")
+        if str(count).endswith(suff2):
             sfx = "ь"
-        elif (str(count).endswith(suff)):
+        elif str(count).endswith(suff):
             sfx = "ня"
-        else:
-            sfx = "ь"
 
         a = 0
         for i in date_str:
             if len(i) == 1:
                 date_str[a] = '0' + i
-                a += 1
+            a += 1
 
-        await ctx.send(f"Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}**?", delete_after=60)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}**? \n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=60)
+
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+            if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                return m.content.lower()
         try:
-            m = await bot.wait_for("message", check=check, timeout = 60)
+            m = await bot.wait_for("message", check=check, timeout = 7)
         except asyncio.TimeoutError:
             print("TimeoutError")
+            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after = 10)
         else:
             if int(count) <= 500:
+                print(int(count)+2)
                 await ctx.channel.purge(limit=int(count)+2)
                 await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
             else:
@@ -680,13 +686,15 @@ try:
         if intr < 0.5:
             await ctx.send("**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.", delete_after=29)
             await ctx.send("Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**", delete_after=29)
+
             def check(m):
-                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                    return m.content.lower()
             try:
                 m = await bot.wait_for("message", check=check, timeout = 30)
             except asyncio.TimeoutError:
-                os.system('python "Bandera_bot.py"')
-                quit()
+                print("TimeoutError")
+                return
             else:
                 if intr <= 0.3:
                     intr = 0.3
