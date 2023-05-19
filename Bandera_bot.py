@@ -87,7 +87,7 @@ try:
     async def before_msg1():
         for _ in range(60*60*24):
             if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
-                print('It is time to create')
+                print('It is time to create!')
                 return
             await asyncio.sleep(30)
 
@@ -106,16 +106,18 @@ try:
                 await bot.process_commands(message)
             else:
                 await message.channel.send("Мене хтось кликав?")
-                def check(m):############Ответ Да
-                    return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                def check(m):
+                    if any (m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                        return (m.content.lower())
                 try:
                     m = await bot.wait_for("message", check=check, timeout = 15)
                 except asyncio.TimeoutError:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
                     await message.channel.send("Що сталося?")
-                    def check(m):############Поздравление с др
-                        return (m.content.lower() == 'з днем народження' or m.content.lower() == 'с днем рождения' or m.content.lower() == 'с др' or m.content.lower() == 'з др') #########################ДОПИЛИТЬ НОРМАЛЬНЫЙ КОНТЕНТ
+                    def check(m):
+                        if any(m.content.lower() == i for i in ('з днем народження', 'с днем рождения', 'с др', 'з др')):
+                            return (m.content.lower())
                     try:
                         m = await bot.wait_for("message", check=check, timeout = 15)
                     except asyncio.TimeoutError:
