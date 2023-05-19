@@ -1,6 +1,6 @@
 try:
     import time
-    
+
     start_time = time.time()
 
     import datetime
@@ -53,7 +53,7 @@ try:
     @bot.event
     async def on_command(ctx):
         print(f"Triggered... <{ctx.command}>; server: <{ctx.guild.name}>; channel: <{ctx.channel.name}>; user: <{ctx.message.author}>")
-    
+
     @bot.event
     async def on_member_join(member):
         guild = bot.get_guild(695715313911857186)
@@ -64,7 +64,7 @@ try:
                           "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await bot.get_channel(695715314696061072).send(f"Ласкаво просимо на сервер **{guild.name}**, {member.mention}. Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
-    
+
     @bot.event
     async def on_ready():
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
@@ -82,7 +82,7 @@ try:
     @tasks.loop(hours=24)
     async def msg_d():
         await img_g.delete()
-        
+
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
@@ -127,7 +127,7 @@ try:
                         print(rand)
                         await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
                         if rand == [1]:
-                            await message.channel.send(file=discord.File('b1.png'))    
+                            await message.channel.send(file=discord.File('b1.png'))
                     else:
                         if str(today) == f"{today.year}-01-01":
                             await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
@@ -137,7 +137,7 @@ try:
                         await message.channel.send("Гаразд, пішов я по своїх справах...")
         else:
             await bot.process_commands(message)
-    
+
     @bot.command(name='fetch id')
     async def id(ctx, member: discord.User):
         await ctx.send(member.id)
@@ -154,7 +154,6 @@ try:
     async def save(ctx, *, msg):
         fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
         fi.write(msg + " ")
-        fi.close
 
     @bot.command()####'fi' - Global var####
     async def read(ctx):
@@ -162,57 +161,59 @@ try:
         if fi.mode == 'r':
             contents = fi.read()
             await ctx.send(contents)
-    
+
     @bot.command()####'fi' - Global var####
     async def c_save(ctx):
         fi = open("data.txt", "w").close()
-            
+
     @bot.command(name='rg_8421')
     async def rg8421(ctx):
         author = ctx.message.author
-        await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " зазіхнув на головну тайну калу, та дізнався рецепт надчистого лайна:" + "\n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
+        await ctx.send(f"<@{str(696670757794742322)}>, {author.mention} зазіхнув на головну тайну калу, та дізнався рецепт надчистого лайна: \n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
 
     @bot.command(name='rates')
     async def rates(ctx, rate, amount=None):
-        await ctx.send(f"*Підрахування...*")
-        counter = 0
+        await ctx.send(f"*Підрахування...*", delete_after=10)
+        global val
+        global name
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
-        _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[6].get_text()
+        _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[7].get_text()
         _dict1 = round(float(_dict1.replace(',', '.')),2)
-        _dict2 = soup.find_all('td', {"data-label":"Офіційний курс"})[7].get_text()
+        _dict2 = soup.find_all('td', {"data-label":"Офіційний курс"})[8].get_text()
         _dict2 = round(float(_dict2.replace(',', '.')),2)
         _dict3 = soup.find_all('td', {"data-label":"Офіційний курс"})[16].get_text()
         _dict3 = round(float(_dict3.replace(',', '.')),2)
         _dict4 = soup.find_all('td', {"data-label":"Офіційний курс"})[20].get_text()
         _dict4 = round(float(_dict4.replace(',', '.'))/10,2)
-        _dict5 = soup.find_all('td', {"data-label":"Офіційний курс"})[9].get_text()
+        _dict5 = soup.find_all('td', {"data-label":"Офіційний курс"})[10].get_text()
         _dict5 = round(float(_dict5.replace(',', '.'))/10,2)
-        rate = rate.lower() 
-        if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
+        rate = rate.lower()
+
+        if any(i in rate for i in ['дол', 'us', 'dol']):
+        ##if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
             val = _dict1
-            name = ("долару")
-            counter = 1
-        elif rate == ("євро") or rate == ("евро") or rate == ("eur") or rate == ("euro"):
+            name = ("USD")
+        elif any(i in rate for i in ['євр', 'евр', 'eur']):
             val = _dict2
-            name = ("євро")
-        elif rate ==("шекель") or rate ==("шекелей") or rate ==("шекеля") or rate ==("шекелів") or rate ==("шекелі") or rate == ("ils"):
+            name = ("EUR")
+        elif any(i in rate for i in ['шек', 'ils', 'sh']):
             val = _dict3
-            name = ("шекеля")
-        elif rate == ("рубль") or rate ==("рубля") or rate ==("рублей") or rate ==("рублі") or rate ==("рублів") or rate == ("rub") or rate == ("ruble") or rate == ("rubles"):
+            name = ("ILS")
+        elif any(i in rate for i in ['руб', 'rub']):
             val = _dict4
-            name = ("рубля")
-        elif rate == ("єна") or rate == ("єни") or rate == ("єн") or rate == ("йена") or rate == ("йены") or rate == ("йен") or rate == ("jpy"):
+            name = ("RUB")
+        elif any(i in rate for i in ['йен', 'єн', 'jp', 'jap']):
             val = _dict5
-            name = ("єни")
+            name = ("JPY")
         else:
             await ctx.send("**Помилка.** Курс даної валюти ще не було внесено до бази даних")
-        bot.dispatch('rates_command', ctx, val, name, amount, rate)
-    
+        bot.dispatch('rates_command', ctx, amount)
+
     @bot.event
-    async def on_rates_command(ctx, val, name, amount, rate):
+    async def on_rates_command(ctx, amount):
         if amount is None:
-            await ctx.send(f"{random.choice(appeal).capitalize()}, курс {name} становить **{val}** грн!")  
+            await ctx.send(f"{random.choice(appeal).capitalize()}, курс {name} становить **{val}** грн!")
         else:
             if ',' in amount:
                 amount = str(amount).replace(',', '.')
@@ -222,14 +223,14 @@ try:
             rt = str(rt)
             if rt.endswith('0'):
                 rt = rt[:-2]
-            await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
+            await ctx.send(f"{amount} {name} становить **{rt}** грн!")
 
     @bot.command(name='fetch vc')
     async def t_voice(ctx, member: discord.Member):
         if member.voice:
             channel_return = member.voice.channel.id
         else:
-            return 
+            return
         await ctx.send(channel_return)
 
     @bot.command(name='kanava')
@@ -242,7 +243,7 @@ try:
         else:
             channel3 = None
         bot.dispatch('kanava_command', ctx, channel1, channel2, channel3, member, t, chance)
-        
+
     @bot.event
     async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
         for i in range(t):
@@ -328,7 +329,7 @@ try:
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
         embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value=(f'*{version}*\n||*{patch_note}*||'), inline=inline)
-        
+
         await ctx.send(embed=embed)
 
     @bot.command(name='pfp')
@@ -364,7 +365,7 @@ try:
                 if c == 9:
                     await pfp_t.delete()
                     await ctx.send("**Доступ відхилено.**")
-            
+
     @bot.command(name="birb")
     async def birb(ctx):
         t2 = ['Випадковий птах для тебе',
@@ -374,7 +375,7 @@ try:
                'Світлина птаха']
         response = requests.get("https://some-random-api.ml/img/birb")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color = 0x013ADF, title = (f"{random.choice(t2)}, {random.choice(appeal)}:")) 
+        embed = discord.Embed(color = 0x013ADF, title = (f"{random.choice(t2)}, {random.choice(appeal)}:"))
         embed.set_image(url = json_data["link"])
         await ctx.send(embed = embed)
 
@@ -390,7 +391,7 @@ try:
             print("TimeoutError")
         else:
             await channel.send("Підтверджено")
-                
+
     @bot.command(pass_context = True, name='kick')
     @commands.has_permissions(kick_members = True)
     async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
@@ -434,31 +435,31 @@ try:
                 await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}')
                 await user.send(rule)
                 await user.kick(reason = reason)
-            
-            
+
+
     @bot.command(name="rule")
     async def rule(ctx, num: int):
         if 1 <= num <= len(links):
             await ctx.send(links[num])
         else:
-            await ctx.send("**Помилка.** Правила під таким номером не існує")    
-            
+            await ctx.send("**Помилка.** Правила під таким номером не існує")
+
     @bot.command(name="pasta")
     async def pasta(ctx, pa: int):
         if 1 <= pa < 5:
             await ctx.send(Quotes1[pa])
         else:
-            await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. \n*Для детальної інформації звертайтеся до @dani4feedyt#5200*")      
+            await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. \n*Для детальної інформації звертайтеся до @dani4feedyt#5200*")
 
     @bot.command(name='quote')
     async def quote(ctx: commands.Context):
         _dict = random.choice(Quotes2)
         await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
-        
+
     @bot.command(aliases=['myroles'], name='$myroles')
     async def t_myroles(ctx):
-        member = ctx.message.author 
-        member_roles = member.roles 
+        member = ctx.message.author
+        member_roles = member.roles
         await ctx.send(f"{member.mention} перелік твоїх ролей:\n{(member_roles).join(' ')}")
 
     @bot.command()
@@ -474,7 +475,7 @@ try:
     @bot.command()
     async def spam_info(ctx):
         await ctx.send("•Щоб розпочати **спам**, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
-    
+
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
@@ -518,7 +519,7 @@ try:
     @commands.has_permissions(manage_messages=True)
     async def t_roles(ctx, member: discord.Member):
         await ctx.send(member.roles)
-            
+
     @bot.command(pass_context = True, name='unmute')
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
@@ -534,14 +535,14 @@ try:
             await ctx.send(embed=embed)
         else:
             await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
-            
+
     @bot.command(name='$time')####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
     async def t_time(ctx):
         timestamp = ctx.message.created_at
         print(timestamp)
         timestamp = str(timestamp)[:-10]
         timestamp = timestamp.replace(' ', '')
-        
+
         date = timestamp[:10]
         date = date.replace('-', '')
         date_y = int(date[:4])
@@ -549,7 +550,7 @@ try:
         date_d = int(date[:2])
 
         date_f = (str(date_d) + ' ' + str(date_m) + ' ' + str(date_y))
-        
+
         time_0 = timestamp[10:]
         time_0 = time_0.replace(':', '')
         time_h = int(time_0[:2]) + 2
@@ -568,7 +569,7 @@ try:
         async for message in ctx.channel.history(limit = None, after=date):
             count += 1
         await ctx.send(count)
-        
+
     @bot.command(pass_context=True, name='clear')
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, count = 100):
@@ -578,9 +579,7 @@ try:
             sfx = "ь"
         elif (str(count).endswith(suff)):
             sfx = "ня"
-        else:
-            sfx = "ь"
-            
+
         await ctx.send(f"Ви дійсно бажаєте очистити **{count}** повідомлен{sfx}?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
@@ -593,7 +592,7 @@ try:
                 await ctx.channel.purge(limit=int(count+3))
                 if int(count) >= 100:
                     count = 'дуууууже багато'
-                time.sleep(0.75)    
+                time.sleep(0.75)
                 await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
@@ -618,7 +617,7 @@ try:
         ho = h-2
         da = int(d)
         mo = int(m)
-        
+
         if ho == -2:
             ho = 22
             da = int(d)-1
@@ -631,16 +630,16 @@ try:
         if mo == 0:
             mo = 12
             ye -= 1
-            
+
         date = [h, mi, d, m]
         date_str = [str(i) for i in date]
-            
+
         date_t = datetime.datetime(year = int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
-        
+
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=60)
         async for message in ctx.channel.history(limit = None, after=date_t):
             count += 1
-            
+
         sfx = "ь"
         suff = ("1", "2", "3", "4")
         if 11<=count<=14:
@@ -655,7 +654,7 @@ try:
             if len(i) == 1:
                 date_str[a] = '0' + i
                 a += 1
-            
+
         await ctx.send(f"Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}**?", delete_after=60)
         def check(m):
             return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
@@ -671,10 +670,10 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
 
 
-    
+
     @bot.command(name='spam')
     async def spam(ctx, intr: float, count: int, *ar):
-        attention = ("\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**")
+        attention = ('\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**')
         ar = list(ar)
         ar = (' '.join(ar))
         a = 0
@@ -697,10 +696,10 @@ try:
             await ctx.send(ar)
             time.sleep(intr)
             a+=1
-        await ctx.send("**Спам** було завершено")       
+        await ctx.send("**Спам** було завершено")
 
 
-                
+
     @bot.command(name='stop')
     async def stop(ctx: commands.Context):
         await ctx.send("Мене було зупинено, але силу мого духу не спинити нікому!")
@@ -708,24 +707,24 @@ try:
         quit()
 
 
-    
+
     @bot.command(name='$ping')
     async def t_ping(ctx):
         await ctx.send(f'Моя затримка складає **{round(bot.latency, 3)}** с')
-        
+
  ###############################################ErrorHandling###############################################
     @bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
             print("Error... **GENERAL_COMMAND**: CommandNotFound")
             await ctx.send("**Помилка.** Даної команди не існує.")
-    
+
     @rates.error
     async def rates_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             print("Error... **rates**: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступні курси: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
-            
+
     @kanava.error
     async def kanava_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -752,7 +751,7 @@ try:
         if isinstance(error, commands.MemberNotFound):
             print("Error... **pfp**: MemberNotFound")
             await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
-    
+
     @kick.error
     async def kick_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -791,17 +790,17 @@ try:
         if isinstance(error, commands.MissingRequiredArgument):
             print("Error... **spam**: MissingRequiredArgument")
             await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри\n||**b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**||")
-    
-  ###############################################ErrorHandling###############################################      
+
+  ###############################################ErrorHandling###############################################
 
     st = ("--- %s секунд ---" % round((time.time() - start_time), 3))
-    
+
     @bot.command(name='$start_t')
     async def t_start_time(ctx):
         await ctx.send(f'Цього разу, час мого запуску склав' + ' ' + st)
-        
+
     print(st)
     bot.run(settings['token'])
-    
+
 except GeneratorExit:
     print("Error_12.1 (Generator_Error)")
