@@ -8,8 +8,8 @@ try:
     import discord
     from discord.ext import commands, tasks
     from Bandera_cfg import settings
-    from Bandera_Quotes import _dict0, n_1
-    from Bandera_PyChton_quotes import Quotes1, links, Quotes2
+    from Bandera_Quotes import quotes, n_1
+    from Bandera_PyChton_quotes import Quotes1, links
     from sys import argv, executable
     import json
     import requests
@@ -34,7 +34,6 @@ try:
     #2. Затраить скрытие сообщений через лямбда методы.
     #############################################__ИДЕИ__#############################################
 
-    ############Global var############
     client = discord.Client()
     bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
     version = 'release 2.4.2B'
@@ -48,7 +47,6 @@ try:
     if today.year % 4 == 0:
         months['feb'] = 29
     appeal = ["козаче", "хлопче", "друже", "вуйко", "брате", "дядьку", "товаришу"]
-    ############Global var############
 
     @bot.event
     async def on_command(ctx):
@@ -69,7 +67,6 @@ try:
     async def on_ready():
         await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
-        print(datetime.datetime.now().hour)
 
     @tasks.loop(hours=24)
     async def msg1():
@@ -254,11 +251,12 @@ try:
                 time.sleep(0.5)
                 await member.edit(voice_channel=channel2)
                 time.sleep(0.5)
-                await member.send("**АНУ, СЕПАРАТЮГА, ТИ КАЄШСЯ В СВОЇХ ЗЛОЧИНАХ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
+                await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                 def check(m):
-                    return (m.content.lower() == 'да' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y' or m.content.lower() == 'так' or m.content.lower() == 'ні' or m.content.lower() == 'нет' or m.content.lower() == 'no')
+                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y', 'ні', 'нет', 'no')):
+                        return (m.content.lower())
                 try:
-                    m = await bot.wait_for("message", check=check, timeout = 1.5)
+                    m = await bot.wait_for("message", check=check, timeout=1.5)
                 except asyncio.TimeoutError:
                     continue
                 else:
@@ -266,14 +264,14 @@ try:
                         await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаєш волю. Хлопці, витягайте його!")
                         break
                     elif rn > ch:
-                        await member.send("Ти кажеш це не щиро. Хлопці, занурюйте його!")
+                        await member.send("Ти мовиш не щиро. Хлопці, занурюйте його!")
                         await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
                         continue
             else:
                 await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів...")
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі пощастило...")
                 return
-        await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")##########
+        await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.edit(voice_channel=channel3)
 
@@ -289,7 +287,7 @@ try:
         guild = ctx.guild
         message = discord.Message
         author = ctx.message.author
-        link = await ctx.channel.create_invite(max_age = age*60)
+        link = await ctx.channel.create_invite(max_age=age*60)
         await member.send(f"{author.mention}запрошує вас на сервер **{ctx.guild.name}!**\n{link}")
 
     @bot.command(name="invite")
@@ -373,20 +371,22 @@ try:
                'Світлина випадкового птаха', 'Світлина птаха, як ти й просив',
                'Тримай пташку', 'Тримай світлину птаха', 'Птах, як ти й побажав',
                'Світлина птаха']
-        response = requests.get("https://some-random-api.ml/img/birb")
+        response = requests.get("https://some-random-api.com/animal/bird")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color = 0x013ADF, title = (f"{random.choice(t2)}, {random.choice(appeal)}:"))
-        embed.set_image(url = json_data["link"])
-        await ctx.send(embed = embed)
+        embed = discord.Embed(color=0x013ADF, title = (f"{random.choice(t2)}, {random.choice(appeal)}:"))
+        embed.set_image(url=json_data["image"])
+        await ctx.send(embed=embed)
 
     @bot.command(pass_context = True, name='$check')
     async def t_check(message):
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
+
         def check(m):
-            return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y') and m.channel == channel
+            if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                return (m.content.lower())
         try:
-            m = await bot.wait_for("message", check=check, timeout = 30)
+            m = await bot.wait_for("message", check=check, timeout=30)
         except asyncio.TimeoutError:
             print("TimeoutError")
         else:
@@ -398,10 +398,6 @@ try:
         if user == ctx.message.author:
             await ctx.send("**Помилка.** Ви не можете виключити себе.")
         else:
-            reasonT = 0
-            reasonA = 0
-            author = ctx.message.author
-            guild = ctx.guild
             if rule_n is None:
                 rule_n = 0
             rule_n = int(rule_n)
@@ -420,8 +416,10 @@ try:
                 reasonT = 'Порушення:'
                 reasonA = reason
             await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
+
             def check(m):
-                return (m.content.lower() == 'так' or m.content.lower() == 'да' or m.content.lower() == 'ага' or m.content.lower() == 'yes' or m.content.lower() == 'y')
+                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                    return (m.content.lower())
             try:
                 m = await bot.wait_for("message", check=check, timeout = 30)
             except asyncio.TimeoutError:
@@ -434,7 +432,7 @@ try:
                 await ctx.send(rule)
                 await user.send(f'Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}')
                 await user.send(rule)
-                await user.kick(reason = reason)
+                await user.kick(reason=reason)
 
 
     @bot.command(name="rule")
@@ -453,8 +451,10 @@ try:
 
     @bot.command(name='quote')
     async def quote(ctx: commands.Context):
-        _dict = random.choice(Quotes2)
-        await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{_dict}***')
+        quote = random.choice(quotes).get_text()
+        quote.replace('<p>', '')
+        quote.replace('</p>', '')
+        await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{quote}***')
 
     @bot.command(aliases=['myroles'], name='$myroles')
     async def t_myroles(ctx):
