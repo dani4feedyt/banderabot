@@ -136,12 +136,12 @@ try:
         else:
             await bot.process_commands(message)
     
-    @bot.command()
+    @bot.command(name='fetch id')
     async def id(ctx, member: discord.User):
         await ctx.send(member.id)
         await ctx.send(datetime.datetime.now().time())
 
-    @bot.command()
+    @bot.command(name='fetch timestamp')
     async def fetch(ctx, msgID: int):
         msg = await ctx.fetch_message(msgID)
         timestamp = msg.created_at
@@ -165,7 +165,7 @@ try:
     async def c_save(ctx):
         fi = open("data.txt", "w").close()
             
-    @bot.command()
+    @bot.command(name='rg_8421')
     async def rg8421(ctx):
         author = ctx.message.author
         await ctx.send("<@" + str(696670757794742322) + ">," + f" {author.mention}" + " зазіхнув на головну тайну калу, та дізнався рецепт надчистого лайна:" + "\n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
@@ -222,7 +222,7 @@ try:
                 rt = rt[:-2]
             await ctx.send(f"{amount} {rate} становить **{rt}** грн!")
 
-    @bot.command()
+    @bot.command(name='fetch vc')
     async def t_voice(ctx, member: discord.Member):
         if member.voice:
             channel_return = member.voice.channel.id
@@ -274,14 +274,14 @@ try:
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.edit(voice_channel=channel3)
 
-    @bot.command()
+    @bot.command(name='greeting')
     async def t_greeting(ctx, member: discord.Member):
         guild = ctx.guild
         await ctx.send(f'{member}')
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
 
-    @bot.command()
+    @bot.command(name='invitation')
     async def t_invite(ctx, member: discord.Member, age: int = 60):
         guild = ctx.guild
         message = discord.Message
@@ -294,12 +294,12 @@ try:
         link = await ctx.channel.create_invite(max_age = age*60)
         await ctx.send(f"Посилання для запрошення ваших друзів на {age} хв!\n{link}")
 
-    @bot.command()
+    @bot.command(name="slava_ukraine")
     async def slava_ukraine(ctx):
         author = ctx.message.author
         await ctx.send(f"**Героям слава, {author.mention}!**")
 
-    @bot.command(pass_context = True)
+    @bot.command(pass_context = True, name='fetch id')
     async def echo(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
