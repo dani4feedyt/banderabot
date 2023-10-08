@@ -197,7 +197,7 @@ try:
         elif any(i in rate for i in ['руб', 'rub']):
             val = _dict4
             name = "RUB"
-        elif any(i in rate for i in ['йен', 'єн', 'jp', 'jap']):
+        elif any(i in rate for i in ['йен', 'єн', 'jp', 'jap', 'yen', 'ien']):
             val = _dict5
             name = "JPY"
         else:
