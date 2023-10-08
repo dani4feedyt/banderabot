@@ -451,9 +451,9 @@ try:
         quote = random.choice(quotes).get_text()
         quote.replace('<p>', '')
         quote.replace('</p>', '')
-        await ctx.send (f'Випадковий вислів Степана Андрійовича: \n\n***{quote}***')
+        await ctx.send(f'Випадковий вислів Степана Андрійовича: \n\n***{quote}***')
 
-    @bot.command(aliases=['myroles'], name='$myroles')
+    @bot.command(name='$myroles')
     async def t_myroles(ctx):
         member = ctx.message.author
         member_roles = member.roles
