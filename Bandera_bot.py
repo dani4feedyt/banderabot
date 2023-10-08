@@ -41,10 +41,12 @@ try:
     data_filename = "data.txt"
     today = datetime.date.today()
     print(today)
+
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
         months['feb'] = 29
-    appeal = ["козаче", "хлопче", "друже", "вуйко", "брате", "дядьку", "товаришу"]
+
+    appeal = ["козаче", "хлопче", "друже", "вуйче", "брате", "дядьку", "товаришу", "добродію"]
 
     @bot.event
     async def on_command(ctx):
@@ -127,7 +129,7 @@ try:
                         if str(today) == f"{today.year}-01-01":
                             await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
                         else:
-                            await message.channel.send(f"Вельми дякую, але ти, певно, помилився. Мій день народження **1 січня**.")
+                            await message.channel.send(f"Вельми дякую, {random.choice(appeal)}, але ти, певно, помилився. Мій день народження **1 січня**.")
                         await asyncio.sleep(7)
                         await message.channel.send("Гаразд, пішов я по своїх справах...")
         else:
@@ -217,7 +219,7 @@ try:
             rt = str(rt)
             if rt.endswith('0'):
                 rt = rt[:-2]
-            await ctx.send(f"{amount} {name} становить **{rt}** грн!")
+            await ctx.send(f"{random.choice(appeal).capitalize()}, {amount} {name} становить **{rt}** грн!")
 
     @bot.command(name='fetch vc')
     async def t_voice(ctx, member: discord.Member):
@@ -455,7 +457,7 @@ try:
     async def t_myroles(ctx):
         member = ctx.message.author
         member_roles = member.roles
-        await ctx.send(f"{member.mention} перелік твоїх ролей:\n{member_roles.join(' ')}")
+        await ctx.send(f"{member.mention} перелік твоїх ролей, {random.choice(appeal)}:\n{member_roles.join(' ')}")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
