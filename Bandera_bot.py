@@ -19,7 +19,6 @@ try:
     from random import randint
     from urllib.request import urlopen
     import lxml
-    from lxml import etree
     from lxml import html
     from collections import Counter
     import asyncio
@@ -35,11 +34,11 @@ try:
     #############################################__ИДЕИ__#############################################
 
     client = discord.Client()
-    bot = commands.Bot(command_prefix = settings['prefix'], intents = discord.Intents.all())
+    bot = commands.Bot(command_prefix=settings['prefix'], intents=discord.Intents.all())
     version = 'release 2.4.2B'
     patch_note = '•minor bug fixes; •improved "kanava" command'
-    w = ("Bandera_bot.py")
-    fi = open("data.txt","w+")
+    w = "Bandera_bot.py"
+    fi = open("data.txt", "w+")
     data_filename = "data.txt"
     today = datetime.date.today()
     print(today)
@@ -65,7 +64,7 @@ try:
 
     @bot.event
     async def on_ready():
-        await bot.change_presence(activity = discord.Game('очке своим пальчиком | b!info'))
+        await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
 
     @tasks.loop(hours=24)
@@ -104,19 +103,19 @@ try:
             else:
                 await message.channel.send("Мене хтось кликав?")
                 def check(m):
-                    if any (m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                        return (m.content.lower())
+                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                        return m.content.lower()
                 try:
-                    m = await bot.wait_for("message", check=check, timeout = 15)
+                    m = await bot.wait_for("message", check=check, timeout=15)
                 except asyncio.TimeoutError:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
                     await message.channel.send("Що сталося?")
                     def check(m):
                         if any(m.content.lower() == i for i in ('з днем народження', 'с днем рождения', 'с др', 'з др')):
-                            return (m.content.lower())
+                            return m.content.lower()
                     try:
-                        m = await bot.wait_for("message", check=check, timeout = 15)
+                        m = await bot.wait_for("message", check=check, timeout=15)
                     except asyncio.TimeoutError:
                         a_list = [0, 1]
                         distribution = [.9, .1]
@@ -160,7 +159,7 @@ try:
             await ctx.send(contents)
 
     @bot.command()####'fi' - Global var####
-    async def c_save(ctx):
+    async def c_save():
         fi = open("data.txt", "w").close()
 
     @bot.command(name='rg_8421')
@@ -175,34 +174,33 @@ try:
         global name
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
-        _dict1 = soup.find_all('td', {"data-label":"Офіційний курс"})[7].get_text()
-        _dict1 = round(float(_dict1.replace(',', '.')),2)
-        _dict2 = soup.find_all('td', {"data-label":"Офіційний курс"})[8].get_text()
-        _dict2 = round(float(_dict2.replace(',', '.')),2)
-        _dict3 = soup.find_all('td', {"data-label":"Офіційний курс"})[16].get_text()
-        _dict3 = round(float(_dict3.replace(',', '.')),2)
-        _dict4 = soup.find_all('td', {"data-label":"Офіційний курс"})[20].get_text()
-        _dict4 = round(float(_dict4.replace(',', '.'))/10,2)
-        _dict5 = soup.find_all('td', {"data-label":"Офіційний курс"})[10].get_text()
-        _dict5 = round(float(_dict5.replace(',', '.'))/10,2)
+        _dict1 = soup.find_all('td', {"data-label": "Офіційний курс"})[7].get_text()
+        _dict1 = round(float(_dict1.replace(',', '.')), 2)
+        _dict2 = soup.find_all('td', {"data-label": "Офіційний курс"})[8].get_text()
+        _dict2 = round(float(_dict2.replace(',', '.')), 2)
+        _dict3 = soup.find_all('td', {"data-label": "Офіційний курс"})[16].get_text()
+        _dict3 = round(float(_dict3.replace(',', '.')), 2)
+        _dict4 = soup.find_all('td', {"data-label": "Офіційний курс"})[20].get_text()
+        _dict4 = round(float(_dict4.replace(',', '.'))/10, 2)
+        _dict5 = soup.find_all('td', {"data-label": "Офіційний курс"})[10].get_text()
+        _dict5 = round(float(_dict5.replace(',', '.'))/10, 2)
         rate = rate.lower()
 
         if any(i in rate for i in ['дол', 'us', 'dol']):
-        ##if rate == ("долар") or rate == ("доларів") or rate == ("долари") or rate == ("доллар") or rate == ("долларов") or rate == ("доллара") or rate == ("usd") or rate == ("dollars") or rate == ("dollar") :
             val = _dict1
-            name = ("USD")
+            name = "USD"
         elif any(i in rate for i in ['євр', 'евр', 'eur']):
             val = _dict2
-            name = ("EUR")
+            name = "EUR"
         elif any(i in rate for i in ['шек', 'ils', 'sh']):
             val = _dict3
-            name = ("ILS")
+            name = "ILS"
         elif any(i in rate for i in ['руб', 'rub']):
             val = _dict4
-            name = ("RUB")
+            name = "RUB"
         elif any(i in rate for i in ['йен', 'єн', 'jp', 'jap']):
             val = _dict5
-            name = ("JPY")
+            name = "JPY"
         else:
             await ctx.send("**Помилка.** Курс даної валюти ще не було внесено до бази даних")
         bot.dispatch('rates_command', ctx, amount)
@@ -232,7 +230,7 @@ try:
 
     @bot.command(name='kanava')
     @commands.has_permissions(manage_messages=True)###############################При добавлении на другой серв - намутить мутку на мутку канала
-    async def kanava(ctx, member: discord.Member, t = 10, chance: int = 30):
+    async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         if member.voice:
@@ -254,7 +252,7 @@ try:
                 await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                 def check(m):
                     if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y', 'ні', 'нет', 'no')):
-                        return (m.content.lower())
+                        return m.content.lower()
                 try:
                     m = await bot.wait_for("message", check=check, timeout=1.5)
                 except asyncio.TimeoutError:
@@ -284,15 +282,13 @@ try:
 
     @bot.command(name='t_invite')
     async def invite(ctx, member: discord.Member, age: int = 60):
-        guild = ctx.guild
-        message = discord.Message
         author = ctx.message.author
         link = await ctx.channel.create_invite(max_age=age*60)
         await member.send(f"{author.mention}запрошує вас на сервер **{ctx.guild.name}!**\n{link}")
 
     @bot.command(name="invite")
     async def invite(ctx, age: int = 60):
-        link = await ctx.channel.create_invite(max_age = age*60)
+        link = await ctx.channel.create_invite(max_age=age*60)
         await ctx.send(f"Посилання для запрошення ваших друзів на {age} хв!\n{link}")
 
     @bot.command(name="slava_ukraine")
@@ -300,7 +296,7 @@ try:
         author = ctx.message.author
         await ctx.send(f"**Героям слава, {author.mention}!**")
 
-    @bot.command(pass_context = True, name='echo')
+    @bot.command(pass_context=True, name='echo')
     async def echo(ctx, *, msg):
         await ctx.send(msg)
         await ctx.message.delete()
@@ -326,7 +322,7 @@ try:
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value=(f'*{version}*\n||*{patch_note}*||'), inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value=f'*{version}*\n||*{patch_note}*||', inline=inline)
 
         await ctx.send(embed=embed)
 
@@ -373,18 +369,18 @@ try:
                'Світлина птаха']
         response = requests.get("https://some-random-api.com/animal/bird")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color=0x013ADF, title = f"{random.choice(t2)}, {random.choice(appeal)}:")
+        embed = discord.Embed(color=0x013ADF, title=f"{random.choice(t2)}, {random.choice(appeal)}:")
         embed.set_image(url=json_data["image"])
         await ctx.send(embed=embed)
 
-    @bot.command(pass_context = True, name='$check')
+    @bot.command(pass_context=True, name='$check')
     async def t_check(message):
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
 
         def check(m):
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                return (m.content.lower())
+                return m.content.lower()
         try:
             m = await bot.wait_for("message", check=check, timeout=30)
         except asyncio.TimeoutError:
@@ -392,9 +388,9 @@ try:
         else:
             await channel.send("Підтверджено")
 
-    @bot.command(pass_context = True, name='kick')
-    @commands.has_permissions(kick_members = True)
-    async def kick(ctx, user: discord.Member, rule_n = None, *, reason = None):
+    @bot.command(pass_context=True, name='kick')
+    @commands.has_permissions(kick_members=True)
+    async def kick(ctx, user: discord.Member, rule_n=None, *, reason=None):
         if user == ctx.message.author:
             await ctx.send("**Помилка.** Ви не можете виключити себе.")
         else:
@@ -409,7 +405,7 @@ try:
                 ruleA = 'None'
             guild = ctx.guild
             author = ctx.message.author
-            if reason == None:
+            if reason is None:
                 reasonT = "**Без будь-якого приводу**"
                 reasonA = '⁣'
             else:
@@ -419,9 +415,9 @@ try:
 
             def check(m):
                 if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                    return (m.content.lower())
+                    return m.content.lower()
             try:
-                m = await bot.wait_for("message", check=check, timeout = 30)
+                m = await bot.wait_for("message", check=check, timeout=30)
             except asyncio.TimeoutError:
                 print("TimeoutError")
             else:
@@ -564,9 +560,9 @@ try:
     @bot.command(name='$count')
     async def t_count(ctx, d: int, m: int, h: int, mi: int):
         count = 0
-        h-=2
+        h -= 2
         date = datetime.datetime(year = 2021, month=m, day=d, hour=h, minute=mi)
-        async for message in ctx.channel.history(limit = None, after=date):
+        async for message in ctx.channel.history(limit=None, after=date):
             count += 1
         await ctx.send(count)
 
@@ -586,7 +582,7 @@ try:
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
                 return m.content.lower()
         try:
-            m = await bot.wait_for("message", check=check, timeout = 7)
+            m = await bot.wait_for("message", check=check, timeout=7)
         except asyncio.TimeoutError:
             await ctx.send("Час очікування вичерпано, запит скасовано.")
             print("TimeoutError")
@@ -636,10 +632,10 @@ try:
         date = [h, mi, d, m]
         date_str = [str(i) for i in date]
 
-        date_t = datetime.datetime(year = int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
+        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
 
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=15)
-        async for message in ctx.channel.history(limit = None, after=date_t):
+        async for message in ctx.channel.history(limit=None, after=date_t):
             count += 1
 
         sfx = "ь"
@@ -662,10 +658,10 @@ try:
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
                 return m.content.lower()
         try:
-            m = await bot.wait_for("message", check=check, timeout = 7)
+            m = await bot.wait_for("message", check=check, timeout=7)
         except asyncio.TimeoutError:
             print("TimeoutError")
-            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after = 10)
+            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=10)
         else:
             if int(count) <= 500:
                 print(int(count)+2)
@@ -673,7 +669,6 @@ try:
                 await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
-
 
 
     @bot.command(name='spam')
@@ -690,7 +685,7 @@ try:
                 if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
                     return m.content.lower()
             try:
-                m = await bot.wait_for("message", check=check, timeout = 30)
+                m = await bot.wait_for("message", check=check, timeout=30)
             except asyncio.TimeoutError:
                 print("TimeoutError")
                 return
@@ -702,7 +697,7 @@ try:
         while a < count:
             await ctx.send(ar)
             time.sleep(intr)
-            a+=1
+            a += 1
         await ctx.send("**Спам** було завершено")
 
 
