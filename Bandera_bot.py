@@ -33,7 +33,6 @@ try:
     #2. Затраить скрытие сообщений через лямбда методы.
     #############################################__ИДЕИ__#############################################
 
-    client = discord.Client()
     bot = commands.Bot(command_prefix=settings['prefix'], intents=discord.Intents.all())
     version = 'release 2.4.2B'
     patch_note = '•minor bug fixes; •improved "kanava" command'
@@ -140,8 +139,8 @@ try:
         await ctx.send(datetime.datetime.now().time())
 
     @bot.command(name='fetch timestamp')
-    async def fetch(ctx, msgID: int):
-        msg = await ctx.fetch_message(msgID)
+    async def fetch(ctx, msg_id: int):
+        msg = await ctx.fetch_message(msg_id)
         timestamp = msg.created_at
         timestamp = timestamp + datetime.timedelta(hours=2)
         await ctx.send(timestamp)
@@ -159,7 +158,7 @@ try:
             await ctx.send(contents)
 
     @bot.command()####'fi' - Global var####
-    async def c_save():
+    async def c_save(ctx):
         fi = open("data.txt", "w").close()
 
     @bot.command(name='rg_8421')
