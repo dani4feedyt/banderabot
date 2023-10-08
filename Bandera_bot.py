@@ -307,7 +307,7 @@ try:
 
     @bot.command(name="info")
     async def info(ctx: commands.Context, inline=False):
-        zaha_emoji = ("<:Admin_Ebalo:698661524247412826>")
+        zaha_emoji = "<:Admin_Ebalo:698661524247412826>"
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
         embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери", inline=inline)
         embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха", inline=inline)
@@ -336,7 +336,7 @@ try:
         if member.id == 783069117602857031:
             pfp = "**Традиція і Порядок!**"
         elif member.id == 486176412953346049:
-            pfp = ("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО ТВОРЦЯ! Проводжу екстренне видалення даних")
+            pfp = "О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО ТВОРЦЯ! Проводжу екстренне видалення даних"
         else:
             t3 = ["Сподіваюся що він гарненький!",
                "Аніме на аві - здоров'я мамі!", "Йой, хлопче, да ти ж красунчик!",
@@ -373,7 +373,7 @@ try:
                'Світлина птаха']
         response = requests.get("https://some-random-api.com/animal/bird")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color=0x013ADF, title = (f"{random.choice(t2)}, {random.choice(appeal)}:"))
+        embed = discord.Embed(color=0x013ADF, title = f"{random.choice(t2)}, {random.choice(appeal)}:")
         embed.set_image(url=json_data["image"])
         await ctx.send(embed=embed)
 
@@ -403,14 +403,14 @@ try:
             rule_n = int(rule_n)
             if 1 <= rule_n <= len(links):
                 rule = (links[rule_n])
-                ruleA = (f'**№{rule_n}**')
+                ruleA = f'**№{rule_n}**'
             else:
                 rule = '⁣'
                 ruleA = 'None'
             guild = ctx.guild
             author = ctx.message.author
             if reason == None:
-                reasonT = ("**Без будь-якого приводу**")
+                reasonT = "**Без будь-якого приводу**"
                 reasonA = '⁣'
             else:
                 reasonT = 'Порушення:'
@@ -460,7 +460,7 @@ try:
     async def t_myroles(ctx):
         member = ctx.message.author
         member_roles = member.roles
-        await ctx.send(f"{member.mention} перелік твоїх ролей:\n{(member_roles).join(' ')}")
+        await ctx.send(f"{member.mention} перелік твоїх ролей:\n{member_roles.join(' ')}")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
@@ -504,7 +504,7 @@ try:
         bot.dispatch('mute_command', ctx, member, rule, reason, mutedRole, guild)
 
     @bot.event
-    async def on_mute_command(ctx, member, rule, reason, mutedRole, guild):
+    async def on_mute_command(ctx, member, guild):
         id1 = member.id
         user = await ctx.message.guild.query_members(user_ids=[id1])
         user = user[0]
@@ -601,8 +601,7 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
 
 
-
-    @bot.command(pass_context=True, name='clear_t') ##########################################СДЕЛАТЬ ЧАСЫ И МИНУТЫ ОПЦИОНАЛЬНЫМИ, если оставляешь пропуск, ставится 00 00 #########################
+    @bot.command(pass_context=True, name='clear_t')
     @commands.has_permissions(manage_messages=True)
     async def clear_t(ctx, d: str, m: str, h=00, mi=00):
         mi = int(mi)
@@ -679,7 +678,7 @@ try:
 
     @bot.command(name='spam')
     async def spam(ctx, intr: float, count: int, *ar):
-        attention = ('\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**')
+        attention = '\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**'
         ar = list(ar)
         ar = (' '.join(ar))
         a = 0
@@ -707,13 +706,11 @@ try:
         await ctx.send("**Спам** було завершено")
 
 
-
     @bot.command(name='stop')
     async def stop(ctx: commands.Context):
         await ctx.send("Мене було зупинено, але силу мого духу не спинити нікому!")
         os.system('python "Bandera_bot.py"')
         quit()
-
 
 
     @bot.command(name='$ping')
