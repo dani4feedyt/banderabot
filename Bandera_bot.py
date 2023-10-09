@@ -452,11 +452,11 @@ try:
         quote.replace('</p>', '')
         await ctx.send(f'Випадковий вислів Степана Андрійовича: \n\n***{quote}***')
 
-    @bot.command(name='$myroles')
-    async def t_myroles(ctx):
+    @bot.command(name='myroles')
+    async def myroles(ctx):
         member = ctx.message.author
         roles = (", ".join(role.name for role in member.roles if role.name != "@everyone"))
-        await ctx.reply(f"Перелік твоїх ролей, {random.choice(appeal)}:\n{roles}")
+        await ctx.reply(f"Перелік твоїх ролей, {random.choice(appeal)}:\n*{roles}*")
 
 
     @bot.command()
