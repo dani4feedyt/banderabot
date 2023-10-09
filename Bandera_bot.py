@@ -10,6 +10,7 @@ try:
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
     from Bandera_PyChton_quotes import Quotes1, links
+    from txt_f import *
     from sys import argv, executable
     import json
     import requests
@@ -41,6 +42,9 @@ try:
     data_filename = "data.txt"
     today = datetime.date.today()
     print(today)
+
+    url = None
+    irritation = 0
 
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
@@ -124,7 +128,7 @@ try:
                         print(rand)
                         await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
                         if rand == [1]:
-                            await message.channel.send(file=discord.File('b1.png'))
+                            await message.channel.send(file=discord.File('b2.png'))
                     else:
                         if str(today) == f"{today.year}-01-01":
                             await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
@@ -328,37 +332,57 @@ try:
 
     @bot.command(name='pfp')
     async def pfp(ctx, member: discord.Member):
-        c = 0
-        if member.id == 783069117602857031:
-            pfp = "**Традиція і Порядок!**"
-        elif member.id == 486176412953346049:
-            pfp = "О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО ТВОРЦЯ! Проводжу екстренне видалення даних"
+        global url
+        global irritation
+        author = ctx.message.author
+        if member.avatar is None:
+            await ctx.send("**Помилка.** На жаль, у цього користувача відсутнє зображення профілю.")
+            irritation = 0
+            return
+        if irritation == 11:
+            await ctx.send(file=discord.File('b2.png'))
+            await mute(ctx, author, 1, 30, reason="Задовбав.")
+            irritation = 0
+            return
+
+        pfp_u = await ctx.reply(member.avatar.url) ##################Конвертер с webp в png
+
+        if url == member.avatar.url:
+            irritation += 1
         else:
-            t3 = ["Сподіваюся що він гарненький!",
-               "Аніме на аві - здоров'я мамі!", "Йой, хлопче, да ти ж красунчик!",
-               "Маєш привабливу фотокартку!", "Одразу видно, справжнісінький українець!",
-               "Йой, як файно!", "Де ж бо такі красунчики родяться?", "11/10!"]
-            pfp = random.choice(t3)
-        avatarUrl = member.avatar_url
-        pfp_a = await ctx.send(f"Аватар користувача {member.mention}:")
-        pfp_u = await ctx.send(avatarUrl) ##################Конвертер с webp в png
-        pfp_t = await ctx.send(pfp)
-        if member.id == 486176412953346049:
-            while c <= 9:
-                await asyncio.sleep(0.5)
-                await pfp_t.edit(content="0 НІ! МеНІ НЕ БУЛО ДОЗВ ЛЕНО РОЗГОЛОШУВАТИ ІНФОРМА ІЮ ПРО СВОГО Т̶̲̏̐͛В̴̞̯̄О̵̢̩̠̦̳͉̾̋̏͛̕͝Р̴̛̟̱̦͉̭̹̱͖̓͆̀͐́̕͝Ц̴̳̞̍̋Я̷͚̣͉́̚! Проводжу екстрене ~~видалення~~ даних.")
-                await asyncio.sleep(0.5)
-                await pfp_t.edit(content="о НІ! МЕНІ НЕ БУЛО ДОЗВОлЕНО РОЗГОЛОШУВА И ІНФОРМАЦ1Ю ПРО СВОГО Т̶̖̳͙̦̰̘̐̊͗́̓̒̊̆̑В̶̢̬͈̗̙̒̆̆̊͛͠ͅО̶̜̗̲̙̝̝̪͊̂͗̔̾̈̄̚̚̚Р̸͖̒͛̊̓͊̄̑̿͝Ц̴̡̛̺̹̮͓̥̟͈̦͙̗̪̽́͋̿͌͌̇̇̌͠Я̵̫̤̞̽̾̈́͠! Проводжу екстрене видалення даних..")
-                await asyncio.sleep(0.5)
-                await pfp_t.edit(content="О НІ! МЕНі НЕ Б ЛО ДО3ВОЛЕНО РОЗГОЛОШУ8АТИ ІНФОРМАЦІЮ ПРО СВОГО Т̷͕͍͓̼̓̈В̷̪̳̩̯͑О̸̧̛̞͓̪̳̗͉̟Р̵̛̱̺̌̐̀͂̉̊͝Ц̸̱͎̦̘͈̈͋͛͆̒̄ͅͅЯ̷̢̇̐̇̈̄̏! Проводжу екстрене ~~видалення~~ даних...")
+            url = member.avatar.url
+            irritation = 0
+
+        if member.id == 783069117602857031:
+            await ctx.send("**Традиція і Порядок!**")
+
+        elif member.id == 486176412953346049:
+            irritation = 0
+            pfp_t = await ctx.send("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО ТВОРЦЯ! Проводжу екстренне видалення даних")
+            for c in range(2):
                 c += 1
-                if c == 3:
-                    await pfp_a.delete()
-                if c == 6:
+                for i in range(4):
+                    await asyncio.sleep(0.2)
+                    await pfp_t.edit(content=pfp_ph_sp[i])
+                    i += 1
+                if c == 1:
                     await pfp_u.delete()
-                if c == 9:
+                elif c == 2:
                     await pfp_t.delete()
                     await ctx.send("**Доступ відхилено.**")
+
+        else:
+            if irritation == 0:
+                await ctx.send(random.choice(pfp_ph_0))
+            elif irritation == 1:
+                await ctx.send(random.choice(pfp_ph_1))
+            elif irritation == 2:
+                await ctx.send(random.choice(pfp_ph_2))
+            elif 3 <= irritation <= 7:
+                await ctx.send(pfp_ph[irritation - 3])
+            elif irritation >= 7:
+                await ctx.send(pfp_ph[-1])
+
 
     @bot.command(name="birb")
     async def birb(ctx):
@@ -481,27 +505,30 @@ try:
         else:
             rule = None
         guild = ctx.guild
-        author = ctx.message.author
+        if reason == 'Задовбав.':
+            author = f"<@!{str(783069117602857031)}>"
+        else:
+            author = ctx.message.author.mention
         mutedRole = discord.utils.get(guild.roles, name="Muted")
         if not mutedRole:
             mutedRole = await guild.create_role(name="Muted")
             for channel in guild.channels:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
-        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author.mention}** на **{time}** хвилин", color=0x013ADF)
+        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author}** на **{time}** хвилин", color=0x013ADF)
         embed.add_field(name="Порушення:", value=reason, inline=False)
-        embed.add_field(name="Порушене правило:", value=f'**№{rule_n}**', inline=False)
+        embed.add_field(name="Порушене правило:", value=f'**#{rule_n}**', inline=False)
         await ctx.send(embed=embed)
         await ctx.send(rule)
         await member.add_roles(mutedRole)
         await asyncio.sleep(1)
         await member.edit(voice_channel=None)
-        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author.mention}** на **{time}** хвилин, за причиною: **"{reason}"**')
+        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author}** на **{time}** хвилин, за причиною: **"{reason}"**')
         await member.send(rule)
         await asyncio.sleep(time * 60)
         bot.dispatch('mute_command', ctx, member, rule, reason, mutedRole, guild)
 
     @bot.event
-    async def on_mute_command(ctx, member, guild):
+    async def on_mute_command(ctx, member, rule, reason, mutedRole, guild):
         id1 = member.id
         user = await ctx.message.guild.query_members(user_ids=[id1])
         user = user[0]
@@ -714,11 +741,16 @@ try:
         await ctx.send(f'Моя затримка складає **{round(bot.latency, 3)}** с')
 
  ###############################################ErrorHandling###############################################
-    @bot.event
+    """@bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
             print("Error... **GENERAL_COMMAND**: CommandNotFound")
-            await ctx.send("**Помилка.** Даної команди не існує.")
+            await ctx.send("**Помилка.** Даної команди не існує.")"""
+
+    @bot.event
+    async def on_command_error(ctx, error):
+        error_f = (f'\n\n||**Description*(beta)*:** {str(error).capitalize()}||')
+        print(error_f)
 
     @rates.error
     async def rates_error(ctx, error):
