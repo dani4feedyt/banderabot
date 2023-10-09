@@ -34,8 +34,8 @@ try:
     #############################################__ИДЕИ__#############################################
 
     bot = commands.Bot(command_prefix=settings['prefix'], intents=discord.Intents.all())
-    version = 'release 2.4.2B'
-    patch_note = '•minor bug fixes; •improved "kanava" command'
+    version = 'release 2.4.3'
+    patch_note = 'last updated: 09.10.23'
     w = "Bandera_bot.py"
     fi = open("data.txt", "w+")
     data_filename = "data.txt"
@@ -346,11 +346,11 @@ try:
         if member.id == 486176412953346049:
             while c <= 9:
                 await asyncio.sleep(0.5)
-                await pfp_t.edit(content="0 НІ! МеНІ НЕ БУЛО ДОЗВ ЛЕНО РОЗГОЛОШУВАТИ ІНФОРМА ІЮ ПРО СВОГО Т̶̲̏̐͛В̴̞̯̄О̵̢̩̠̦̳͉̾̋̏͛̕͝Р̴̛̟̱̦͉̭̹̱͖̓͆̀͐́̕͝Ц̴̳̞̍̋Я̷͚̣͉́̚! Проводжу екстренне ~~видалення~~ даних.")
+                await pfp_t.edit(content="0 НІ! МеНІ НЕ БУЛО ДОЗВ ЛЕНО РОЗГОЛОШУВАТИ ІНФОРМА ІЮ ПРО СВОГО Т̶̲̏̐͛В̴̞̯̄О̵̢̩̠̦̳͉̾̋̏͛̕͝Р̴̛̟̱̦͉̭̹̱͖̓͆̀͐́̕͝Ц̴̳̞̍̋Я̷͚̣͉́̚! Проводжу екстрене ~~видалення~~ даних.")
                 await asyncio.sleep(0.5)
-                await pfp_t.edit(content="о НІ! МЕНІ НЕ БУЛО ДОЗВОлЕНО РОЗГОЛОШУВА И ІНФОРМАЦ1Ю ПРО СВОГО Т̶̖̳͙̦̰̘̐̊͗́̓̒̊̆̑В̶̢̬͈̗̙̒̆̆̊͛͠ͅО̶̜̗̲̙̝̝̪͊̂͗̔̾̈̄̚̚̚Р̸͖̒͛̊̓͊̄̑̿͝Ц̴̡̛̺̹̮͓̥̟͈̦͙̗̪̽́͋̿͌͌̇̇̌͠Я̵̫̤̞̽̾̈́͠! Проводжу екстренне видалення даних..")
+                await pfp_t.edit(content="о НІ! МЕНІ НЕ БУЛО ДОЗВОлЕНО РОЗГОЛОШУВА И ІНФОРМАЦ1Ю ПРО СВОГО Т̶̖̳͙̦̰̘̐̊͗́̓̒̊̆̑В̶̢̬͈̗̙̒̆̆̊͛͠ͅО̶̜̗̲̙̝̝̪͊̂͗̔̾̈̄̚̚̚Р̸͖̒͛̊̓͊̄̑̿͝Ц̴̡̛̺̹̮͓̥̟͈̦͙̗̪̽́͋̿͌͌̇̇̌͠Я̵̫̤̞̽̾̈́͠! Проводжу екстрене видалення даних..")
                 await asyncio.sleep(0.5)
-                await pfp_t.edit(content="О НІ! МЕНі НЕ Б ЛО ДО3ВОЛЕНО РОЗГОЛОШУ8АТИ ІНФОРМАЦІЮ ПРО СВОГО Т̷͕͍͓̼̓̈В̷̪̳̩̯͑О̸̧̛̞͓̪̳̗͉̟Р̵̛̱̺̌̐̀͂̉̊͝Ц̸̱͎̦̘͈̈͋͛͆̒̄ͅͅЯ̷̢̇̐̇̈̄̏! Проводжу екстренне ~~видалення~~ даних...")
+                await pfp_t.edit(content="О НІ! МЕНі НЕ Б ЛО ДО3ВОЛЕНО РОЗГОЛОШУ8АТИ ІНФОРМАЦІЮ ПРО СВОГО Т̷͕͍͓̼̓̈В̷̪̳̩̯͑О̸̧̛̞͓̪̳̗͉̟Р̵̛̱̺̌̐̀͂̉̊͝Ц̸̱͎̦̘͈̈͋͛͆̒̄ͅͅЯ̷̢̇̐̇̈̄̏! Проводжу екстрене ~~видалення~~ даних...")
                 c += 1
                 if c == 3:
                     await pfp_a.delete()
@@ -421,7 +421,7 @@ try:
             except asyncio.TimeoutError:
                 print("TimeoutError")
             else:
-                embed = discord.Embed(title="Вигнання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
+                embed = discord.Embed(title="Заслання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
                 embed.add_field(name=reasonT, value=reasonA, inline=False)
                 embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
                 await ctx.send(embed=embed)
@@ -450,7 +450,7 @@ try:
         quote = random.choice(quotes).get_text()
         quote.replace('<p>', '')
         quote.replace('</p>', '')
-        await ctx.send(f'Випадковий вислів Степана Андрійовича: \n\n***{quote}***')
+        await ctx.send(f'Випадковий вислів Степана Андрійовича Бандери: \n\n***{quote}***')
 
     @bot.command(name='myroles')
     async def myroles(ctx):
