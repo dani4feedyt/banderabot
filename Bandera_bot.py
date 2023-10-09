@@ -294,8 +294,7 @@ try:
 
     @bot.command(name="slava_ukraine")
     async def slava_ukraine(ctx):
-        author = ctx.message.author
-        await ctx.send(f"**Героям слава, {author.mention}!**")
+        await ctx.reply(f"**Героям слава, {random.choice(appeal)}!**")
 
     @bot.command(pass_context=True, name='echo')
     async def echo(ctx, *, msg):
@@ -456,13 +455,14 @@ try:
     @bot.command(name='$myroles')
     async def t_myroles(ctx):
         member = ctx.message.author
-        member_roles = member.roles
-        await ctx.send(f"{member.mention} перелік твоїх ролей, {random.choice(appeal)}:\n{member_roles.join(' ')}")
+        roles = (", ".join(role.name for role in member.roles if role.name != "@everyone"))
+        await ctx.reply(f"Перелік твоїх ролей, {random.choice(appeal)}:\n{roles}")
+
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
-        await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допрошуватися особисто Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+        await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допитуватися особисто Степаном Андрійовичем Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
