@@ -640,16 +640,16 @@ try:
         ye = today.year
         count = 0
         h = int(h)
-        ho = h-2
+        #ho = h - 2
         da = int(d)
         mo = int(m)
 
-        if ho == -2:
-            ho = 22
-            da = int(d)-1
-        if ho == -1:
-            ho = 23
-            da = int(d)-1
+        #if ho == -2:
+        #    ho = 22
+        #    da = int(d)-1
+        #if ho == -1:
+        #   ho = 23
+        #    da = int(d)-1
         if da == 0:
             mo -= 1
             da = list(months.values())[mo-1]
@@ -660,9 +660,10 @@ try:
         date = [h, mi, d, m]
         date_str = [str(i) for i in date]
 
-        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
+        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(h), minute=int(date_str[1]))
+        print(date_t)
 
-        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=15)
+        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=20)
         async for message in ctx.channel.history(limit=None, after=date_t):
             count += 1
 
@@ -680,7 +681,7 @@ try:
                 date_str[a] = '0' + i
             a += 1
 
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}**? \n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=60)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}**? \n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
 
         def check(m):
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
@@ -689,7 +690,7 @@ try:
             m = await bot.wait_for("message", check=check, timeout=7)
         except asyncio.TimeoutError:
             print("TimeoutError")
-            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=10)
+            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
         else:
             if int(count) <= 500:
                 print(int(count)+2)
