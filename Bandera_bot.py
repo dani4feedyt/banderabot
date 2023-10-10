@@ -35,8 +35,8 @@ try:
     #############################################__ИДЕИ__#############################################
 
     bot = commands.Bot(command_prefix=settings['prefix'], intents=discord.Intents.all())
-    version = 'release 2.4.3'
-    patch_note = 'last updated: 09.10.23'
+    version = 'release 2.4.4'
+    patch_note = 'last updated: 11.10.23'
     w = "Bandera_bot.py"
     fi = open("data.txt", "w+")
     data_filename = "data.txt"
@@ -306,7 +306,7 @@ try:
         await ctx.message.delete()
 
     @bot.command(name="info")
-    async def info(ctx: commands.Context, inline=False):
+    async def info(ctx, inline=False):
         zaha_emoji = "<:Admin_Ebalo:698661524247412826>"
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
         embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери", inline=inline)
@@ -324,9 +324,9 @@ try:
         embed.add_field(name=f"**b!rates (Валюта) (Кількість)**", value=f"Найактуальніший курс валют", inline=inline)
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
-        embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg/200px-%D0%A2%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D1%96%D1%8F_%D1%96_%D0%9F%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA.jpg")
+        embed.set_image(url="https://i.ibb.co/4stKfF2/band.png")
         embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n\n*Розробник:* **@dani4feedyt#5200**", value=f'*{version}*\n||*{patch_note}*||', inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n*Розробник:* **@dani4feedyt#5200**", value=f'*{version}*\n||*{patch_note}*||', inline=inline)
 
         await ctx.send(embed=embed)
 
@@ -456,16 +456,16 @@ try:
 
 
     @bot.command(name="rule")
-    async def rule(ctx, num: int):
-        if 1 <= num <= len(links):
-            await ctx.send(links[num])
+    async def rule(ctx, number: int):
+        if 1 <= number <= len(links):
+            await ctx.send(links[number])
         else:
             await ctx.send("**Помилка.** Правила під таким номером не існує")
 
     @bot.command(name="pasta")
-    async def pasta(ctx, pa: int):
-        if 1 <= pa < 5:
-            await ctx.send(Quotes1[pa])
+    async def pasta(ctx, number: int):
+        if 1 <= number < 5:
+            await ctx.send(Quotes1[number])
         else:
             await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. \n*Для детальної інформації звертайтеся до @dani4feedyt#5200*")
 
@@ -741,88 +741,86 @@ try:
         await ctx.send(f'Моя затримка складає **{round(bot.latency, 3)}** с')
 
  ###############################################ErrorHandling###############################################
-    """@bot.event
-    async def on_command_error(ctx, error):
-        if isinstance(error, commands.CommandNotFound):
-            print("Error... **GENERAL_COMMAND**: CommandNotFound")
-            await ctx.send("**Помилка.** Даної команди не існує.")"""
 
-    @bot.event
-    async def on_command_error(ctx, error):
-        error_f = (f'\n\n||**Description*(beta)*:** {str(error).capitalize()}||')
-        print(error_f)
+    error_desc = ""
+
+    def error_temp(error):
+        return f'\n\n*||**Description:** {str(error)}||*'
+
 
     @rates.error
     async def rates_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **rates**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть назву бажаної валюти.\nНа даний момент доступні курси: Долару, Євро, Шекеля, Рубля та Єни\n||**b!rates (Валюта)**||")
+        global error_desc
+        error_desc = "На даний момент доступні курси Долару, Євро, Шекеля, Рубля та Єни.\n||**b!rates** *(Валюта) (Кількість)*||"
+
 
     @kanava.error
     async def kanava_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **kanava**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kanava @(Нікнейм) (Кількість) (Довіра бота)**||")
-        if isinstance(error, commands.MemberNotFound):
-            print("Error... **kanava**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
+        global error_desc
+        error_desc = "||**b!kanava** *@(Нікнейм) (Кількість) (Довіра бота)*||"
+
 
     @clear_t.error
     async def clear_t_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **clear_t**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть дату та час у коректному форматі.\n||**b!clear_t (День) (Місяць) (Години) (Хвилини)**||")
-        if isinstance(error, commands.CommandInvokeError):
-            print("Error... **clear_t**: CommandInvokeError")
-            await ctx.send("**Помилка.** Введена дата некоректна.")
+        global error_desc
+        error_desc = "Введіть дату та час у коректному форматі.\n||**b!clear_t** *(День) (Місяць) (Години) (Хвилини)*||"
+
 
     @pfp.error
     async def pfp_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **pfp**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Необхідний нікнейм користувача.")
-        if isinstance(error, commands.MemberNotFound):
-            print("Error... **pfp**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
+        global error_desc
+        error_desc = "||**b!pfp** *@(Нікнейм)*||"
+
 
     @kick.error
     async def kick_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **kick**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!kick @(Нікнейм) (Причина)**||")
-        if isinstance(error, commands.MemberNotFound):
-            print("Error... **kick**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері.")
+        global error_desc
+        error_desc = "||**b!kick** *@(Нікнейм) (Причина)*||"
+
 
     @pasta.error
     async def pasta_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **pasta**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть номер бажаної пасти.")
+        global error_desc
+        error_desc = "||**b!pasta** *(Номер пасти)*||"
+
 
     @mute.error
     async def mute_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **mute**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри.\n||**b!mute @(Нікнейм) (Час у хвилинах) (Порушене правило) (Причина)**||")
-        if isinstance(error, commands.MemberNotFound):
-            print("Error... **mute**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
+        global error_desc
+        error_desc = "||**b!mute** *@(Нікнейм) (Час муту у хвилинах) (Номер порушення) (Опис)*||"
 
     @unmute.error
     async def unmute_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **unmute**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть нікнейм користувача.")
-        if isinstance(error, commands.MemberNotFound):
-            print("Error... **unmute**: MemberNotFound")
-            await ctx.send("**Помилка.** Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно.")
+        global error_desc
+        error_desc = "||**b!unmute** *@(Нікнейм)*||"
 
     @spam.error
     async def spam_error(ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            print("Error... **spam**: MissingRequiredArgument")
-            await ctx.send("**Помилка.** Будь ласка, введіть усі необхідні параметри\n||**b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**||")
+        global error_desc
+        error_desc = "||**b!spam** *(Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)*||"
+
+    @bot.event
+    async def on_command_error(ctx, error):
+        print(error)
+        global error_desc
+        err = "**Помилка. **"
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send(f"{err}Даної команди не існує.")
+            await ctx.send(error_temp(error))
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send(f"{err}Йой, хлопче, в тебе не вистачає прав для виконання цієї команди!")
+            await ctx.send(error_temp(error))
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(f"{err}Не вистачає аргументів для виконання команди, перевірте коректність написання.")
+            await ctx.send(error_temp(error))
+        elif isinstance(error, commands.CommandInvokeError):
+            await ctx.send(f"{err}Аргумент заданий некоректно.")
+            await ctx.send(error_temp(error))
+        elif isinstance(error, commands.MemberNotFound):
+            await ctx.send(f"{err}Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері.")
+            await ctx.send(error_temp(error))
+        await ctx.send(error_desc)
+        error_desc = ""
 
   ###############################################ErrorHandling###############################################
 
