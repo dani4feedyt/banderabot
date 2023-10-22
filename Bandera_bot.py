@@ -313,7 +313,7 @@ try:
         embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха", inline=inline)
         embed.add_field(name=f"**b!kick @(Нікнейм) (Порушення)** {zaha_emoji}", value=f"Вигнання на Соловки", inline=inline)
         embed.add_field(name=f"**b!clear (Кількість повідомлень)** {zaha_emoji}", value=f"Видалення повідомлень", inline=inline)
-        embed.add_field(name=f"**b!clear_t (День) (Місяць) (Година) (Хвилина)** {zaha_emoji}", value=f"Видалення повідомлень починаючи з заданої дати", inline=inline)
+        embed.add_field(name=f"**b!clear_t (День) (Місяць) (Година) (Хвилина)** {zaha_emoji}", value=f"Видалення повідомлень починаючи з заданої дати. \n||*Часовий пояс за замовчуванням - GMT+3 (Київський час)*||", inline=inline)
         embed.add_field(name=f"**b!quote**", value=f"Надішлю вам випадковий вислів Степана Андрійовича", inline=inline)
         embed.add_field(name=f"**b!pasta (Number 1-4)**", value=f'Один з крилатих висловів про так званий "Колюмбас"', inline=inline)
         embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми", inline=inline)
@@ -335,6 +335,7 @@ try:
         global url
         global irritation
         author = ctx.message.author
+        member_url = f"https://cdn.discordapp.com/avatars/{member.id}/{member.avatar}.png?size=1024"
         if member.avatar is None:
             await ctx.send("**Помилка.** На жаль, у цього користувача відсутнє зображення профілю.")
             irritation = 0
@@ -345,12 +346,12 @@ try:
             irritation = 0
             return
 
-        pfp_u = await ctx.reply(member.avatar.url) ##################Конвертер с webp в png
+        pfp_u = await ctx.reply(member_url)
 
-        if url == member.avatar.url:
+        if url == member_url:
             irritation += 1
         else:
-            url = member.avatar.url
+            url = member_url
             irritation = 0
 
         if member.id == 783069117602857031:
@@ -622,34 +623,25 @@ try:
                 time.sleep(0.75)
                 await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
             else:
-                await ctx.send("**Помилка.** Ви не можете видаляти більше 150 повідомлень!", delete_after=60)
+                await ctx.send("**Помилка.** Ви не можете видалити більше ніж 150 повідомлень.", delete_after=60)
 
 
     @bot.command(pass_context=True, name='clear_t')
     @commands.has_permissions(manage_messages=True)
-    async def clear_t(ctx, d: str, m: str, h=00, mi=00):
-        mi = int(mi)
-        try:
-            d = int(d)
-        except ValueError:
-            d = today.day
-        try:
-            m = int(m)
-        except ValueError:
-            m = today.month
+    async def clear_t(ctx, d: str, m: str, h=00, mi=00, utc=+3):
+        
         ye = today.year
-        count = 0
-        h = int(h)
-        #ho = h - 2
+            
         da = int(d)
         mo = int(m)
-
-        #if ho == -2:
-        #    ho = 22
-        #    da = int(d)-1
-        #if ho == -1:
-        #   ho = 23
-        #    da = int(d)-1
+        mi = int(mi)
+        h = int(h)
+        utc = int(utc)
+        ho = h - utc
+        
+        if ho < 0:
+            da -= 1
+            ho = 24 - utc
         if da == 0:
             mo -= 1
             da = list(months.values())[mo-1]
@@ -660,9 +652,10 @@ try:
         date = [h, mi, d, m]
         date_str = [str(i) for i in date]
 
-        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(h), minute=int(date_str[1]))
+        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
         print(date_t)
-
+        
+        count = 0
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=20)
         async for message in ctx.channel.history(limit=None, after=date_t):
             count += 1
@@ -681,7 +674,7 @@ try:
                 date_str[a] = '0' + i
             a += 1
 
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}**? \n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{utc}**?\n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
 
         def check(m):
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
@@ -752,19 +745,19 @@ try:
     @rates.error
     async def rates_error(ctx, error):
         global error_desc
-        error_desc = "На даний момент доступні курси Долару, Євро, Шекеля, Рубля та Єни.\n||**b!rates** *(Валюта) (Кількість)*||"
+        error_desc = "На даний момент доступні курси Долару, Євро, Шекеля, Рубля та Єни.\n||**b!rates** *(Валюта) {Кількість}*||"
 
 
     @kanava.error
     async def kanava_error(ctx, error):
         global error_desc
-        error_desc = "||**b!kanava** *@(Нікнейм) (Кількість) (Довіра бота)*||"
+        error_desc = "||**b!kanava** *@(Нікнейм) (Кількість) {Довіра бота}*||"
 
 
     @clear_t.error
     async def clear_t_error(ctx, error):
         global error_desc
-        error_desc = "Введіть дату та час у коректному форматі.\n||**b!clear_t** *(День) (Місяць) (Години) (Хвилини)*||"
+        error_desc = "Введіть дату та час у коректному форматі.\n||**b!clear_t** *(День) (Місяць) (Години) (Хвилини) {Часовий пояс}*||"
 
 
     @pfp.error
@@ -776,7 +769,7 @@ try:
     @kick.error
     async def kick_error(ctx, error):
         global error_desc
-        error_desc = "||**b!kick** *@(Нікнейм) (Причина)*||"
+        error_desc = "||**b!kick** *@(Нікнейм) {Причина}*||"
 
 
     @pasta.error
@@ -788,7 +781,7 @@ try:
     @mute.error
     async def mute_error(ctx, error):
         global error_desc
-        error_desc = "||**b!mute** *@(Нікнейм) (Час муту у хвилинах) (Номер порушення) (Опис)*||"
+        error_desc = "||**b!mute** *@(Нікнейм) (Час муту у хвилинах) {Номер порушення} {Опис}*||"
 
     @unmute.error
     async def unmute_error(ctx, error):
