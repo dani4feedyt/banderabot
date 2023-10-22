@@ -52,6 +52,16 @@ try:
 
     appeal = ["козаче", "хлопче", "друже", "вуйче", "брате", "дядьку", "товаришу", "добродію"]
 
+    def msg_end_temp(number):
+        msg_ending = "ь"
+        exep1 = ("1", "2", "3", "4")
+        exep2 = ("11", "12", "13", "14")
+        if str(number).endswith(exep2):
+            msg_ending = "ь"
+        elif str(number).endswith(exep1):
+            msg_ending = "ня"
+        return msg_ending
+
     @bot.event
     async def on_command(ctx):
         print(f"Triggered... <{ctx.command}>; server: <{ctx.guild.name}>; channel: <{ctx.channel.name}>; user: <{ctx.message.author}>")
@@ -598,15 +608,9 @@ try:
     @bot.command(pass_context=True, name='clear')
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, count = 100):
-        sfx = "ь"
-        suff = ("1", "2", "3", "4")
-        suff2 = ("11", "12", "13", "14")
-        if str(count).endswith(suff2):
-            sfx = "ь"
-        elif str(count).endswith(suff):
-            sfx = "ня"
 
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx}? \n*Для підтверждення - напишіть "так" протягом 7 секунд* ', delete_after=60)
+        msg_ending = msg_end_temp(count)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending}? \n*Для підтверждення - напишіть "так" протягом 7 секунд* ', delete_after=60)
         def check(m):
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
                 return m.content.lower()
@@ -621,7 +625,7 @@ try:
                 if int(count) >= 100:
                     count = 'дуууууже багато'
                 time.sleep(0.75)
-                await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
+                await ctx.send(f'Було видалено **{count}** повідомлен{msg_ending}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видалити більше ніж 150 повідомлень.", delete_after=60)
 
@@ -653,20 +657,12 @@ try:
         date_str = [str(i) for i in date]
 
         date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
-        print(date_t)
+        print("Timestamp UTC datetime: ", date_t)
         
         count = 0
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=20)
         async for message in ctx.channel.history(limit=None, after=date_t):
             count += 1
-
-        sfx = "ь"
-        suff = ("1", "2", "3", "4")
-        suff2 = ("11", "12", "13", "14")
-        if str(count).endswith(suff2):
-            sfx = "ь"
-        elif str(count).endswith(suff):
-            sfx = "ня"
 
         a = 0
         for i in date_str:
@@ -674,7 +670,8 @@ try:
                 date_str[a] = '0' + i
             a += 1
 
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{sfx} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{utc}**?\n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
+        msg_ending = msg_end_temp(count)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{utc}**?\n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
 
         def check(m):
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
@@ -688,7 +685,7 @@ try:
             if int(count) <= 500:
                 print(int(count)+2)
                 await ctx.channel.purge(limit=int(count)+2)
-                await ctx.send(f'Було видалено **{count}** повідомлен{sfx}!', delete_after=60)
+                await ctx.send(f'Було видалено **{count}** повідомлен{msg_ending}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
 
