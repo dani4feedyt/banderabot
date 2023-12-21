@@ -109,6 +109,12 @@ try:
                 return
             await asyncio.sleep(30)
 
+
+    @bot.command(name='identify')
+    async def identify(ctx):
+        await ctx.send(ctx.attachments[0].url)
+        await ctx.send(datetime.datetime.now().time())
+
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
     async def on_message(message):
         if "бандер" in message.content.lower():
