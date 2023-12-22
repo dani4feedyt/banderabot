@@ -27,6 +27,8 @@ try:
     from selenium import webdriver
     from bs4 import BeautifulSoup
     from datetime import date
+    from image_rec import imagery
+
 
     #############################################__ИДЕИ__#############################################
     #1. Сделать предварительный выбор языка в b!info
@@ -112,8 +114,13 @@ try:
 
     @bot.command(name='identify')
     async def identify(ctx):
-        await ctx.send(ctx.attachments[0].url)
-        await ctx.send(datetime.datetime.now().time())
+        f_path = f'src/last_img.jpg'
+        os.remove(f_path)
+        im_url = ctx.message.attachments[0].url
+        myfile = requests.get(im_url)
+        open(f_path, 'wb').write(myfile.content)
+        await ctx.send(f' Я гадаю, що це... {imagery()}')
+
 
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
     async def on_message(message):
