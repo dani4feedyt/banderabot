@@ -659,7 +659,7 @@ try:
 
     @bot.command(pass_context=True, name='clear_t')
     @commands.has_permissions(manage_messages=True)
-    async def clear_t(ctx, d: str, m: str, h=00, mi=00, utc=+3):
+    async def clear_t(ctx, d: str, m: str, h=00, mi=00, gmt=+2):
         
         ye = today.year
             
@@ -667,12 +667,12 @@ try:
         mo = int(m)
         mi = int(mi)
         h = int(h)
-        utc = int(utc)
-        ho = h - utc
+        gmt = int(gmt)
+        ho = h - gmt
         
         if ho < 0:
             da -= 1
-            ho = 24 - utc
+            ho = 24 - gmt
         if da == 0:
             mo -= 1
             da = list(months.values())[mo-1]
@@ -684,7 +684,7 @@ try:
         date_str = [str(i) for i in date]
 
         date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
-        print("Timestamp UTC datetime: ", date_t)
+        print("Timestamp GMT datetime: ", date_t)
         
         count = 0
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=20)
@@ -698,7 +698,7 @@ try:
             a += 1
 
         msg_ending = msg_end_temp(count)
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{utc}**?\n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**?\n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
 
         def check(m):
             if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
