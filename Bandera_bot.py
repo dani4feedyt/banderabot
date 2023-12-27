@@ -115,8 +115,19 @@ try:
     @bot.command(name='identify')
     async def identify(ctx):
         f_path = f'src/last_img.jpg'
-        os.remove(f_path)
-        im_url = ctx.message.attachments[0].url
+        if ctx.message.attachments:
+            im_url = ctx.message.attachments[0].url
+            print(True)
+        if not ctx.message.attachments:
+            print(False)
+            msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+            if msg.attachments:
+                im_url = msg.attachments[0].url
+                print(im_url)
+            else:
+                await ctx.send(f'**Помилка**. У повідомленні відсутнє зображення.')
+                return
+
         myfile = requests.get(im_url)
         open(f_path, 'wb').write(myfile.content)
         await ctx.send(f' Я гадаю, що це... {imagery()}')
@@ -368,7 +379,11 @@ try:
             irritation = 0
             return
 
-        pfp_u = await ctx.reply(member_url)
+        pfp_image = requests.get(member_url)
+        with open(f'src/last_pfp.jpg', 'wb') as f:
+            f.write(pfp_image.content)
+            picture = discord.File('src/last_pfp.jpg')
+            pfp_u = await ctx.reply(file=picture)
 
         if url == member_url:
             irritation += 1
@@ -583,7 +598,7 @@ try:
         else:
             await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
 
-    @bot.command(name='$time')####################################ДОДЕЛАТЬ ТАЙМШТАМП ДЛЯ КЛИРА#################################
+    @bot.command(name='$time')
     async def t_time(ctx):
         timestamp = ctx.message.created_at
         print(timestamp)
