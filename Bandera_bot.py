@@ -3,6 +3,7 @@ try:
 
     start_time = time.time()
 
+    import PIL
     import datetime
     import inspect
     import discord
@@ -112,7 +113,7 @@ try:
             await asyncio.sleep(30)
 
 
-    @bot.command(name='identify')
+    """@bot.command(name='identify')
     async def identify(ctx):
         f_path = f'src/last_img.jpg'
         if ctx.message.attachments:
@@ -130,7 +131,7 @@ try:
 
         myfile = requests.get(im_url)
         open(f_path, 'wb').write(myfile.content)
-        await ctx.send(f' Я гадаю, що це... {imagery()}')
+        await ctx.send(f' Я гадаю, що це... {imagery()}')"""
 
 
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
@@ -363,7 +364,7 @@ try:
 
         await ctx.send(embed=embed)
 
-    @bot.command(name='pfp')
+    """@bot.command(name='pfp')
     async def pfp(ctx, member: discord.Member):
         global url
         global irritation
@@ -419,7 +420,7 @@ try:
             elif 3 <= irritation <= 7:
                 await ctx.send(pfp_ph[irritation - 3])
             elif irritation >= 7:
-                await ctx.send(pfp_ph[-1])
+                await ctx.send(pfp_ph[-1])"""
 
 
     @bot.command(name="birb")
@@ -582,7 +583,7 @@ try:
     async def t_roles(ctx, member: discord.Member):
         await ctx.send(member.roles)
 
-    @bot.command(pass_context = True, name='unmute')
+    """@bot.command(pass_context = True, name='unmute')
     @commands.has_permissions(manage_messages=True)
     async def unmute(ctx, member: discord.Member):
         id1 = member.id
@@ -596,7 +597,7 @@ try:
             embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=0x013ADF)
             await ctx.send(embed=embed)
         else:
-            await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
+            await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")"""
 
     @bot.command(name='$time')
     async def t_time(ctx):
@@ -701,8 +702,9 @@ try:
         await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**?\n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
 
         def check(m):
-            if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                return m.content.lower()
+            if m.author == ctx.author:
+                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                    return m.content.lower()
         try:
             m = await bot.wait_for("message", check=check, timeout=7)
         except asyncio.TimeoutError:
@@ -784,10 +786,10 @@ try:
         error_desc = "Введіть дату та час у коректному форматі.\n||**b!clear_t** *(День) (Місяць) (Години) (Хвилини) {Часовий пояс}*||"
 
 
-    @pfp.error
+    """@pfp.error
     async def pfp_error(ctx, error):
         global error_desc
-        error_desc = "||**b!pfp** *@(Нікнейм)*||"
+        error_desc = "||**b!pfp** *@(Нікнейм)*||"""
 
 
     @kick.error
@@ -807,10 +809,10 @@ try:
         global error_desc
         error_desc = "||**b!mute** *@(Нікнейм) (Час муту у хвилинах) {Номер порушення} {Опис}*||"
 
-    @unmute.error
+    """@unmute.error
     async def unmute_error(ctx, error):
         global error_desc
-        error_desc = "||**b!unmute** *@(Нікнейм)*||"
+        error_desc = "||**b!unmute** *@(Нікнейм)*||"""
 
     @spam.error
     async def spam_error(ctx, error):
