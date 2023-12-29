@@ -35,4 +35,5 @@ opencv-python~=4.8.1.78
 torch~=2.1.1
 torchvision~=0.16.1
 timm~=0.9.12
-Pillow~=9.5.0
+Pillow~=10.1.0
+PIL~=10.1.0

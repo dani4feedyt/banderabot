@@ -1,10 +1,12 @@
 import numpy as np
 import json
+import PIL
 from PIL import Image
 import timm
 import torch
 from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
+
 
 def imagery():
     labels = json.load(open('./src/imagenet21_class_index(ukr).json', encoding='utf-8'))
