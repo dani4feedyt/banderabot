@@ -114,6 +114,7 @@ try:
 
     @bot.command(name='identify')
     async def identify(ctx):
+        mes = await ctx.send(f'*Хмм... дайте поміркувати...*')
         f_path = f'src/last_img.jpg'
 
         if ctx.message.attachments:
@@ -132,13 +133,14 @@ try:
         myfile = requests.get(im_url)
         open(f_path, 'wb').write(myfile.content)
 
-        lables_list = imagery()
+        lables_list = imagery(f_path)
         output_labels = str()
         for i in range(len(lables_list[0])):
             output_labels += lables_list[0][i]
             output_labels += f' *({lables_list[1][i]})*'
             if i < len(lables_list[0]) - 1:
                 output_labels += '; '
+        await mes.delete()
         await ctx.send(f' Я гадаю, що це... {output_labels}')
 
 
