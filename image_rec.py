@@ -24,10 +24,18 @@ def imagery():
     tensor = transform(img).unsqueeze(0)
     logits = model(tensor)
     out = logits.detach().cpu().numpy()
-    idx = np.argmax(out, axis=1)
-    im_index = idx[0]
-    ukr_label = labels.get(f"{im_index}")
-    eng_label = str(eng_labels[im_index]).replace('_', ' ')
-    return f'{ukr_label} *({eng_label})*'
+    idx_list = np.argpartition(out, -5, axis=1)[:, -5:]
+
+    eng_label_list = []
+    ukr_label_list = []
+    for im_index in idx_list[0]:
+        ##print(im_index)
+        ukr_label = labels.get(f"{im_index}")
+        eng_label = str(eng_labels[im_index]).replace('_', ' ')
+        ##print(ukr_label, eng_label)
+        ukr_label_list.append(ukr_label)
+        eng_label_list.append(eng_label)
+
+    return ukr_label_list, eng_label_list
 
 

@@ -115,6 +115,7 @@ try:
     @bot.command(name='identify')
     async def identify(ctx):
         f_path = f'src/last_img.jpg'
+
         if ctx.message.attachments:
             im_url = ctx.message.attachments[0].url
             print(True)
@@ -130,7 +131,15 @@ try:
 
         myfile = requests.get(im_url)
         open(f_path, 'wb').write(myfile.content)
-        await ctx.send(f' Я гадаю, що це... {imagery()}')
+
+        lables_list = imagery()
+        output_labels = str()
+        for i in range(len(lables_list[0])):
+            output_labels += lables_list[0][i]
+            output_labels += f' *({lables_list[1][i]})*'
+            if i < len(lables_list[0]) - 1:
+                output_labels += '; '
+        await ctx.send(f' Я гадаю, що це... {output_labels}')
 
 
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
