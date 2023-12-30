@@ -31,8 +31,8 @@ try:
 
 
     #############################################__ИДЕИ__#############################################
-    #1. Сделать предварительный выбор языка в b!info
-    #2. Затраить скрытие сообщений через лямбда методы.
+    #1. Сделать предварительный выбор языка в b!info.
+    #2. Написать универсальную распознавалку текстового ответа как функцию (например как в 150:17).
     #############################################__ИДЕИ__#############################################
 
     bot = commands.Bot(command_prefix=settings['prefix'], intents=discord.Intents.all())
@@ -99,7 +99,6 @@ try:
     async def before_msg1():
         for _ in range(60*60*24):
             if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
-                print('It is time to create!')
                 return
             await asyncio.sleep(30)
 
@@ -107,7 +106,6 @@ try:
     async def before_msg_d():
         for _ in range(60*60*24):
             if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '29':
-                print('It is time to delete')
                 return
             await asyncio.sleep(30)
 
@@ -119,9 +117,7 @@ try:
 
         if ctx.message.attachments:
             im_url = ctx.message.attachments[0].url
-            print(True)
         if not ctx.message.attachments:
-            print(False)
             msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
             if msg.attachments:
                 im_url = msg.attachments[0].url
@@ -169,7 +165,6 @@ try:
                         a_list = [0, 1]
                         distribution = [.9, .1]
                         rand = random.choices(a_list, distribution)
-                        print(rand)
                         await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
                         if rand == [1]:
                             await message.channel.send(file=discord.File('b2.png'))
@@ -447,17 +442,19 @@ try:
         await ctx.send(embed=embed)
 
     @bot.command(pass_context=True, name='$check')
-    async def t_check(message):
+    async def t_check(ctx, message):
         channel = message.channel
         await channel.send("Чи бажаєте ви {String}?")
 
         def check(m):
-            if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                return m.content.lower()
+            if m.author == ctx.author:
+                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                    return m.content.lower()
         try:
             m = await bot.wait_for("message", check=check, timeout=30)
         except asyncio.TimeoutError:
-            print("TimeoutError")
+            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
+            return
         else:
             await channel.send("Підтверджено")
 
@@ -487,12 +484,14 @@ try:
             await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
 
             def check(m):
-                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                    return m.content.lower()
+                if m.author == ctx.author:
+                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                        return m.content.lower()
             try:
                 m = await bot.wait_for("message", check=check, timeout=30)
             except asyncio.TimeoutError:
-                print("TimeoutError")
+                await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
+                return
             else:
                 embed = discord.Embed(title="Заслання", description=f'**{user}** був виключений з серверу модератором **{author.mention}**', color=0x013ADF)
                 embed.add_field(name=reasonT, value=reasonA, inline=False)
@@ -650,13 +649,14 @@ try:
         msg_ending = msg_end_temp(count)
         await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending}? \n*Для підтверждення - напишіть "так" протягом 7 секунд* ', delete_after=60)
         def check(m):
-            if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                return m.content.lower()
+            if m.author == ctx.author:
+                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                    return m.content.lower()
         try:
             m = await bot.wait_for("message", check=check, timeout=7)
         except asyncio.TimeoutError:
-            await ctx.send("Час очікування вичерпано, запит скасовано.")
-            print("TimeoutError")
+            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
+            return
         else:
             if int(count) <= 150:
                 await ctx.channel.purge(limit=int(count+3))
@@ -668,7 +668,7 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видалити більше ніж 150 повідомлень.", delete_after=60)
 
 
-    @bot.command(pass_context=True, name='clear_t')
+    @bot.command(pass_context=True, name='clear_t')#################Дописать чтобы бот цитировал крайнее сообшение до которого он очистит
     @commands.has_permissions(manage_messages=True)
     async def clear_t(ctx, d: str, m: str, h=00, mi=00, gmt=+2):
         
@@ -698,7 +698,7 @@ try:
         print("Timestamp GMT datetime: ", date_t)
         
         count = 0
-        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=20)
+        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=30)
         async for message in ctx.channel.history(limit=None, after=date_t):
             count += 1
 
@@ -709,17 +709,17 @@ try:
             a += 1
 
         msg_ending = msg_end_temp(count)
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**?\n*Для підтверждення - напишіть "так" протягом 7 секунд*', delete_after=20)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**?\n*Для підтверждення - напишіть "так" протягом 30 секунд*', delete_after=30)
 
         def check(m):
             if m.author == ctx.author:
                 if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
                     return m.content.lower()
         try:
-            m = await bot.wait_for("message", check=check, timeout=7)
+            m = await bot.wait_for("message", check=check, timeout=30)
         except asyncio.TimeoutError:
-            print("TimeoutError")
             await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
+            return
         else:
             if int(count) <= 500:
                 print(int(count)+2)
@@ -740,12 +740,13 @@ try:
             await ctx.send("Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**", delete_after=29)
 
             def check(m):
-                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                    return m.content.lower()
+                if m.author == ctx.author:
+                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                        return m.content.lower()
             try:
                 m = await bot.wait_for("message", check=check, timeout=30)
             except asyncio.TimeoutError:
-                print("TimeoutError")
+                await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
                 return
             else:
                 if intr <= 0.3:
@@ -759,9 +760,9 @@ try:
         await ctx.send("**Спам** було завершено")
 
 
-    @bot.command(name='stop')
+    @bot.command(name='stop') ##########плохой стоп, сделать как в Bandera G
     async def stop(ctx: commands.Context):
-        await ctx.send("Мене було зупинено, але силу мого духу не спинити нікому!")
+        await ctx.send("Мене було зупинено, але мою жагу до свободи не спинити нікому!")
         os.system('python "Bandera_bot.py"')
         quit()
 
