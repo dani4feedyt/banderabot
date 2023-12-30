@@ -111,7 +111,7 @@ try:
 
 
     @bot.command(name='identify')
-    async def identify(ctx):
+    async def identify(ctx, n_outputs=5):
         mes = await ctx.send(f'*Хмм... дайте поміркувати...*')
         f_path = f'src/last_img.jpg'
 
@@ -129,7 +129,7 @@ try:
         myfile = requests.get(im_url)
         open(f_path, 'wb').write(myfile.content)
 
-        lables_list = imagery(f_path)
+        lables_list = imagery(f_path, n_outputs)
         output_labels = str()
         for i in range(len(lables_list[0])):
             output_labels += lables_list[0][i]

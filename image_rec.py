@@ -8,7 +8,7 @@ from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
 
 
-def imagery(file):
+def imagery(file, n_outputs):
     labels = json.load(open('./src/imagenet21_class_index(ukr).json', encoding='utf-8'))
 
     tree = torch.load('./src/imagenet21k_miil_tree.pth')
@@ -22,7 +22,7 @@ def imagery(file):
     tensor = transform(img).unsqueeze(0)
     logits = model(tensor)
     out = logits.detach().cpu().numpy()
-    idx_list = np.argpartition(out, -5, axis=1)[:, -5:]
+    idx_list = np.argpartition(out, -n_outputs, axis=1)[:, -n_outputs:]
 
     eng_label_list = []
     ukr_label_list = []
