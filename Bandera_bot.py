@@ -743,40 +743,53 @@ try:
             interval = 3600
             await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями більший за **{interval}** секунд. Значення параметру змінено на **{interval}**")
 
-        timeout = 5
-        global spam
-        spam = True
-        await ctx.send(f"**Спам** розпочнеться через **{timeout}** секунд, для завершення - введіть **b!stop**")
-        await asyncio.sleep(timeout)
-        await ctx.send(f"**Спам** у особисті повідомлення {member} розпочато")
+        await ctx.send(f"Ви дійсно бажаєте розпочати спам у особисті повідомлення користувача {member.mention}?")
+        def check(m):
+            if m.author == ctx.author:
+                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
+                    return m.content.lower()
+        try:
+            m = await bot.wait_for("message", check=check, timeout=30)
+        except asyncio.TimeoutError:
+            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
+            return
 
-        a = 0
-        for i in range(count):
-            while True:
-                if not spam:
-                    break
-                if a < count:
-                    await member.send(text_arg)
-                    await asyncio.sleep(interval)
-                    a += 1
-                break
-
-        await ctx.send(random.choice(spam_ph))
-        if interval > 15:
-            pass
         else:
-            if count == a:
-                await ctx.send(f"{member.mention} отримав **усі** повідомлення!")
+            timeout = 5
+            global spam
+            spam = True
+            await ctx.send(f"**Спам** розпочнеться через **{timeout}** секунд, для завершення - введіть **b!stop**")
+            await asyncio.sleep(timeout)
+            await ctx.send(f"**Спам** у особисті повідомлення {member.mention} розпочато")
+
+            a = 0
+            for i in range(count):
+                while True:
+                    if not spam:
+                        break
+                    if a < count:
+                        await member.send(text_arg)
+                        await asyncio.sleep(interval)
+                        a += 1
+                    break
+
+            await ctx.send(random.choice(spam_ph))
+            if interval > 15:  # чтобы спам со слишком долгими интервалами не засорял чат, будучи неуместным по своему завершению
+                pass
             else:
-                await ctx.send(f"Кількість отриманих повідомлень користувачем {member.mention} : **{a}**")
-        await member.send("Спам закінчено, тобі цього вистачить.")
+                if count == a:
+                    await ctx.send(f"{member.mention} отримав **усі** повідомлення!")
+                else:
+                    await ctx.send(f"Кількість отриманих повідомлень користувачем {member.mention} : **{a}**")
+            spam = False
+            await member.send("Спам закінчено, тобі цього вистачить.")
 
 
-    @bot.command(name='stop') ##########плохой стоп, сделать как в Bandera G
-    async def stop(ctx: commands.Context):
+    @bot.command(name='stop')
+    async def stop(ctx):
+        global spam
+        spam = False ##сюда можно встроить выключатели глобальных переменных для остановки комманд
         await ctx.send("Мене було зупинено, але мою жагу до свободи не спинити нікому!")
-        os.system('python "Bandera_bot.py"')
-        quit()
 
 
     @bot.command(name='$ping')
