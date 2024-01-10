@@ -301,11 +301,8 @@ try:
                 await member.edit(voice_channel=channel2)
                 time.sleep(0.5)
                 await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
-                def check(m):
-                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y', 'ні', 'нет', 'no')):
-                        return m.content.lower()
                 try:
-                    m = await bot.wait_for("message", check=check, timeout=1.5)
+                    await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0].extend(checklists[1])), timeout=1.5)
                 except asyncio.TimeoutError:
                     continue
                 else:
@@ -451,9 +448,8 @@ try:
     @bot.command(pass_context=True, name='$check')
     async def t_check(ctx):
         await ctx.send("Чи бажаєте ви {String}?")
-        check_list = ['так', 'да', 'ага', 'yes', 'y']
         try:
-            await bot.wait_for("message", check=lambda message: check(ctx, message, check_list), timeout=30)
+            await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
         except asyncio.TimeoutError:
             await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
             return
@@ -485,12 +481,8 @@ try:
                 reasonA = reason
             await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
 
-            def check(m):
-                if m.author == ctx.author:
-                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                        return m.content.lower()
             try:
-                m = await bot.wait_for("message", check=check, timeout=30)
+                await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
             except asyncio.TimeoutError:
                 await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
                 return
@@ -650,12 +642,9 @@ try:
 
         msg_ending = msg_end_temp(count)
         await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending}? \n*Для підтверждення - напишіть "так" протягом 7 секунд* ', delete_after=60)
-        def check(m):
-            if m.author == ctx.author:
-                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                    return m.content.lower()
+
         try:
-            m = await bot.wait_for("message", check=check, timeout=7)
+            await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=7)
         except asyncio.TimeoutError:
             await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
             return
@@ -713,12 +702,8 @@ try:
         msg_ending = msg_end_temp(count)
         await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**?\n*Для підтверждення - напишіть "так" протягом 30 секунд*', delete_after=30)
 
-        def check(m):
-            if m.author == ctx.author:
-                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                    return m.content.lower()
         try:
-            m = await bot.wait_for("message", check=check, timeout=30)
+            await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
         except asyncio.TimeoutError:
             await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
             return
@@ -744,12 +729,9 @@ try:
             await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями більший за **{interval}** секунд. Значення параметру змінено на **{interval}**")
 
         await ctx.send(f"Ви дійсно бажаєте розпочати спам у особисті повідомлення користувача {member.mention}?")
-        def check(m):
-            if m.author == ctx.author:
-                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                    return m.content.lower()
+
         try:
-            m = await bot.wait_for("message", check=check, timeout=30)
+            await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
         except asyncio.TimeoutError:
             await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
             return
