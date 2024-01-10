@@ -55,6 +55,11 @@ try:
 
     appeal = ["козаче", "хлопче", "друже", "вуйче", "брате", "дядьку", "товаришу", "добродію"]
 
+    def check(ctx, msg, check_list):
+        if msg.author == ctx.author:
+            if any(msg.content.lower() == i for i in check_list):
+                return msg.content.lower()
+
     def msg_end_temp(number):
         msg_ending = "ь"
         exep1 = ("1", "2", "3", "4")
@@ -444,21 +449,16 @@ try:
         await ctx.send(embed=embed)
 
     @bot.command(pass_context=True, name='$check')
-    async def t_check(ctx, message):
-        channel = message.channel
-        await channel.send("Чи бажаєте ви {String}?")
-
-        def check(m):
-            if m.author == ctx.author:
-                if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                    return m.content.lower()
+    async def t_check(ctx):
+        await ctx.send("Чи бажаєте ви {String}?")
+        check_list = ['так', 'да', 'ага', 'yes', 'y']
         try:
-            m = await bot.wait_for("message", check=check, timeout=30)
+            await bot.wait_for("message", check=lambda message: check(ctx, message, check_list), timeout=30)
         except asyncio.TimeoutError:
             await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
             return
         else:
-            await channel.send("Підтверджено")
+            await ctx.send("Підтверджено")
 
     @bot.command(pass_context=True, name='kick')
     @commands.has_permissions(kick_members=True)
