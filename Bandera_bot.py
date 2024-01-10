@@ -37,8 +37,8 @@ try:
     #############################################__ИДЕИ__#############################################
 
     bot = commands.Bot(command_prefix=settings['prefix'], intents=discord.Intents.all())
-    version = 'release 2.4.4'
-    patch_note = 'last updated: 11.10.23'
+    version = 'release 3.1'
+    patch_note = 'last updated: 10.01.24'
     w = "Bandera_bot.py"
     fi = open("data.txt", "w+")
     data_filename = "data.txt"
@@ -213,10 +213,8 @@ try:
         await ctx.send(f"<@{str(696670757794742322)}>, {author.mention} зазіхнув на головну тайну калу, та дізнався рецепт надчистого лайна: \n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
 
     @bot.command(name='rates')
-    async def rates(ctx, rate, amount=None):
+    async def rates(ctx, amount, *, rate):
         await ctx.send(f"*Підрахування...*", delete_after=10)
-        global val
-        global name
         page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
         soup = BeautifulSoup(page1.content, 'html.parser')
         _dict1 = soup.find_all('td', {"data-label": "Офіційний курс"})[7].get_text()
@@ -248,22 +246,18 @@ try:
             name = "JPY"
         else:
             await ctx.send("**Помилка.** Курс даної валюти ще не було внесено до бази даних")
-        bot.dispatch('rates_command', ctx, amount)
+            return
 
-    @bot.event
-    async def on_rates_command(ctx, amount):
-        if amount is None:
-            await ctx.send(f"{random.choice(appeal).capitalize()}, курс {name} становить **{val}** грн!")
-        else:
-            if ',' in amount:
-                amount = str(amount).replace(',', '.')
-            amount = float(amount)
-            rt = float(val) * float(amount)
-            rt = round(rt, 2)
-            rt = str(rt)
-            if rt.endswith('0'):
-                rt = rt[:-2]
-            await ctx.send(f"{random.choice(appeal).capitalize()}, {amount} {name} становить **{rt}** грн!")
+        if ',' in amount:
+            amount = str(amount).replace(',', '.')
+        amount = float(amount)
+        rt = float(val) * float(amount)
+        rt = round(rt, 2)
+        rt = str(rt)
+        if rt.endswith('0'):
+            rt = rt[:-2]
+
+        await ctx.send(f"{random.choice(appeal).capitalize()}, {int(amount)} {name} становить **{rt}** грн!")
 
     @bot.command(name='fetch vc')
     async def t_voice(ctx, member: discord.Member):
@@ -336,6 +330,8 @@ try:
     @bot.command(name="slava_ukraine")
     async def slava_ukraine(ctx):
         await ctx.reply(f"**Героям слава, {random.choice(appeal)}!**")
+        await ctx.send(ctx.guild.name)
+        print(ctx.guild.name)
 
     @bot.command(pass_context=True, name='echo')
     async def echo(ctx, *, msg):
@@ -783,7 +779,7 @@ try:
     @rates.error
     async def rates_error(ctx, error):
         global error_desc
-        error_desc = "На даний момент доступні курси Долару, Євро, Шекеля, Рубля та Єни.\n||**b!rates** *(Валюта) {Кількість}*||"
+        error_desc = "На даний момент доступні курси Долару, Євро, Шекеля, Рубля та Єни.\n||**b!rates** *(Кількість) (Валюта)*||"
 
 
     @kanava.error
