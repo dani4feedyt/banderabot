@@ -13,7 +13,7 @@ links = {1:'https://tenor.com/view/no-genshin-impact-discord-rules-gif-20700280'
          7:'https://tenor.com/view/bruh-gif-19222296',
          8:'https://tenor.com/view/davy-enardo-discord-gif-19344047',
          9:'https://tenor.com/view/discord-rules-rules-gif-18972022',
-         10:'https://tenor.com/view/dimden-cat-dimdem-cute-cat-discord-gif-22604911',
+         10:'https://tenor.com/view/rule10-jiren-dragon-ball-super-binding-of-isaac-the-binding-of-isaac-gif-23048755',
          11:'https://tenor.com/view/rule-rule11-11-gif-21694891',
          12:'https://tenor.com/view/people-playground-rule12-gif-20419176',
          13:'https://tenor.com/view/1984-rule13-gif-21572417',

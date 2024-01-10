@@ -10,7 +10,7 @@ try:
     from discord.ext.commands import has_permissions, MissingPermissions
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
-    from Bandera_PyChton_quotes import Quotes1, links
+    from dicts_txt_f import Quotes1, links
     from txt_f import *
     from sys import argv, executable
     import json
