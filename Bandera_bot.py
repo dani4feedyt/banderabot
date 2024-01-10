@@ -593,6 +593,7 @@ try:
             await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
             embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=0x013ADF)
             await ctx.send(embed=embed)
+            await member.edit(voice_channel=None)
         else:
             await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
 
