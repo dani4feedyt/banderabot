@@ -154,20 +154,14 @@ try:
                 await bot.process_commands(message)
             else:
                 await message.channel.send("Мене хтось кликав?")
-                def check(m):
-                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                        return m.content.lower()
                 try:
-                    m = await bot.wait_for("message", check=check, timeout=15)
+                    await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[0]), timeout=15)
                 except asyncio.TimeoutError:
                     await message.channel.send("Гаразд, мені певно здалося...")
                 else:
                     await message.channel.send("Що сталося?")
-                    def check(m):
-                        if any(m.content.lower() == i for i in ('з днем народження', 'с днем рождения', 'с др', 'з др')):
-                            return m.content.lower()
                     try:
-                        m = await bot.wait_for("message", check=check, timeout=15)
+                        await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[2]), timeout=15)
                     except asyncio.TimeoutError:
                         a_list = [0, 1]
                         distribution = [.9, .1]
@@ -729,7 +723,6 @@ try:
             await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями більший за **{interval}** секунд. Значення параметру змінено на **{interval}**")
 
         await ctx.send(f"Ви дійсно бажаєте розпочати спам у особисті повідомлення користувача {member.mention}?")
-
         try:
             await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
         except asyncio.TimeoutError:
