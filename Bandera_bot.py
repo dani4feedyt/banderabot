@@ -229,7 +229,7 @@ try:
         _dict5 = round(float(_dict5.replace(',', '.'))/10, 2)
         rate = rate.lower()
 
-        if any(i in rate for i in ['дол', 'us', 'dol']):
+        if any(i in rate for i in ['дол', 'us', 'dol', 'бак', 'бач' 'buck']):
             val = _dict1
             name = "USD"
         elif any(i in rate for i in ['євр', 'евр', 'eur']):
