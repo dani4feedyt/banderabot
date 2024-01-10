@@ -7,6 +7,7 @@ try:
     import inspect
     import discord
     from discord.ext import commands, tasks
+    from discord.ext.commands import has_permissions, MissingPermissions
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
     from Bandera_PyChton_quotes import Quotes1, links
@@ -44,6 +45,7 @@ try:
     today = datetime.date.today()
     print(today)
 
+    spam = True
     url = None
     irritation = 0
 
@@ -137,7 +139,7 @@ try:
             if i < len(lables_list[0]) - 1:
                 output_labels += '; '
         await mes.delete()
-        await ctx.send(f' Я гадаю, що це... {output_labels}')
+        await ctx.send(f'Я гадаю, що це... {output_labels}')
 
 
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
@@ -729,35 +731,45 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
 
 
-    @bot.command(name='spam')
-    async def spam(ctx, intr: float, count: int, *ar):
-        attention = '\n**Спам** розпочнеться через **5** секунд, для завершення - введіть **b!stop**'
-        ar = list(ar)
-        ar = (' '.join(ar))
-        a = 0
-        if intr < 0.5:
-            await ctx.send("**Увага!** За швидкості спаму більшої за одне слово у **0.5** секунд, повідомлення можуть надсилатися некоректно.", delete_after=29)
-            await ctx.send("Бажаєте продовжити операцію? Швидкість буде змінена на **0.5**", delete_after=29)
+    @bot.command(name='spam', pass_context=True)
+    @has_permissions(manage_roles=True, ban_members=True)
+    async def spam(ctx, member: discord.Member, count, interval, *, text_arg):
+        count = int(count)
+        interval = float(interval)
+        if interval < 0.5:
+            interval = 0.5
+            await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями менший за **{interval}** секунд. Значення параметру змінено на **{interval}**")
+        if interval > 3600:
+            interval = 3600
+            await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями більший за **{interval}** секунд. Значення параметру змінено на **{interval}**")
 
-            def check(m):
-                if m.author == ctx.author:
-                    if any(m.content.lower() == i for i in ('так', 'да', 'ага', 'yes', 'y')):
-                        return m.content.lower()
-            try:
-                m = await bot.wait_for("message", check=check, timeout=30)
-            except asyncio.TimeoutError:
-                await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
-                return
+        timeout = 5
+        global spam
+        spam = True
+        await ctx.send(f"**Спам** розпочнеться через **{timeout}** секунд, для завершення - введіть **b!stop**")
+        await asyncio.sleep(timeout)
+        await ctx.send(f"**Спам** у особисті повідомлення {member} розпочато")
+
+        a = 0
+        for i in range(count):
+            while True:
+                if not spam:
+                    break
+                if a < count:
+                    await member.send(text_arg)
+                    await asyncio.sleep(interval)
+                    a += 1
+                break
+
+        await ctx.send(random.choice(spam_ph))
+        if interval > 15:
+            pass
+        else:
+            if count == a:
+                await ctx.send(f"{member.mention} отримав **усі** повідомлення!")
             else:
-                if intr <= 0.3:
-                    intr = 0.3
-        await ctx.send(attention)
-        time.sleep(5)
-        while a < count:
-            await ctx.send(ar)
-            time.sleep(intr)
-            a += 1
-        await ctx.send("**Спам** було завершено")
+                await ctx.send(f"Кількість отриманих повідомлень користувачем {member.mention} : **{a}**")
+        await member.send("Спам закінчено, тобі цього вистачить.")
 
 
     @bot.command(name='stop') ##########плохой стоп, сделать как в Bandera G
@@ -828,7 +840,7 @@ try:
     @spam.error
     async def spam_error(ctx, error):
         global error_desc
-        error_desc = "||**b!spam** *(Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)*||"
+        error_desc = "||**b!spam** *(Кількість повідомлень) (Кулдаун між повідомленнями) (Слово для спаму)*||"
 
     @bot.event
     async def on_command_error(ctx, error):
