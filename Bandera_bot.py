@@ -6,6 +6,7 @@ try:
     import datetime
     import inspect
     import discord
+    import discord.ui
     from discord.ext import commands, tasks
     from discord.ext.commands import has_permissions, MissingPermissions
     from Bandera_cfg import settings
@@ -116,6 +117,11 @@ try:
                 return
             await asyncio.sleep(30)
 
+
+    # class MyView(discord.ui.View):
+    #     @discord.ui.button(label="Click me!", style=discord.ButtonStyle.primary, emoji="😎")
+    # @bot.command(name='ticktacktoe')
+    # async def ttt(ctx):
 
     @bot.command(name='identify')
     async def identify(ctx, n_outputs=5):
