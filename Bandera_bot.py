@@ -118,14 +118,24 @@ try:
             await asyncio.sleep(30)
 
 
-    class MyView(discord.ui.View):
-        @discord.ui.button(label="Слава україні", style=discord.ButtonStyle.primary, emoji="🇺🇦")
-        async def button_callback(self, button, interaction):
-            await interaction.response.send_message("Героям слава")
+    class Buttons(discord.ui.View):
 
-    @bot.command(name='ticktacktoe')
-    async def ttt(ctx):
-        await ctx.respond("Кніпка", view=MyView())
+        def __init__(self, *, timeout=180):
+            super().__init__(timeout=timeout)
+
+        @discord.ui.button(label="ㅤ", row=0, style=discord.ButtonStyle.success)
+        async def button_callback(self, interaction, button: discord.ui.Button):
+            button.label = "X"
+            await interaction.response.edit_message(content = "Героям слава", view=self)
+
+        @discord.ui.button(label="ㅤ", row=1, style=discord.ButtonStyle.primary)
+        async def second_button_callback(self, interaction, button: discord.ui.Button):
+            button.label = "X"
+            await interaction.response.edit_message(content = "Слава Україні", view=self)
+
+    @bot.command(name='button_t')
+    async def ticktacktoe(ctx):
+        await ctx.reply("Кніпка", view=Buttons())
 
     @bot.command(name='identify')
     async def identify(ctx, n_outputs=5):
