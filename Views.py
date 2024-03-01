@@ -13,15 +13,13 @@ movemap = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2
 
 myIterator = cycle(range(2))
 
-board = ttt.initial_state()
+def ai_func(self, board, view):
 
-def ai_func(board, button):
-
-    game_over = ttt.terminal(board)[0]
-    player = ttt.player(board)
+    game_over = ttt.terminal(view.board)[0]
+    player = ttt.player(view.board)
 
     if game_over:
-        winner = ttt.winner(board)
+        winner = ttt.winner(view.board)
         if winner is None:
             print(f"Game Over: Tie.")
         else:
@@ -29,103 +27,142 @@ def ai_func(board, button):
     else:
         print(f"Computer thinking...")
         time.sleep(0.5)
-        move = ttt.minimax(board)
-        board = ttt.result(board, move)
+        move = ttt.minimax(view.board)
+        view.board = ttt.result(view.board, move)
 
         move_coord = movemap.index(move)
+        x = movemap[move_coord][0]
+        print(x)
+        y = movemap[move_coord][1]
+        print(y)
+        print(view.board)
 
-        # discord.ui.Button['custom_id' = 1]
+
+        # Button.callback().label = 1
+
         print(move)
         print(move_coord)
-        print("Bbbb", button.custom_id)
+        next(myIterator)
 
-        return board, move
+        return view.board, move
 
 # def button_autopress(move, button):
 #     button
 
-class Buttons(discord.ui.View):
-    def __init__(self, *, timeout=180):
-        super().__init__(timeout=timeout)
+class Button(discord.ui.Button['TicTacToe']):
+    def __init__(self, x: int, y: int):
+        super().__init__(style=discord.ButtonStyle.secondary, label='ㅤ', row=y)
+        self.x = x
+        self.y = y
 
-    @discord.ui.button(label="ㅤ", custom_id="0", row=0, style=discord.ButtonStyle.primary)
-    async def button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][0] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board, button)
+    async def callback(self, interaction: discord.Interaction):
+        view: TicTacToe = self.view
+        turn = current_label[next(myIterator)]
+        self.style = discord.ButtonStyle.success
+        self.label = turn
+        view.board[self.y][self.x] = self.label
+        self.disabled = True
+        self.content = view.board
+        await interaction.response.edit_message(content=self.content, view=view)
+        msg = await interaction.original_response()
+        await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
+
+class TicTacToe(discord.ui.View):
+    children: list[Button]
+
+    def __init__(self):
+        super().__init__()
+
+        self.board = ttt.initial_state()
+
+        for x in range(3):
+            for y in range(3):
+                self.add_item(Button(x, y))
 
 
-    @discord.ui.button(label="ㅤ", custom_id="1", row=0, style=discord.ButtonStyle.primary)
-    async def second_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][1] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board, button)
 
-    @discord.ui.button(label="ㅤ", custom_id="2", row=0, style=discord.ButtonStyle.primary)
-    async def third_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][2] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board)
-
-    @discord.ui.button(label="ㅤ", custom_id="3", row=1, style=discord.ButtonStyle.primary)
-    async def fourth_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][0] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board)
-
-    @discord.ui.button(label="ㅤ", custom_id="4", row=1, style=discord.ButtonStyle.primary)
-    async def fifth_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][1] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board)
-
-    @discord.ui.button(label="ㅤ", custom_id="5", row=1, style=discord.ButtonStyle.primary)
-    async def sixth_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][2] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board)
-
-    @discord.ui.button(label="ㅤ", custom_id="6", row=2, style=discord.ButtonStyle.primary)
-    async def seventh_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][0] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board)
-
-    @discord.ui.button(label="ㅤ", custom_id="7", row=2, style=discord.ButtonStyle.primary)
-    async def eighth_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][1] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board)
-
-    @discord.ui.button(label="ㅤ", custom_id="8", row=2, style=discord.ButtonStyle.primary)
-    async def ninth_button_callback(self, interaction, button: discord.ui.Button):
-        label = current_label[next(myIterator)]
-        button.label = label
-        button.disabled = True
-        board[button.row][2] = label
-        await interaction.response.edit_message(content=board, view=self)
-        ai_func(board)
+# class Field(discord.ui.View):
+#     def __init__(self, *, timeout=180):
+#         super().__init__(timeout=timeout)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="0", row=0, style=discord.ButtonStyle.primary)
+#     async def button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][0] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board, button)
+#
+#
+#     @discord.ui.button(label="ㅤ", custom_id="1", row=0, style=discord.ButtonStyle.primary)
+#     async def second_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][1] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board, button)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="2", row=0, style=discord.ButtonStyle.primary)
+#     async def third_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][2] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="3", row=1, style=discord.ButtonStyle.primary)
+#     async def fourth_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][0] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="4", row=1, style=discord.ButtonStyle.primary)
+#     async def fifth_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][1] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="5", row=1, style=discord.ButtonStyle.primary)
+#     async def sixth_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][2] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="6", row=2, style=discord.ButtonStyle.primary)
+#     async def seventh_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][0] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="7", row=2, style=discord.ButtonStyle.primary)
+#     async def eighth_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][1] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board)
+#
+#     @discord.ui.button(label="ㅤ", custom_id="8", row=2, style=discord.ButtonStyle.primary)
+#     async def ninth_button_callback(self, interaction, button: discord.ui.Button):
+#         label = current_label[next(myIterator)]
+#         button.label = label
+#         button.disabled = True
+#         board[button.row][2] = label
+#         await interaction.response.edit_message(content=board, view=self)
+#         ai_func(board)
