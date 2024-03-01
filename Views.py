@@ -50,8 +50,8 @@ def ai_func(self, board, view):
 #     button
 
 class Button(discord.ui.Button['TicTacToe']):
-    def __init__(self, x: int, y: int, label):
-        super().__init__(style=discord.ButtonStyle.secondary, label=label, row=y)
+    def __init__(self, x: int, y: int, label, disabled):
+        super().__init__(style=discord.ButtonStyle.secondary, label=label, row=y, disabled=disabled)
         self.x = x
         self.y = y
 
@@ -67,6 +67,7 @@ class Button(discord.ui.Button['TicTacToe']):
         msg = await interaction.original_response()
         await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
         view.recreate_board()
+        await msg.edit(view=view)
 
 class TicTacToe(discord.ui.View):
     children: list[Button]
@@ -81,12 +82,14 @@ class TicTacToe(discord.ui.View):
         self.clear_items()
         for x in range(3):
             for y in range(3):
-                if self.board[x][y] is None:
+                if self.board[y][x] is None:
                     label = 'ㅤ'
+                    disabled = False
                 else:
-                    label = self.board[x][y]
+                    label = self.board[y][x]
+                    disabled = True
                 print(label)
-                self.add_item(Button(x, y, label))
+                self.add_item(Button(x, y, label, disabled))
 
 
         # for x in range(3):
