@@ -11,6 +11,7 @@ try:
     from discord.ext.commands import has_permissions, MissingPermissions
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
+    from Views import Buttons
     from dicts_txt_f import Quotes1, links
     from txt_f import *
     from sys import argv, executable
@@ -116,58 +117,6 @@ try:
             if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '29':
                 return
             await asyncio.sleep(30)
-
-
-    class Buttons(discord.ui.View):
-
-        def __init__(self, *, timeout=180):
-            super().__init__(timeout=timeout)
-
-        @discord.ui.button(label="ㅤ", row=0, style=discord.ButtonStyle.primary)
-        async def button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content = "0.0", view=self)
-
-        @discord.ui.button(label="ㅤ", row=0, style=discord.ButtonStyle.primary)
-        async def second_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content = "0.1", view=self)
-
-        @discord.ui.button(label="ㅤ", row=0, style=discord.ButtonStyle.primary)
-        async def third_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content="0.2", view=self)
-
-        @discord.ui.button(label="ㅤ", row=1, style=discord.ButtonStyle.primary)
-        async def fourth_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content="1.0", view=self)
-
-        @discord.ui.button(label="ㅤ", row=1, style=discord.ButtonStyle.primary)
-        async def fifth_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content="1.1", view=self)
-
-        @discord.ui.button(label="ㅤ", row=1, style=discord.ButtonStyle.primary)
-        async def sixth_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content="1.2", view=self)
-
-        @discord.ui.button(label="ㅤ", row=2, style=discord.ButtonStyle.primary)
-        async def seventh_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content="2.0", view=self)
-
-        @discord.ui.button(label="ㅤ", row=2, style=discord.ButtonStyle.primary)
-        async def eighth_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content="2.1", view=self)
-
-        @discord.ui.button(label="ㅤ", row=2, style=discord.ButtonStyle.primary)
-        async def ninth_button_callback(self, interaction, button: discord.ui.Button):
-            button.label = "X"
-            await interaction.response.edit_message(content="2.2", view=self)
-
 
     @bot.command(name='button_t')
     async def ticktacktoe(ctx):
