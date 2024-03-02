@@ -9,7 +9,7 @@ EMPTY = None
 
 user_player: int
 
-current_label = ["X", "O"]
+current_label = [X, O]
 
 movemap = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
 
@@ -21,43 +21,56 @@ triggered = False
 class Select(discord.ui.View):
     def __init__(self):
         super().__init__()
+        print("proooooc")
 
 
-    @discord.ui.button(label="X", row=1, style=discord.ButtonStyle.success)
+    @discord.ui.button(label=X, row=1, style=discord.ButtonStyle.success)
     async def x_callback(self, interaction, button: discord.ui.Button):
         button.disabled = True
         await interaction.response.edit_message(content="Ви обрали грати за хрестика!", view=self)
         global user_player
         user_player = 0
+        player_select()
+        print("player", player_select())
         Select.stop(self)
         msg = await interaction.original_response()
         await msg.edit(view=TicTacToe())
 
-    @discord.ui.button(label="O", row=1, style=discord.ButtonStyle.danger)
+    @discord.ui.button(label=O, row=1, style=discord.ButtonStyle.danger)
     async def o_callback(self, interaction, button: discord.ui.Button):
         button.disabled = True
         await interaction.response.edit_message(content="Ви обрали грати за нолика!", view=self)
         global user_player
         user_player = 1
+        player_select()
+        print("player", player_select())
         Select.stop(self)
         msg = await interaction.original_response()
         await msg.edit(view=TicTacToe())
 
 
 def clearup():
-    TicTacToe.board = ttt.initial_state()
+    global myIterator
+    TicTacToe.board = ttt.initial_state(0)
+    myIterator = cycle(range(2))
     global triggered
     triggered = False
 
 
 def player_select():
     global user_player
+    global current_label
     ai_p = 1
     if ai_p == user_player:
         ai_p = 0
 
     user_p = current_label[user_player]
-    ai_p = current_label[user_player]
+    ai_p = current_label[ai_p]
+
+    if user_p == O:
+        current_label = [O, X]
+    else:
+        current_label = [X, O]
 
     return user_p, ai_p
 
@@ -66,6 +79,7 @@ def ai_func(self, board, view):
 
     game_over = ttt.terminal(view.board)[0]
     player = ttt.player(view.board)
+    print("plaaaay", player)
 
     if game_over:
         winner = ttt.winner(view.board)
@@ -120,16 +134,15 @@ class TicTacToe(discord.ui.View):
     def __init__(self):
         super().__init__()
         print("proc")
+        clearup()
 
-        self.board = ttt.initial_state()
+        self.board = ttt.initial_state(0)
         print("ini_board", self.board)##########deeeeeeeeeep copy
 
         global triggered
         if user_player == 1:
-            self.board = ttt.initial_state()
-            if not triggered:
-                next(myIterator)
-            triggered = True
+            self.board = ttt.initial_state(1)
+            next(myIterator)
 
         self.recreate_board(self.board) ########
 
@@ -142,12 +155,12 @@ class TicTacToe(discord.ui.View):
                     label = 'ㅤ'
                     disabled = False
                 else:
-                    if board[y][x] == current_label[0]:
+                    if board[y][x] == X:
                         style = discord.ButtonStyle.success
-                    elif board[y][x] == current_label[1]:
+                    elif board[y][x] == O:
                         style = discord.ButtonStyle.danger
                     label = board[y][x]
                     disabled = True
                 print("board", board)
-                print("ini", ttt.initial_state())
+                print("ini", ttt.initial_state(0))
                 self.add_item(Button(x, y, label, style, disabled))
