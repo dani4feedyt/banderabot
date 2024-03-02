@@ -21,6 +21,7 @@ triggered = False
 class Select(discord.ui.View):
     def __init__(self):
         super().__init__()
+        self.board = ttt.ini
 
 
     @discord.ui.button(label="X", row=1, style=discord.ButtonStyle.success)
@@ -96,8 +97,8 @@ def ai_func(self, board, view):
 
 
 class Button(discord.ui.Button['TicTacToe']):
-    def __init__(self, x: int, y: int, label, disabled):
-        super().__init__(style=discord.ButtonStyle.secondary, label=label, row=y, disabled=disabled)
+    def __init__(self, x: int, y: int, label, style, disabled):
+        super().__init__(style=style, label=label, row=y, disabled=disabled)
         self.x = x
         self.y = y
 
@@ -120,7 +121,7 @@ class TicTacToe(discord.ui.View):
     def __init__(self):
         super().__init__()
 
-        self.board = ttt.initial_state(0)
+        self.board = ttt.ini ##########deeeeeeeeeep copy
 
         global triggered
         if user_player == 1:
@@ -135,11 +136,17 @@ class TicTacToe(discord.ui.View):
         self.clear_items()
         for x in range(3):
             for y in range(3):
+                style = discord.ButtonStyle.secondary
                 if self.board[y][x] is None:
                     label = 'ㅤ'
                     disabled = False
                 else:
+                    if self.board[y][x] == current_label[0]:
+                        style = discord.ButtonStyle.success
+                    elif self.board[y][x] == current_label[1]:
+                        style = discord.ButtonStyle.danger
                     label = self.board[y][x]
                     disabled = True
                 print(self.board)
-                self.add_item(Button(x, y, label, disabled))
+                print(ttt.ini)
+                self.add_item(Button(x, y, label, style, disabled))
