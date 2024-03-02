@@ -121,7 +121,7 @@ try:
     @bot.command(name='button_t')
     async def ticktacktoe(ctx):
         board = []
-        await ctx.reply(board, view=TicTacToe())
+        await ctx.reply(board, view=Select())
 
     @bot.command(name='identify')
     async def identify(ctx, n_outputs=5):
