@@ -11,13 +11,20 @@ EMPTY = None
 
 signs = [X, O, EMPTY]
 
-def initial_state():
+ini = [[EMPTY, EMPTY, EMPTY],
+       [EMPTY, EMPTY, EMPTY],
+       [EMPTY, EMPTY, EMPTY]]
+
+def initial_state(n):
     """
     Returns starting state of the board.
     """
-    return [[EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY]]
+    # if n == 1:
+    #     mod = copy.deepcopy(ini)
+    #     mod[random.randint(0, 2)][random.randint(0, 2)] = signs[0]
+    #     return mod
+    # else:
+    return ini
 
 
 def player(board):

@@ -15,10 +15,13 @@ movemap = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2
 
 myIterator = cycle(range(2))
 
+triggered = False
+
 
 class Select(discord.ui.View):
     def __init__(self):
         super().__init__()
+
 
     @discord.ui.button(label="X", row=1, style=discord.ButtonStyle.success)
     async def x_callback(self, interaction, button: discord.ui.Button):
@@ -39,6 +42,12 @@ class Select(discord.ui.View):
         Select.stop(self)
         msg = await interaction.original_response()
         await msg.edit(view=TicTacToe())
+
+
+def clearup():
+    TicTacToe.board = ttt.initial_state(0)
+    global triggered
+    triggered = False
 
 
 def player_select():
@@ -102,7 +111,7 @@ class Button(discord.ui.Button['TicTacToe']):
         await interaction.response.edit_message(content=self.content, view=view)
         msg = await interaction.original_response()
         await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
-        view.recreate_board()
+        view.recreate_board() ##########
         await msg.edit(view=view)
 
 class TicTacToe(discord.ui.View):
@@ -111,8 +120,16 @@ class TicTacToe(discord.ui.View):
     def __init__(self):
         super().__init__()
 
-        self.board = ttt.initial_state()
-        self.recreate_board()
+        self.board = ttt.initial_state(0)
+
+        global triggered
+        if user_player == 1:
+            self.board = ttt.initial_state(1)
+            if not triggered:
+                next(myIterator)
+            triggered = True
+
+        self.recreate_board() ########
 
     def recreate_board(self):
         self.clear_items()
@@ -124,5 +141,5 @@ class TicTacToe(discord.ui.View):
                 else:
                     label = self.board[y][x]
                     disabled = True
-                print(label)
+                print(self.board)
                 self.add_item(Button(x, y, label, disabled))

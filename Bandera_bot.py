@@ -11,7 +11,6 @@ try:
     from discord.ext.commands import has_permissions, MissingPermissions
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
-    from Views import *
     from dicts_txt_f import Quotes1, links
     from txt_f import *
     from sys import argv, executable
@@ -120,7 +119,9 @@ try:
 
     @bot.command(name='button_t')
     async def ticktacktoe(ctx):
+        from Views import Select, TicTacToe, clearup
         board = []
+        clearup()
         await ctx.reply(board, view=Select())
 
     @bot.command(name='identify')
