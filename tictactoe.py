@@ -11,11 +11,7 @@ EMPTY = None
 
 signs = [X, O, EMPTY]
 
-ini = [[EMPTY, EMPTY, EMPTY],
-       [EMPTY, EMPTY, EMPTY],
-       [EMPTY, EMPTY, EMPTY]]
-
-def initial_state(n):
+def initial_state():
     """
     Returns starting state of the board.
     """
@@ -24,7 +20,9 @@ def initial_state(n):
     #     mod[random.randint(0, 2)][random.randint(0, 2)] = signs[0]
     #     return mod
     # else:
-    return ini
+    return [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]]
 
 
 def player(board):

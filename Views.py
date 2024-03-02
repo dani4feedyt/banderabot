@@ -21,7 +21,6 @@ triggered = False
 class Select(discord.ui.View):
     def __init__(self):
         super().__init__()
-        self.board = ttt.ini
 
 
     @discord.ui.button(label="X", row=1, style=discord.ButtonStyle.success)
@@ -46,7 +45,7 @@ class Select(discord.ui.View):
 
 
 def clearup():
-    TicTacToe.board = ttt.initial_state(0)
+    TicTacToe.board = ttt.initial_state()
     global triggered
     triggered = False
 
@@ -87,7 +86,7 @@ def ai_func(self, board, view):
         print(x)
         y = movemap[move_coord][1]
         print(y)
-        print(view.board)
+        print("view_board", view.board)
 
         print(move)
         print(move_coord)
@@ -112,7 +111,7 @@ class Button(discord.ui.Button['TicTacToe']):
         await interaction.response.edit_message(content=self.content, view=view)
         msg = await interaction.original_response()
         await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
-        view.recreate_board() ##########
+        view.recreate_board(view.board) ##########
         await msg.edit(view=view)
 
 class TicTacToe(discord.ui.View):
@@ -120,33 +119,35 @@ class TicTacToe(discord.ui.View):
 
     def __init__(self):
         super().__init__()
+        print("proc")
 
-        self.board = ttt.ini ##########deeeeeeeeeep copy
+        self.board = ttt.initial_state()
+        print("ini_board", self.board)##########deeeeeeeeeep copy
 
         global triggered
         if user_player == 1:
-            self.board = ttt.initial_state(1)
+            self.board = ttt.initial_state()
             if not triggered:
                 next(myIterator)
             triggered = True
 
-        self.recreate_board() ########
+        self.recreate_board(self.board) ########
 
-    def recreate_board(self):
+    def recreate_board(self, board):
         self.clear_items()
         for x in range(3):
             for y in range(3):
                 style = discord.ButtonStyle.secondary
-                if self.board[y][x] is None:
+                if board[y][x] is None:
                     label = 'ㅤ'
                     disabled = False
                 else:
-                    if self.board[y][x] == current_label[0]:
+                    if board[y][x] == current_label[0]:
                         style = discord.ButtonStyle.success
-                    elif self.board[y][x] == current_label[1]:
+                    elif board[y][x] == current_label[1]:
                         style = discord.ButtonStyle.danger
-                    label = self.board[y][x]
+                    label = board[y][x]
                     disabled = True
-                print(self.board)
-                print(ttt.ini)
+                print("board", board)
+                print("ini", ttt.initial_state())
                 self.add_item(Button(x, y, label, style, disabled))
