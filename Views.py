@@ -1,5 +1,4 @@
 import discord
-from itertools import cycle
 import tictactoe as ttt
 import time
 
@@ -13,9 +12,9 @@ current_label = [X, O]
 
 movemap = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
 
-myIterator = cycle(range(2))
-
 triggered = False
+
+ai_turn = False
 
 
 class Select(discord.ui.View):
@@ -50,9 +49,7 @@ class Select(discord.ui.View):
 
 
 def clearup():
-    global myIterator
     TicTacToe.board = ttt.initial_state(0)
-    myIterator = cycle(range(2))
     global triggered
     triggered = False
 
@@ -67,44 +64,45 @@ def player_select():
     user_p = current_label[user_player]
     ai_p = current_label[ai_p]
 
-    if user_p == O:
-        current_label = [O, X]
-    else:
-        current_label = [X, O]
+    # if user_p == O:
+    #     current_label = [O, X]
+    # else:
+    #     current_label = [X, O]
 
     return user_p, ai_p
 
 
 def ai_func(self, board, view):
 
+    global ai_turn
+
+    move = ()
     game_over = ttt.terminal(view.board)[0]
     player = ttt.player(view.board)
     print("plaaaay", player)
 
-    if game_over:
-        winner = ttt.winner(view.board)
-        if winner is None:
-            print(f"Game Over: Tie.")
-        else:
-            print(f"Game Over: {winner} wins.")
-    else:
+    if not game_over:
         print(f"Computer thinking...")
 
     if player_select()[0] != player and not game_over:
-        time.sleep(0.5)
-        move = ttt.minimax(view.board)
-        view.board = ttt.result(view.board, move)
+        if ai_turn:
+            time.sleep(0.5)
+            move = ttt.minimax(view.board)
+            view.board = ttt.result(view.board, move)
 
-        move_coord = movemap.index(move)
-        x = movemap[move_coord][0]
-        print(x)
-        y = movemap[move_coord][1]
-        print(y)
-        print("view_board", view.board)
+            move_coord = movemap.index(move)
+            x = movemap[move_coord][0]
+            print(x)
+            y = movemap[move_coord][1]
+            print(y)
+            print("view_board", view.board)
 
-        print(move)
-        print(move_coord)
-        next(myIterator)
+            print(move)
+            print(move_coord)
+
+            ai_turn = False
+        else:
+            ai_turn = True
 
         return view.board, move
 
@@ -117,15 +115,22 @@ class Button(discord.ui.Button['TicTacToe']):
 
     async def callback(self, interaction: discord.Interaction):
         view: TicTacToe = self.view
-        turn = current_label[next(myIterator)]
-        self.label = turn
+        player = ttt.player(view.board)
+        self.label = player
         view.board[self.y][self.x] = self.label
         self.disabled = True
         self.content = view.board
         await interaction.response.edit_message(content=self.content, view=view)
         msg = await interaction.original_response()
-        await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
-        view.recreate_board(view.board) ##########
+        if not ttt.terminal(view.board)[0]:
+            if ai_func(self, view.board, view)[0] is not None:
+                await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
+        else:
+            print("NON((")
+        view.recreate_board(view.board)
+        # print(win)
+        # if win is not None:
+        #     await msg.edit(content=win)
         await msg.edit(view=view)
 
 class TicTacToe(discord.ui.View):
@@ -142,12 +147,12 @@ class TicTacToe(discord.ui.View):
         global triggered
         if user_player == 1:
             self.board = ttt.initial_state(1)
-            next(myIterator)
 
         self.recreate_board(self.board) ########
 
     def recreate_board(self, board):
         self.clear_items()
+        wintxt = None
         for x in range(3):
             for y in range(3):
                 style = discord.ButtonStyle.secondary
@@ -161,6 +166,17 @@ class TicTacToe(discord.ui.View):
                         style = discord.ButtonStyle.danger
                     label = board[y][x]
                     disabled = True
+
+                # if ttt.terminal(self.board)[0]:
+                #     disabled = True
+                #     winner = ttt.winner(self.board)
+                #     if winner is None:
+                #         wintxt = "Гра закінчена: Нічия."
+                #     else:
+                #         wintxt = f"Гра закінчена: {winner} переміг."
+
                 print("board", board)
                 print("ini", ttt.initial_state(0))
                 self.add_item(Button(x, y, label, style, disabled))
+
+                #return wintxt
