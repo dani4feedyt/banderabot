@@ -120,9 +120,9 @@ try:
     @bot.command(name='button_t')
     async def ticktacktoe(ctx):
         from Views import Select, TicTacToe, clearup
-        board = []
         clearup()
-        await ctx.reply(board, view=Select())
+        title = "Ну що, готовий до гри?\n**Обирай гравця:**"
+        await ctx.reply(title, view=Select())
 
     @bot.command(name='identify')
     async def identify(ctx, n_outputs=5):

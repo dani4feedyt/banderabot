@@ -1,6 +1,9 @@
+import random
+
 import discord
 import tictactoe as ttt
 import time
+from txt_f import ttt_titles
 
 X = "X"
 O = "O"
@@ -26,7 +29,7 @@ class Select(discord.ui.View):
     @discord.ui.button(label=X, row=1, style=discord.ButtonStyle.success)
     async def x_callback(self, interaction, button: discord.ui.Button):
         button.disabled = True
-        await interaction.response.edit_message(content="Ви обрали грати за хрестика!", view=self)
+        await interaction.response.edit_message(content="Ти обрав грати за **Х**, розпочинай!", view=self)
         global user_player
         user_player = 0
         player_select()
@@ -38,7 +41,7 @@ class Select(discord.ui.View):
     @discord.ui.button(label=O, row=1, style=discord.ButtonStyle.danger)
     async def o_callback(self, interaction, button: discord.ui.Button):
         button.disabled = True
-        await interaction.response.edit_message(content="Ви обрали грати за нолика!", view=self)
+        await interaction.response.edit_message(content="Ти обрав грати за **0**, я розпочну.", view=self)
         global user_player
         user_player = 1
         player_select()
@@ -121,18 +124,22 @@ class Button(discord.ui.Button['TicTacToe']):
         self.label = player
         view.board[self.y][self.x] = self.label
         self.disabled = True
-        self.content = view.board
-        await interaction.response.edit_message(content=self.content, view=view)
+        # self.content = view.board
+
+        await interaction.response.edit_message(view=view)
         msg = await interaction.original_response()
+
         if not ttt.terminal(view.board)[0]:
+            await msg.edit(content="Хмм... дай поміркувати...")
             if ai_func(self, view.board, view)[0] is not None:
-                await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
-        else:
-            print("NON((")
+                ai_func(self, view.board, view)
 
         view.recreate_board(view.board)
-        if wintxt is not None:
-             await msg.edit(content=wintxt)
+
+        if wintxt is None:
+            await msg.edit(content=f"{random.choice(ttt_titles)} Ходи.")
+        else:
+            await msg.edit(content=wintxt)
 
         await msg.edit(view=view)
 
@@ -173,9 +180,13 @@ class TicTacToe(discord.ui.View):
                     disabled = True
                     winner = ttt.winner(self.board)
                     if winner is None:
-                        wintxt = "Гра закінчена: Нічия."
+                        wintxt = "Гра закінчена. Нічия."
                     else:
-                        wintxt = f"Гра закінчена: {winner} переміг."
+                        if winner == player_select()[0]:
+                            winner = "Ти"
+                        else:
+                            winner = "Я"
+                        wintxt = f"Гра закінчена. {winner} переміг!"
 
                 print("board", board)
                 print("ini", ttt.initial_state(0))

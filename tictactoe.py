@@ -16,8 +16,8 @@ def initial_state(n):
     Returns starting state of the board.
     """
     ini = [[EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY]]
+           [EMPTY, EMPTY, EMPTY],
+           [EMPTY, EMPTY, EMPTY]]
     if n == 1:
         ini[random.randint(0, 2)][random.randint(0, 2)] = signs[0]
     return ini
