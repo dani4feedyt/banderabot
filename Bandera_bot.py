@@ -127,6 +127,7 @@ try:
     async def identify(ctx, n_outputs=5):
         mes = await ctx.send(f'*Хмм... дайте поміркувати...*')
         f_path = f'src/last_img.jpg'
+        im_url = ''
 
         if ctx.message.attachments:
             im_url = ctx.message.attachments[0].url
