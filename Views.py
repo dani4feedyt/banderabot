@@ -4,6 +4,7 @@ import discord
 import tictactoe as ttt
 import time
 from txt_f import ttt_titles
+import asyncio
 
 X = "X"
 O = "O"
@@ -23,7 +24,6 @@ ai_turn = False
 class Select(discord.ui.View):
     def __init__(self):
         super().__init__()
-        print("proooooc")
 
 
     @discord.ui.button(label=X, row=1, style=discord.ButtonStyle.success)
@@ -33,7 +33,6 @@ class Select(discord.ui.View):
         global user_player
         user_player = 0
         player_select()
-        print("player", player_select())
         Select.stop(self)
         msg = await interaction.original_response()
         await msg.edit(view=TicTacToe())
@@ -45,16 +44,18 @@ class Select(discord.ui.View):
         global user_player
         user_player = 1
         player_select()
-        print("player", player_select())
         Select.stop(self)
         msg = await interaction.original_response()
         await msg.edit(view=TicTacToe())
 
 
-def clearup():
+def clearup(view):
     global wintxt
     global ai_turn
-    TicTacToe.board = ttt.initial_state(0)
+    if user_player == 1:
+        view.board = ttt.initial_state(1)
+    else:
+        view.board = ttt.initial_state(0)
     ai_turn = False
     wintxt = None
 
@@ -69,11 +70,6 @@ def player_select():
     user_p = current_label[user_player]
     ai_p = current_label[ai_p]
 
-    # if user_p == O:
-    #     current_label = [O, X]
-    # else:
-    #     current_label = [X, O]
-
     return user_p, ai_p
 
 
@@ -84,26 +80,12 @@ def ai_func(self, board, view):
     move = ()
     game_over = ttt.terminal(view.board)[0]
     player = ttt.player(view.board)
-    print("plaaaay", player)
-
-    if not game_over:
-        print(f"Computer thinking...")
 
     if player_select()[0] != player and not game_over:
         if ai_turn:
             time.sleep(0.5)
             move = ttt.minimax(view.board)
             view.board = ttt.result(view.board, move)
-
-            move_coord = movemap.index(move)
-            x = movemap[move_coord][0]
-            print(x)
-            y = movemap[move_coord][1]
-            print(y)
-            print("view_board", view.board)
-
-            print(move)
-            print(move_coord)
 
             ai_turn = False
         else:
@@ -124,17 +106,24 @@ class Button(discord.ui.Button['TicTacToe']):
         self.label = player
         view.board[self.y][self.x] = self.label
         self.disabled = True
-        # self.content = view.board
 
         await interaction.response.edit_message(view=view)
         msg = await interaction.original_response()
 
         if not ttt.terminal(view.board)[0]:
             await msg.edit(content="Хмм... дай поміркувати...")
-            if ai_func(self, view.board, view)[0] is not None:
-                ai_func(self, view.board, view)
+            view.recreate_board(view.board, True)
+            await msg.edit(view=view)
+            try:
+                if ai_func(self, view.board, view)[0] is not None:
+                    ai_func(self, view.board, view)
+            except TypeError:
+                await msg.edit(content="*Помилка* На ігровому полі виникла проблема, маю його очистити.")
+                await asyncio.sleep(3)
+                clearup(view)
 
-        view.recreate_board(view.board)
+
+        view.recreate_board(view.board, False)
 
         if wintxt is None:
             await msg.edit(content=f"{random.choice(ttt_titles)} Ходи.")
@@ -148,22 +137,23 @@ class TicTacToe(discord.ui.View):
 
     def __init__(self):
         super().__init__()
-        print("proc")
-        clearup()
 
         self.board = ttt.initial_state(0)
-        print("ini_board", self.board)##########deeeeeeeeeep copy
+
+        clearup(self)
 
         if user_player == 1:
             self.board = ttt.initial_state(1)
 
-        self.recreate_board(self.board) ########
+        self.recreate_board(self.board, False) ########
 
-    def recreate_board(self, board):
+    def recreate_board(self, board, processing):
         self.clear_items()
         global wintxt
+
         for x in range(3):
             for y in range(3):
+
                 style = discord.ButtonStyle.secondary
                 if board[y][x] is None:
                     label = 'ㅤ'
@@ -188,6 +178,9 @@ class TicTacToe(discord.ui.View):
                             winner = "Я"
                         wintxt = f"Гра закінчена. {winner} переміг!"
 
-                print("board", board)
-                print("ini", ttt.initial_state(0))
+                if processing:
+                    disabled = True
+
                 self.add_item(Button(x, y, label, style, disabled))
+
+        print("board", board)

@@ -119,8 +119,7 @@ try:
 
     @bot.command(name='button_t')
     async def ticktacktoe(ctx):
-        from Views import Select, TicTacToe, clearup
-        clearup()
+        from Views import Select
         title = "Ну що, готовий до гри?\n**Обирай гравця:**"
         await ctx.reply(title, view=Select())
 
@@ -292,9 +291,9 @@ try:
                 rn = randint(0, 10)
                 ch = round(chance/10)
                 await member.edit(voice_channel=channel1)
-                time.sleep(0.5)
+                await asyncio.sleep(0.5)
                 await member.edit(voice_channel=channel2)
-                time.sleep(0.5)
+                await asyncio.sleep(0.5)
                 await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                 try:
                     await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0].extend(checklists[1])), timeout=1.5)
@@ -651,7 +650,7 @@ try:
                 await ctx.channel.purge(limit=int(count+3))
                 if int(count) >= 100:
                     count = 'дуууууже багато'
-                time.sleep(0.75)
+                await asyncio.sleep(0.75)
                 await ctx.send(f'Було видалено **{count}** повідомлен{msg_ending}!', delete_after=60)
             else:
                 await ctx.send("**Помилка.** Ви не можете видалити більше ніж 150 повідомлень.", delete_after=60)
