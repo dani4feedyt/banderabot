@@ -3,7 +3,8 @@ import random
 import discord
 import tictactoe as ttt
 import time
-from txt_f import ttt_titles
+from txt_f import ttt_titles, ttt_wins, ttt_loses, ttt_ties
+
 import asyncio
 
 X = "X"
@@ -14,11 +15,9 @@ user_player: int
 
 current_label = [X, O]
 
-movemap = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
-
 wintxt = None
-
 ai_turn = False
+ai_win = -1
 
 
 class Select(discord.ui.View):
@@ -50,19 +49,18 @@ class Select(discord.ui.View):
 
 
 def clearup(view):
-    global wintxt
-    global ai_turn
+    global wintxt, ai_turn, ai_win
     if user_player == 1:
         view.board = ttt.initial_state(1)
     else:
         view.board = ttt.initial_state(0)
     ai_turn = False
+    ai_win = -1
     wintxt = None
 
 
 def player_select():
-    global user_player
-    global current_label
+    global user_player, current_label
     ai_p = 1
     if ai_p == user_player:
         ai_p = 0
@@ -129,6 +127,12 @@ class Button(discord.ui.Button['TicTacToe']):
             await msg.edit(content=f"{random.choice(ttt_titles)} Ходи.")
         else:
             await msg.edit(content=wintxt)
+            if ai_win == 1:
+                await msg.reply(content=random.choice(ttt_wins))
+            elif ai_win == 0:
+                await msg.reply(content=random.choice(ttt_loses))
+            else:
+                await msg.reply(content=random.choice(ttt_ties))
 
         await msg.edit(view=view)
 
@@ -145,11 +149,11 @@ class TicTacToe(discord.ui.View):
         if user_player == 1:
             self.board = ttt.initial_state(1)
 
-        self.recreate_board(self.board, False) ########
+        self.recreate_board(self.board, False)
 
     def recreate_board(self, board, processing):
         self.clear_items()
-        global wintxt
+        global wintxt, ai_win
 
         for x in range(3):
             for y in range(3):
@@ -174,8 +178,10 @@ class TicTacToe(discord.ui.View):
                     else:
                         if winner == player_select()[0]:
                             winner = "Ти"
+                            ai_win = 0
                         else:
                             winner = "Я"
+                            ai_win = 1
                         wintxt = f"Гра закінчена. {winner} переміг!"
 
                 if processing:
