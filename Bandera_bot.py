@@ -387,7 +387,7 @@ try:
             return
 
         pfp_image = requests.get(member_url)
-        await ctx.send(member_url)
+
         with open(f'src/last_pfp.jpg', 'wb') as f:
             f.write(pfp_image.content)
             picture = discord.File('src/last_pfp.jpg')
