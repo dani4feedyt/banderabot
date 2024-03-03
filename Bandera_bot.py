@@ -375,7 +375,7 @@ try:
         global url
         global irritation
         author = ctx.message.author
-        member_url = f"https://cdn.discordapp.com/avatars/{member.id}/{member.avatar}.png?size=1024"
+        member_url = f"{member.avatar}"
         if member.avatar is None:
             await ctx.send("**Помилка.** На жаль, у цього користувача відсутнє зображення профілю.")
             irritation = 0
@@ -387,6 +387,7 @@ try:
             return
 
         pfp_image = requests.get(member_url)
+        await ctx.send(member_url)
         with open(f'src/last_pfp.jpg', 'wb') as f:
             f.write(pfp_image.content)
             picture = discord.File('src/last_pfp.jpg')
