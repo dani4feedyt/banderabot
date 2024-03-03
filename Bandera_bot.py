@@ -117,7 +117,7 @@ try:
                 return
             await asyncio.sleep(30)
 
-    @bot.command(name='button_t')
+    @bot.command(name='ttt')
     async def ticktacktoe(ctx):
         from Views import Select
         title = "Ну що, готовий до гри?\n**Обирай гравця:**"
