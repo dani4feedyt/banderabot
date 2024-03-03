@@ -12,7 +12,7 @@ current_label = [X, O]
 
 movemap = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
 
-triggered = False
+wintxt = None
 
 ai_turn = False
 
@@ -49,9 +49,11 @@ class Select(discord.ui.View):
 
 
 def clearup():
+    global wintxt
+    global ai_turn
     TicTacToe.board = ttt.initial_state(0)
-    global triggered
-    triggered = False
+    ai_turn = False
+    wintxt = None
 
 
 def player_select():
@@ -127,10 +129,11 @@ class Button(discord.ui.Button['TicTacToe']):
                 await msg.edit(content=ai_func(self, view.board, view)[0], view=view)
         else:
             print("NON((")
+
         view.recreate_board(view.board)
-        # print(win)
-        # if win is not None:
-        #     await msg.edit(content=win)
+        if wintxt is not None:
+             await msg.edit(content=wintxt)
+
         await msg.edit(view=view)
 
 class TicTacToe(discord.ui.View):
@@ -144,7 +147,6 @@ class TicTacToe(discord.ui.View):
         self.board = ttt.initial_state(0)
         print("ini_board", self.board)##########deeeeeeeeeep copy
 
-        global triggered
         if user_player == 1:
             self.board = ttt.initial_state(1)
 
@@ -152,7 +154,7 @@ class TicTacToe(discord.ui.View):
 
     def recreate_board(self, board):
         self.clear_items()
-        wintxt = None
+        global wintxt
         for x in range(3):
             for y in range(3):
                 style = discord.ButtonStyle.secondary
@@ -167,16 +169,14 @@ class TicTacToe(discord.ui.View):
                     label = board[y][x]
                     disabled = True
 
-                # if ttt.terminal(self.board)[0]:
-                #     disabled = True
-                #     winner = ttt.winner(self.board)
-                #     if winner is None:
-                #         wintxt = "Гра закінчена: Нічия."
-                #     else:
-                #         wintxt = f"Гра закінчена: {winner} переміг."
+                if ttt.terminal(self.board)[0]:
+                    disabled = True
+                    winner = ttt.winner(self.board)
+                    if winner is None:
+                        wintxt = "Гра закінчена: Нічия."
+                    else:
+                        wintxt = f"Гра закінчена: {winner} переміг."
 
                 print("board", board)
                 print("ini", ttt.initial_state(0))
                 self.add_item(Button(x, y, label, style, disabled))
-
-                #return wintxt
