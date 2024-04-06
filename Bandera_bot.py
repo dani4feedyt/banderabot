@@ -11,7 +11,7 @@ try:
     from discord.ext.commands import has_permissions, MissingPermissions
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
-    from dicts_txt_f import Quotes1, links
+    from func_txt_f import *
     from txt_f import *
     from sys import argv, executable
     import json
@@ -38,8 +38,8 @@ try:
     #############################################__ИДЕИ__#############################################
 
     bot = commands.Bot(command_prefix=settings['prefix'], intents=discord.Intents.all())
-    version = 'release 3.1'
-    patch_note = 'last updated: 10.01.24'
+    version = 'release 3.3'
+    patch_note = 'last updated: 06.04.24'
     w = "Bandera_bot.py"
     fi = open("data.txt", "w+")
     data_filename = "data.txt"
@@ -53,8 +53,6 @@ try:
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
         months['feb'] = 29
-
-    appeal = ["козаче", "хлопче", "друже", "вуйче", "брате", "дядьку", "товаришу", "добродію"]
 
     def check(ctx, msg, check_list):
         if msg.author == ctx.author:
@@ -221,37 +219,37 @@ try:
 
     @bot.command(name='rates')
     async def rates(ctx, amount, *, rate):
-        await ctx.send(f"*Підрахування...*", delete_after=10)
-        page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
-        soup = BeautifulSoup(page1.content, 'html.parser')
-        _dict1 = soup.find_all('td', {"data-label": "Офіційний курс"})[7].get_text()
-        _dict1 = round(float(_dict1.replace(',', '.')), 2)
-        _dict2 = soup.find_all('td', {"data-label": "Офіційний курс"})[8].get_text()
-        _dict2 = round(float(_dict2.replace(',', '.')), 2)
-        _dict3 = soup.find_all('td', {"data-label": "Офіційний курс"})[16].get_text()
-        _dict3 = round(float(_dict3.replace(',', '.')), 2)
-        _dict4 = soup.find_all('td', {"data-label": "Офіційний курс"})[20].get_text()
-        _dict4 = round(float(_dict4.replace(',', '.'))/10, 2)
-        _dict5 = soup.find_all('td', {"data-label": "Офіційний курс"})[10].get_text()
-        _dict5 = round(float(_dict5.replace(',', '.'))/10, 2)
+        val = None
+        name = None
         rate = rate.lower()
 
-        if any(i in rate for i in ['дол', 'us', 'dol', 'бак', 'бач' 'buck']):
-            val = _dict1
-            name = "USD"
-        elif any(i in rate for i in ['євр', 'евр', 'eur']):
-            val = _dict2
-            name = "EUR"
-        elif any(i in rate for i in ['шек', 'ils', 'sh']):
-            val = _dict3
-            name = "ILS"
-        elif any(i in rate for i in ['руб', 'rub']):
-            val = _dict4
-            name = "RUB"
-        elif any(i in rate for i in ['йен', 'єн', 'jp', 'jap', 'yen', 'ien']):
-            val = _dict5
-            name = "JPY"
-        else:
+        wait_msg = await ctx.send(f"*Підрахування...*", delete_after=10)
+        page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
+        soup = BeautifulSoup(page1.content, 'html.parser')
+
+        date = soup.find('span', {"id": "exchangeDate"}).get_text()
+
+        def parser(currency: int, decimal: bool):
+            c_rate = soup.find_all('td', {"data-label": "Офіційний курс"})[currency].get_text()
+            c_rate = float(c_rate.replace(',', '.'))
+            if decimal:
+                c_rate /= 10
+            return round(c_rate, 2)
+
+        for x in nondec:
+            if any(i in rate for i in x):
+                val = parser(nondec_map[nondec.index(x)][1], False)
+                name = nondec_map[nondec.index(x)][0]
+                break
+
+        for y in yesdec:
+            if any(i in rate for i in y):
+                val = parser(yesdec_map[yesdec.index(y)][1], True)
+                name = yesdec_map[yesdec.index(y)][0]
+                break
+
+        if val is None:
+            await wait_msg.delete()
             await ctx.send("**Помилка.** Курс даної валюти ще не було внесено до бази даних")
             return
 
@@ -264,7 +262,9 @@ try:
         if rt.endswith('0'):
             rt = rt[:-2]
 
-        await ctx.send(f"{random.choice(appeal).capitalize()}, {int(amount)} {name} становить **{rt}** грн!")
+        await wait_msg.delete()
+        await ctx.send(f"{random.choice(appeal).capitalize()}, {int(amount)} {name} становить **{rt}** грн!"
+                       f"\n||*Cтаном на {date}: 1 UAH = {val} {name}*||")
 
     @bot.command(name='fetch vc')
     async def t_voice(ctx, member: discord.Member):
@@ -787,7 +787,7 @@ try:
     @rates.error
     async def rates_error(ctx, error):
         global error_desc
-        error_desc = "На даний момент доступні курси Долару, Євро, Шекеля, Рубля та Єни.\n||**b!rates** *(Кількість) (Валюта)*||"
+        error_desc = "Введіть запит у коректному форматі.\n||**b!rates** *(Кількість) (Валюта)*||"
 
 
     @kanava.error
