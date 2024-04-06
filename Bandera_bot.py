@@ -264,7 +264,7 @@ try:
 
         await wait_msg.delete()
         await ctx.send(f"{random.choice(appeal).capitalize()}, {int(amount)} {name} становить **{rt}** грн!"
-                       f"\n||*Cтаном на {date}: 1 UAH = {val} {name}*||")
+                       f"\n||*Cтаном на {date}: 1 {name} = {val} UAH*||")
 
     @bot.command(name='fetch vc')
     async def t_voice(ctx, member: discord.Member):
