@@ -57,6 +57,7 @@ def clearup(view):
     ai_turn = False
     ai_win = -1
     wintxt = None
+    ttt.generator()
 
 
 def player_select():

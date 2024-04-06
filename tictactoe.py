@@ -5,6 +5,14 @@ Tic Tac Toe Player
 import copy
 import random
 
+intelligence = 0
+
+def generator():
+    global intelligence
+    seed = random.randint(1, 30) ##Change the numbers to affect winrate
+    print(intelligence)
+    intelligence = seed
+
 X = "X"
 O = "O"
 EMPTY = None
@@ -155,21 +163,36 @@ def minimax(board):
     """
     b_state = copy.deepcopy(board)
 
-    def maxvalue(b_state):
-        if terminal(b_state)[0]:
-            return utility(b_state)
-        v = float('-inf')
-        for action in actions(b_state):
-            v = max(v, minvalue(result(b_state, action)))
+    def maxvalue(b_state, depth=0):
+        if depth < intelligence:
+            if terminal(b_state)[0]:
+                return utility(b_state)
+            v = float('-inf')
+            for action in actions(b_state):
+                v = max(v, minvalue(result(b_state, action), depth+1))
+                print("depth", depth, v)
+        else:
+            v = float('-inf')
+            for action in actions(b_state):
+                v = max(v, minvalue(result(b_state, action), depth))
+                print("elseVdepth", depth, v)
         return v
 
-    def minvalue(b_state):
-        if terminal(b_state)[0]:
-            return utility(b_state)
-        v = float('inf')
-        for action in actions(b_state):
-            v = min(v, maxvalue(result(b_state, action)))
+    def minvalue(b_state, depth=0):
+        if depth < intelligence:
+            if terminal(b_state)[0]:
+                return utility(b_state)
+            v = float('inf')
+            for action in actions(b_state):
+                v = min(v, maxvalue(result(b_state, action), depth+1))
+                print("depth", depth, v)
+        else:
+            v = float('inf')
+            for action in actions(b_state):
+                v = min(v, maxvalue(result(b_state, action), depth))
+                print("elseVdepth", depth, v)
         return v
+
 
     def maxi(b_state):
         minactions = []
