@@ -676,27 +676,27 @@ try:
 
         except AttributeError:
 
-            da = int(d)
-            mo = int(m)
-            mi = int(mi)
-            h = int(h)
+            utc_d = int(d)
+            utc_m = int(m)
             gmt = int(gmt)
-            ho = h - gmt
 
-            if ho < 0:
-                da -= 1
-                ho = 24 - gmt
-            if da == 0:
-                mo -= 1
-                da = list(months.values())[mo - 1]
-            if mo == 0:
-                mo = 12
+            utc_h = h - gmt
+            if utc_h < 0:
+                utc_d -= 1
+                utc_h = 24 - gmt
+            if utc_d == 0:
+                utc_m -= 1
+                utc_d = list(months.values())[utc_m - 1]
+            if utc_m == 0:
+                utc_m = 12
                 ye -= 1
 
-            date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(mi),
+            date_t = datetime.datetime(year=int(ye), month=int(utc_m), day=int(utc_d), hour=int(utc_h), minute=int(mi),
                                        tzinfo=datetime.timezone.utc)
+            print(date_t)
         else:
             date_t = msg.created_at
+            date_t = date_t.replace(microsecond=date_t.microsecond-1000)
             h = date_t.hour
             mi = date_t.minute
             d = date_t.day
@@ -706,6 +706,7 @@ try:
 
         date = [h, mi, d, m]
         date_str = [str(i) for i in date]
+        print(date)
 
         a = 0
         for i in date_str:
@@ -716,12 +717,9 @@ try:
         last_mes = None
         count = 0
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=30)
-        async for count, message in asyncstdlib.enumerate(ctx.channel.history(limit=None, after=date_t)):
+        async for count, message in asyncstdlib.enumerate(ctx.channel.history(limit=None, after=date_t, oldest_first=True)):
             if count == 0:
                 last_mes = message
-            print(message.content)
-            print(message.created_at)
-            print(date_t)
 
         msg_ending = msg_end_temp(count)
         if last_mes is not None:
@@ -736,8 +734,7 @@ try:
                 return
             else:
                 if int(count) <= 500:
-                    print(int(count)+2)
-                    await ctx.channel.purge(limit=int(count)+2)
+                    await ctx.channel.purge(limit=int(count) + 2)
                     await ctx.send(f'Було видалено **{count}** повідомлен{msg_ending}!', delete_after=60)
                 else:
                     await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
