@@ -25,6 +25,7 @@ try:
     from lxml import html
     from collections import Counter
     import asyncio
+    import asyncstdlib
     from asyncio import sleep
     from selenium import webdriver
     from bs4 import BeautifulSoup
@@ -183,6 +184,12 @@ try:
                         await message.channel.send("Гаразд, пішов я по своїх справах...")
         else:
             await bot.process_commands(message)
+
+    @bot.listen()
+    async def on_message(message):
+        trigger_list = ["+", "-", "*", "/"]
+        if any(x in message.content.lower() for x in trigger_list):
+            print(message.content)
 
     @bot.command(name='fetch id')
     async def id(ctx, member: discord.User):
@@ -658,9 +665,9 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видалити більше ніж 150 повідомлень.", delete_after=60)
 
 
-    @bot.command(pass_context=True, name='clear_t')#################Дописать чтобы бот цитировал крайнее сообшение до которого он очистит
+    @bot.command(pass_context=True, name='clear_t')#############Создать возможность очищать от сообщения на которое ты ответил
     @commands.has_permissions(manage_messages=True)
-    async def clear_t(ctx, d: str, m: str, h=00, mi=00, gmt=+2):
+    async def clear_t(ctx, d: str, m: str, h=00, mi=00, gmt=+3):
         
         ye = today.year
             
@@ -684,13 +691,19 @@ try:
         date = [h, mi, d, m]
         date_str = [str(i) for i in date]
 
-        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]))
+        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]), tzinfo=datetime.timezone.utc)
         print("Timestamp GMT datetime: ", date_t)
-        
+
+        last_mes = None
         count = 0
         await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=30)
-        async for message in ctx.channel.history(limit=None, after=date_t):
-            count += 1
+        async for count, message in asyncstdlib.enumerate(ctx.channel.history(limit=None, after=date_t)):
+            if count == 0:
+                last_mes = message
+            print(message.content)
+            print(message.created_at)
+            print(date_t)
+
 
         a = 0
         for i in date_str:
@@ -699,20 +712,25 @@ try:
             a += 1
 
         msg_ending = msg_end_temp(count)
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з **{date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**?\n*Для підтверждення - напишіть "так" протягом 30 секунд*', delete_after=30)
+        if last_mes is not None:
+            await last_mes.reply(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з цього повідомлення? '
+                                 f'**({date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**)'
+                                 f'\n*Для підтверждення - напишіть "так" протягом 30 секунд*', delete_after=30)
 
-        try:
-            await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
-        except asyncio.TimeoutError:
-            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
-            return
-        else:
-            if int(count) <= 500:
-                print(int(count)+2)
-                await ctx.channel.purge(limit=int(count)+2)
-                await ctx.send(f'Було видалено **{count}** повідомлен{msg_ending}!', delete_after=60)
+            try:
+                await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
+            except asyncio.TimeoutError:
+                await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
+                return
             else:
-                await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
+                if int(count) <= 500:
+                    print(int(count)+2)
+                    await ctx.channel.purge(limit=int(count)+2)
+                    await ctx.send(f'Було видалено **{count}** повідомлен{msg_ending}!', delete_after=60)
+                else:
+                    await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
+        else:
+            await ctx.send("**Помилка.** Обраного повідомлення не існує. Спробуйте змінити часовий пояс.", delete_after=60)
 
 
     @bot.command(name='spam', pass_context=True)
