@@ -665,34 +665,53 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видалити більше ніж 150 повідомлень.", delete_after=60)
 
 
-    @bot.command(pass_context=True, name='clear_t')#############Создать возможность очищать от сообщения на которое ты ответил
+    @bot.command(pass_context=True, name='clear_t')
     @commands.has_permissions(manage_messages=True)
-    async def clear_t(ctx, d: str, m: str, h=00, mi=00, gmt=+3):
-        
+    async def clear_t(ctx, d=00, m=00, h=00, mi=00, gmt=+3):
+
         ye = today.year
-            
-        da = int(d)
-        mo = int(m)
-        mi = int(mi)
-        h = int(h)
-        gmt = int(gmt)
-        ho = h - gmt
-        
-        if ho < 0:
-            da -= 1
-            ho = 24 - gmt
-        if da == 0:
-            mo -= 1
-            da = list(months.values())[mo-1]
-        if mo == 0:
-            mo = 12
-            ye -= 1
+
+        try:
+            msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+
+        except AttributeError:
+
+            da = int(d)
+            mo = int(m)
+            mi = int(mi)
+            h = int(h)
+            gmt = int(gmt)
+            ho = h - gmt
+
+            if ho < 0:
+                da -= 1
+                ho = 24 - gmt
+            if da == 0:
+                mo -= 1
+                da = list(months.values())[mo - 1]
+            if mo == 0:
+                mo = 12
+                ye -= 1
+
+            date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(mi),
+                                       tzinfo=datetime.timezone.utc)
+        else:
+            date_t = msg.created_at
+            h = date_t.hour
+            mi = date_t.minute
+            d = date_t.day
+            m = date_t.month
+            gmt = "+0"
+            print(date_t)
 
         date = [h, mi, d, m]
         date_str = [str(i) for i in date]
 
-        date_t = datetime.datetime(year=int(ye), month=int(mo), day=int(da), hour=int(ho), minute=int(date_str[1]), tzinfo=datetime.timezone.utc)
-        print("Timestamp GMT datetime: ", date_t)
+        a = 0
+        for i in date_str:
+            if len(i) == 1:
+                date_str[a] = '0' + i
+            a += 1
 
         last_mes = None
         count = 0
@@ -703,13 +722,6 @@ try:
             print(message.content)
             print(message.created_at)
             print(date_t)
-
-
-        a = 0
-        for i in date_str:
-            if len(i) == 1:
-                date_str[a] = '0' + i
-            a += 1
 
         msg_ending = msg_end_temp(count)
         if last_mes is not None:
