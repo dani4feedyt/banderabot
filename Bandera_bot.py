@@ -19,6 +19,7 @@ try:
     import os
     import sys
     import random
+    import re
     from random import randint
     from urllib.request import urlopen
     import lxml
@@ -187,9 +188,27 @@ try:
 
     @bot.listen()
     async def on_message(message):
-        trigger_list = ["+", "-", "*", "/"]
-        if any(x in message.content.lower() for x in trigger_list):
-            print(message.content)
+        trigger_list = ["+", "-", "*", "/", "^", "(", ")"]
+        math_operator = None
+        math_operators = ""
+        if message.author.bot:
+            return
+
+        if "підрахуй" in message.content.lower():
+            if any(x in message.content.lower() for x in trigger_list):
+                for operator in trigger_list:
+                    math_operators = math_operators + operator
+
+            tuple_part = re.split(" ", message.content.lower())
+            outstring = ''.join(re.findall(r'[-+/()*^]?\d?', ''.join(tuple_part)))
+            func = outstring.replace('^', '**')
+            print(func)
+            solution = eval(func)
+            if len(str(solution)) <= 64:
+                await message.channel.send(solution)
+            else:
+                await message.channel.send("**Помилка.** Результат довший за 64 символа, тому не може бути надісланий у повідомленні.")
+
 
     @bot.command(name='fetch id')
     async def id(ctx, member: discord.User):
