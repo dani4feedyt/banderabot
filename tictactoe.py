@@ -10,7 +10,6 @@ intelligence = 0
 def generator():
     global intelligence
     seed = random.randint(1, 30) ##Change the numbers to affect winrate
-    print(intelligence)
     intelligence = seed
 
 X = "X"
@@ -161,6 +160,7 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
+    print("difficulty: ", intelligence)
     b_state = copy.deepcopy(board)
 
     def maxvalue(b_state, depth=0):
@@ -170,12 +170,12 @@ def minimax(board):
             v = float('-inf')
             for action in actions(b_state):
                 v = max(v, minvalue(result(b_state, action), depth+1))
-                print("depth", depth, v)
+                #print("depth", depth, v)
         else:
             v = float('-inf')
             for action in actions(b_state):
                 v = max(v, minvalue(result(b_state, action), depth))
-                print("elseVdepth", depth, v)
+                #print("elseVdepth", depth, v)
         return v
 
     def minvalue(b_state, depth=0):
@@ -185,12 +185,12 @@ def minimax(board):
             v = float('inf')
             for action in actions(b_state):
                 v = min(v, maxvalue(result(b_state, action), depth+1))
-                print("depth", depth, v)
+                #print("depth", depth, v)
         else:
             v = float('inf')
             for action in actions(b_state):
                 v = min(v, maxvalue(result(b_state, action), depth))
-                print("elseVdepth", depth, v)
+                #print("elseVdepth", depth, v)
         return v
 
 
