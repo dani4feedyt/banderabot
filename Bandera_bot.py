@@ -84,7 +84,7 @@ try:
                           "\n•Для отримання більш розгорнутої інформації щодо мого функціоналу перейдіть до каналу **#info**" +
                           "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        await bot.get_channel(695715314696061072).send(f"Ласкаво просимо на сервер **{guild.name}**, {member.mention}. Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
+        await bot.get_channel(695715314696061072).send(f"Ласкаво просимо на сервер **{guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
 
     @bot.event
     async def on_ready():

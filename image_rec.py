@@ -1,6 +1,5 @@
 import numpy as np
 import json
-import PIL
 from PIL import Image
 import timm
 import torch
