@@ -36,5 +36,4 @@ torch~=2.1.1
 torchvision~=0.16.1
 timm~=0.9.12
 Pillow~=10.1.0
-PIL~=10.1.0
 asyncstdlib~=3.12.2
