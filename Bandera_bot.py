@@ -188,7 +188,7 @@ try:
 
     @bot.listen()
     async def on_message(message):
-        trigger_list = ["+", "-", "*", "/", "^", "(", ")"]
+        trigger_list = ["+", "-", "*", "/", "^", "(", ")", "."]
         math_operator = None
         math_operators = ""
         if message.author.bot:
@@ -200,7 +200,7 @@ try:
                     math_operators = math_operators + operator
 
             tuple_part = re.split(" ", message.content.lower())
-            outstring = ''.join(re.findall(r'[-+/()*^]?\d?', ''.join(tuple_part)))
+            outstring = ''.join(re.findall(r'[-+/()*^.]?\d?', ''.join(tuple_part)))
             func = outstring.replace('^', '**')
             print(func)
             solution = eval(func)
