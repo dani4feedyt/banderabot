@@ -188,18 +188,17 @@ try:
 
     @bot.listen()
     async def on_message(message):
-        trigger_list = ["+", "-", "*", "/", "^", "(", ")", "."]
-        math_operator = None
-        math_operators = ""
+        msg = message.content.lower()
+
         if message.author.bot:
             return
 
-        if "підрахуй" in message.content.lower():
-            if any(x in message.content.lower() for x in trigger_list):
-                for operator in trigger_list:
-                    math_operators = math_operators + operator
+        if "підрахуй" in msg:
 
-            tuple_part = re.split(" ", message.content.lower())
+            if "," in msg:
+                msg = str(msg).replace(",", ".")
+
+            tuple_part = re.split(" ", msg)
             outstring = ''.join(re.findall(r'[-+/()*^.]?\d?', ''.join(tuple_part)))
             func = outstring.replace('^', '**')
             print(func)
