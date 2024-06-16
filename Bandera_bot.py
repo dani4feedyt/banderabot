@@ -93,15 +93,17 @@ try:
 
     @tasks.loop(hours=24)
     async def msg1():
-        global img_g
+        global img_id
         message_channel = bot.get_channel(695715314696061072)
         t = str(datetime.datetime.today().weekday())
         img_g = await message_channel.send(file=discord.File(f'd_t{t}.png'))
+        img_id = img_g.id
         msg_d.start()
 
     @tasks.loop(hours=24)
     async def msg_d():
-        await img_g.delete()
+        msg = await bot.get_channel(695715314696061072).fetch_message(img_id)
+        await msg.delete()
 
     @msg1.before_loop
     async def before_msg1():
