@@ -46,6 +46,7 @@ try:
     fi = open("data.txt", "w+")
     data_filename = "data.txt"
     today = datetime.date.today()
+    img_id = 0
     print(today)
 
     spam = True
@@ -91,31 +92,26 @@ try:
         await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
 
-    @tasks.loop(hours=24)
+    @tasks.loop(minutes=1)
     async def msg1():
         global img_id
-        message_channel = bot.get_channel(695715314696061072)
+        previous_id = img_id
+        message_channel = bot.get_channel(1072196822233272420)
         t = str(datetime.datetime.today().weekday())
+        dt = datetime.datetime.now().hour
+        print(dt)
+        print(img_id)
         img_g = await message_channel.send(file=discord.File(f'd_t{t}.png'))
         img_id = img_g.id
-        msg_d.start()
-
-    @tasks.loop(hours=24)
-    async def msg_d():
-        msg = await bot.get_channel(695715314696061072).fetch_message(img_id)
-        await msg.delete()
+        if previous_id != 0:
+            msg = await message_channel.fetch_message(previous_id)
+            await msg.delete()
 
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
-            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
-                return
-            await asyncio.sleep(30)
-
-    @msg_d.before_loop
-    async def before_msg_d():
-        for _ in range(60*60*24):
-            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '29':
+            print(datetime.datetime.now().hour)
+            if str(datetime.datetime.now().hour) == '19':
                 return
             await asyncio.sleep(30)
 
