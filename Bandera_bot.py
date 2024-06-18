@@ -53,6 +53,8 @@ try:
     url = None
     irritation = 0
 
+    main_ch_id = 695715314696061072
+
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
         months['feb'] = 29
@@ -85,23 +87,21 @@ try:
                           "\n•Для отримання більш розгорнутої інформації щодо мого функціоналу перейдіть до каналу **#info**" +
                           "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        await bot.get_channel(695715314696061072).send(f"Ласкаво просимо на сервер **{guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
+        await bot.get_channel(main_ch_id).send(f"Ласкаво просимо на сервер **{guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
 
     @bot.event
     async def on_ready():
         await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(hours=24)
     async def msg1():
         global img_id
         previous_id = img_id
-        message_channel = bot.get_channel(1072196822233272420)
-        t = str(datetime.datetime.today().weekday())
-        dt = datetime.datetime.now().hour
-        print(dt)
-        print(img_id)
-        img_g = await message_channel.send(file=discord.File(f'd_t{t}.png'))
+        message_channel = bot.get_channel(main_ch_id)
+        dw = str(datetime.datetime.today().weekday())
+        # print(img_id)
+        img_g = await message_channel.send(file=discord.File(f'd_t{dw}.png'))
         img_id = img_g.id
         if previous_id != 0:
             msg = await message_channel.fetch_message(previous_id)
@@ -110,8 +110,7 @@ try:
     @msg1.before_loop
     async def before_msg1():
         for _ in range(60*60*24):
-            print(datetime.datetime.now().hour)
-            if str(datetime.datetime.now().hour) == '19':
+            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
                 return
             await asyncio.sleep(30)
 
@@ -133,7 +132,7 @@ try:
             msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
             if msg.attachments:
                 im_url = msg.attachments[0].url
-                print(im_url)
+                # print(im_url)
             else:
                 await ctx.send(f'**Помилка**. У повідомленні відсутнє зображення.')
                 return
@@ -199,7 +198,7 @@ try:
             tuple_part = re.split(" ", msg)
             outstring = ''.join(re.findall(r'[-+/()*^.]?\d?', ''.join(tuple_part)))
             func = outstring.replace('^', '**')
-            print(func)
+            # print(func)
             solution = eval(func)
             if len(str(solution)) <= 64:
                 await message.channel.send(solution)
@@ -219,19 +218,19 @@ try:
         timestamp = timestamp + datetime.timedelta(hours=2)
         await ctx.send(timestamp)
 
-    @bot.command()####'fi' - Global var####
+    @bot.command()
     async def save(ctx, *, msg):
         fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
         fi.write(msg + " ")
 
-    @bot.command()####'fi' - Global var####
+    @bot.command()
     async def read(ctx):
         fi = open("data.txt", "r")
         if fi.mode == 'r':
             contents = fi.read()
             await ctx.send(contents)
 
-    @bot.command()####'fi' - Global var####
+    @bot.command()
     async def c_save(ctx):
         fi = open("data.txt", "w").close()
 
