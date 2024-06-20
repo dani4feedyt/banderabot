@@ -103,6 +103,7 @@ try:
         # print(img_id)
         img_g = await message_channel.send(file=discord.File(f'd_t{dw}.png'))
         img_id = img_g.id
+        print("previous_id ", previous_id)
         if previous_id != 0:
             msg = await message_channel.fetch_message(previous_id)
             await msg.delete()
