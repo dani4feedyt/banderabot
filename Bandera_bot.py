@@ -43,10 +43,9 @@ try:
     version = 'release 3.3'
     patch_note = 'last updated: 06.04.24'
     w = "Bandera_bot.py"
-    fi = open("data.txt", "w+")
     data_filename = "data.txt"
     today = datetime.date.today()
-    img_id = 0
+    # img_id = 0
     print(today)
 
     spam = True
@@ -96,17 +95,19 @@ try:
 
     @tasks.loop(hours=24)
     async def msg1():
-        global img_id
-        previous_id = img_id
+        # global img_id
+        # previous_id = img_id
         message_channel = bot.get_channel(main_ch_id)
         dw = str(datetime.datetime.today().weekday())
         # print(img_id)
         img_g = await message_channel.send(file=discord.File(f'd_t{dw}.png'))
         img_id = img_g.id
-        print("previous_id ", previous_id)
-        if previous_id != 0:
-            msg = await message_channel.fetch_message(previous_id)
+        # print("previous_id ", previous_id)
+        with open("data.txt", "r") as fi:
+            msg = await message_channel.fetch_message(int(fi.read()))
             await msg.delete()
+        with open("data.txt", "w") as fi:
+            fi.write(str(img_id))
 
     @msg1.before_loop
     async def before_msg1():
