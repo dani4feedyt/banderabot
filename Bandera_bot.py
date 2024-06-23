@@ -299,7 +299,7 @@ try:
         await ctx.send(channel_return)
 
     @bot.command(name='kanava')
-    @commands.has_permissions(manage_messages=True)###############################При добавлении на другой серв - намутить мутку на мутку канала
+    @commands.has_permissions(manage_messages=True)###############################При добавлении на другой серв - намутить мутку на создание нужного канала
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
@@ -319,17 +319,17 @@ try:
                 await asyncio.sleep(0.5)
                 await member.edit(voice_channel=channel2)
                 await asyncio.sleep(0.5)
-                await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НЕЗАЛЕЖНОСТІ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
+                await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                 try:
                     await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0].extend(checklists[1])), timeout=1.5)
                 except asyncio.TimeoutError:
                     continue
                 else:
                     if rn <= ch:
-                        await member.send("Гаразд. На цей раз я тобі повірю. Ти отримаєш волю. Хлопці, витягайте його!")
+                        await member.send("Гаразд. На цей раз я тобі повірю. Хлопці, витягайте його!")
                         break
                     elif rn > ch:
-                        await member.send("Ти мовиш не щиро. Хлопці, занурюйте його!")
+                        await member.send("Ага, так я тобі і повірив... Хлопці, занурюйте його!")
                         await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
                         continue
             else:
