@@ -92,11 +92,11 @@ try:
         await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
 
-    @tasks.loop(seconds=10)
+    @tasks.loop(seconds=24)
     async def msg1():
         # global img_id
         # previous_id = img_id
-        message_channel = bot.get_channel(1072196822233272420)
+        message_channel = bot.get_channel(main_ch_id)
         dw = str(datetime.datetime.today().weekday())
         img_g = await message_channel.send(file=discord.File(f'd_t{dw}.png'))
         img_id = img_g.id
@@ -109,12 +109,12 @@ try:
         print(img_id)
 
 
-    # @msg1.before_loop
-    # async def before_msg1():
-    #     for _ in range(60*60*24):
-    #         if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
-    #             return
-    #         await asyncio.sleep(30)
+    @msg1.before_loop
+    async def before_msg1():
+        for _ in range(60*60*24):
+            if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
+                return
+            await asyncio.sleep(30)
 
     @bot.command(name='ttt')
     async def ticktacktoe(ctx):
