@@ -92,7 +92,7 @@ try:
         await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
         msg1.start()
 
-    @tasks.loop(seconds=24)
+    @tasks.loop(hours=24)
     async def msg1():
         # global img_id
         # previous_id = img_id
