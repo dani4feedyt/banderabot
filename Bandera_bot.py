@@ -227,10 +227,8 @@ try:
 
     @bot.command()
     async def read(ctx):
-        fi = open("data.txt", "r")
-        if fi.mode == 'r':
-            contents = fi.read()
-            await ctx.send(contents)
+        from db_handler import result
+        await ctx.send(result)
 
     @bot.command()
     async def c_save(ctx):
