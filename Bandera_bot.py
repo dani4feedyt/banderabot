@@ -32,6 +32,7 @@ try:
     from bs4 import BeautifulSoup
     from datetime import date
     from image_rec import imagery
+    from db_handler import engine, cur
 
 
     #############################################__ИДЕИ__#############################################
@@ -94,19 +95,23 @@ try:
 
     @tasks.loop(hours=24)
     async def msg1():
-        # global img_id
-        # previous_id = img_id
         message_channel = bot.get_channel(main_ch_id)
         dw = str(datetime.datetime.today().weekday())
         img_g = await message_channel.send(file=discord.File(f'd_t{dw}.png'))
         img_id = img_g.id
-        # print("previous_id ", previous_id)
-        with open("data.txt", "r") as fi:
-            msg = await message_channel.fetch_message(int(fi.read()))
-            await msg.delete()
-        with open("data.txt", "w") as f:
-            f.write(str(img_id))
-        print(img_id)
+
+        result = []
+        cur.execute('SELECT * FROM img_data;')
+
+        for row in cur.fetchall():
+            result.append(row)
+        msg = await message_channel.fetch_message(int(result[0][1]))
+        print(msg)
+        await msg.delete()
+
+        cur.execute('DELETE FROM img_data WHERE id =(SELECT MAX(id) FROM img_data)')
+        cur.execute(f'INSERT INTO img_data(discord_id) VALUES({img_id})')
+        engine.commit()
 
 
     @msg1.before_loop
@@ -225,10 +230,10 @@ try:
         fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
         fi.write(msg + " ")
 
-    @bot.command()
-    async def read(ctx):
-        from db_handler import result
-        await ctx.send(result)
+    # @bot.command()
+    # async def read(ctx):
+    #     from db_handler import result
+    #     await ctx.send(result)
 
     @bot.command()
     async def c_save(ctx):
