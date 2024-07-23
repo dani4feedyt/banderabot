@@ -324,7 +324,7 @@ try:
                 await asyncio.sleep(0.5)
                 await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                 try:
-                    await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0].extend(checklists[1])), timeout=1.5)
+                    await bot.wait_for("message", check=lambda message: check(ctx, message, (checklists[0] + checklists[1])), timeout=1.5)
                 except asyncio.TimeoutError:
                     continue
                 else:
@@ -336,8 +336,11 @@ try:
                         await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
                         continue
             else:
-                await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів...")
-                await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі пощастило...")
+                await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.")
+                await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі поки що пощастило. Але, я все пам'ятаю...")
+                await ctx.send(f"Залишилось {t-i}")
+                #TODO cur.execute(f'INSERT INTO kanava_data(user_id, iter_left) VALUES({member.id}, {t-i})')
+                # engine.commit()
                 return
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
