@@ -338,7 +338,7 @@ try:
             else:
                 await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.")
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі поки що пощастило. Але, я все пам'ятаю...")
-                await ctx.send(f"Залишилось {t-i}")
+                await ctx.send(f"Залишилось {t-i}ff")
                 #TODO cur.execute(f'INSERT INTO kanava_data(user_id, iter_left) VALUES({member.id}, {t-i})')
                 # engine.commit()
                 return
