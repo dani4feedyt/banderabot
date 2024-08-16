@@ -53,6 +53,7 @@ try:
     irritation = 0
 
     main_ch_id = 695715314696061072
+    g_guild = bot.get_guild(695715313911857186)
 
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
@@ -79,14 +80,32 @@ try:
 
     @bot.event
     async def on_member_join(member):
-        guild = bot.get_guild(695715313911857186)
-        member_count = len(guild.members)
-        await member.send(f"**Вітаємо вас на сервері {guild.name}**!" +
+        member_count = len(g_guild.members)
+        await member.send(f"**Вітаємо вас на сервері {g_guild.name}**!" +
                           "\n\n•Я - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу." +
                           "\n•Для отримання більш розгорнутої інформації щодо мого функціоналу перейдіть до каналу **#info**" +
                           "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        await bot.get_channel(main_ch_id).send(f"Ласкаво просимо на сервер **{guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
+        await bot.get_channel(main_ch_id).send(f"Ласкаво просимо на сервер **{g_guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
+
+
+    @bot.event
+    async def on_voice_state_update(member, before, after):
+        if before.channel is None and after.channel:
+            m_id = member.id
+            print(m_id)
+            channel = after.channel
+            cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {m_id}")
+            data = cur.fetchone()
+            # cur.execute(f"SELECT guild_id FROM kanava_data WHERE user_id = {m_id}")
+            # guild = cur.fetchone()
+            # сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
+            engine.commit()
+            if data:
+                message = await member.guild.system_channel.send(f"Канава активована для користувача {member.mention}", delete_after=10)
+                ctx = await bot.get_context(message)
+                await kanava(ctx, member=member, t=data[0])
+                print(data[0])
 
     @bot.event
     async def on_ready():
@@ -339,10 +358,12 @@ try:
                 await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.")
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі поки що пощастило. Але, я все пам'ятаю...")
                 await ctx.send(f"Залишилось {t-i}")
-                #TODO cur.execute(f'INSERT INTO kanava_data(user_id, iter_left) VALUES({member.id}, {t-i})')
-                # engine.commit()
+                cur.execute(f'INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, {t-i}, {ctx.guild.id})')
+                engine.commit()
                 return
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
+        cur.execute(f'DELETE FROM kanava_data WHERE user_id ={member.id}')
+        engine.commit()
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.edit(voice_channel=channel3)
 
