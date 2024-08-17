@@ -349,10 +349,6 @@ try:
         else:
             channel3 = None
 
-        bot.dispatch('kanava_command', ctx, channel1, channel2, channel3, member, t, chance)
-
-    @bot.event
-    async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):
         for i in range(t):
             if member.voice:
                 rn = randint(0, 10)
