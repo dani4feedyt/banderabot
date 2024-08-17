@@ -414,7 +414,7 @@ try:
     async def info(ctx, inline=False):
         zaha_emoji = "<:Admin_Ebalo:698661524247412826>"
         embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
-        embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери", inline=inline)
+        embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери ", inline=inline)
         embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха", inline=inline)
         embed.add_field(name=f"**b!kick @(Нікнейм) (Порушення)** {zaha_emoji}", value=f"Вигнання на Соловки", inline=inline)
         embed.add_field(name=f"**b!clear (Кількість повідомлень)** {zaha_emoji}", value=f"Видалення повідомлень", inline=inline)
