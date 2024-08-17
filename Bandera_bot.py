@@ -231,6 +231,10 @@ try:
             else:
                 await message.channel.send("**Помилка.** Результат довший за 64 символа, тому не може бути надісланий у повідомленні.")
 
+        if "іді" in msg:
+            await message.channel.send('<:idi_nahui:1197676923745226822>')
+
+
 
     @bot.command(name='fetch id')
     async def id(ctx, member: discord.User):
@@ -321,8 +325,17 @@ try:
         await ctx.send(channel_return)
 
     @bot.command(name='kanava')
-    @commands.has_permissions(manage_messages=True)###############################При добавлении на другой серв - намутить мутку на создание нужного канала
+    @commands.has_permissions(manage_messages=True)
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
+
+        cur.execute(f'''INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, 0, {ctx.guild.id})
+                                ON CONFLICT DO NOTHING''')
+        engine.commit()
+
+        if ctx.author.id != 783069117602857031:
+            cur.execute(f'''UPDATE kanava_data SET iter_left = kanava_data.iter_left + {t} 
+                                    WHERE kanava_data.user_id = {member.id}''')
+            engine.commit()
 
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         if channel1 is None:
@@ -348,9 +361,9 @@ try:
                 await asyncio.sleep(0.5)
                 await member.edit(voice_channel=channel2)
                 await asyncio.sleep(0.5)
-                await member.send("**НУ ШО, СЕПАРАТЮГА, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
+                await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                 try:
-                    await bot.wait_for("message", check=lambda message: check(ctx, message, (checklists[0] + checklists[1])), timeout=1.5)
+                    await bot.wait_for("message", check=lambda message: check(message, message, (checklists[0] + checklists[1])), timeout=1.5)
                 except asyncio.TimeoutError:
                     continue
                 else:
@@ -358,15 +371,14 @@ try:
                         await member.send("Гаразд. На цей раз я тобі повірю. Хлопці, витягайте його!")
                         break
                     elif rn > ch:
-                        await member.send("Ага, так я тобі і повірив... Хлопці, занурюйте його!")
+                        await member.send("Ага, так я тобі і повірив... Хлопці, продовжуємо!")
                         await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
                         continue
             else:
-                await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.")
-                await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі поки що пощастило. Але, я все пам'ятаю...")
-                await ctx.send(f"Залишилось занурень: {t-i}")
-                cur.execute(f'''INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, {t-i}, {ctx.guild.id})
-                                ON CONFLICT (user_id) DO UPDATE SET iter_left = kanava_data.iter_left + {t-i} 
+                await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
+                await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
+                await ctx.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
+                cur.execute(f'''UPDATE kanava_data SET iter_left = kanava_data.iter_left - {i} 
                                 WHERE kanava_data.user_id = {member.id}''')
                 engine.commit()
                 return
@@ -581,21 +593,32 @@ try:
 
 
     @bot.command()
-    @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
         await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допитуватися особисто Степаном Андрійовичем Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
-        cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {ctx.message.author.id}")
-        num = cur.fetchone()[0]
+        cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {ctx.author.id}")
+        num = cur.fetchone()
         engine.commit()
 
         congr = ''
-        if num == 0:
+        if num == 0 or num is None:
             congr = '**Вітаю!**'
-        await ctx.send(f"Ваша заборгованість: {num} занурень. {congr}")
+            num = [0]
+        await ctx.send(f"Ваша заборгованість: **{num[0]}** занурен{msg_end_temp(num[0])}. {congr}")
 
     @bot.command()
-    @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(mention_everyone=True)
+    async def kanava_score(ctx, member: discord.Member):
+        cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {member.id}")
+        num = cur.fetchone()
+        engine.commit()
+
+        if num == 0 or num is None:
+            num = [0]
+
+        await ctx.send(f"Заборгованість {member.mention}: **{num[0]}** занурен{msg_end_temp(num[0])}.")
+
+    @bot.command()
     async def mute_info(ctx):
         await ctx.send("•Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів і отримає особисте повідомлення з причиною муту\n•При закінченні терміну дії, мут буде автоматично знято\n•Для дострокового зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
