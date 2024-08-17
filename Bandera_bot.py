@@ -323,16 +323,23 @@ try:
     @bot.command(name='kanava')
     @commands.has_permissions(manage_messages=True)###############################При добавлении на другой серв - намутить мутку на создание нужного канала
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
+
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
+        if channel1 is None:
+            await ctx.guild.create_voice_channel("ГУЛАГ (AFK)")
         channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
+        if channel2 is None:
+            await ctx.guild.create_voice_channel("Канава/МАрк (Марк и Марк)")
+
         if member.voice:
             channel3 = member.voice.channel
         else:
             channel3 = None
+
         bot.dispatch('kanava_command', ctx, channel1, channel2, channel3, member, t, chance)
 
     @bot.event
-    async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):######################################discord.on_voice_state_update(member, before, after)
+    async def on_kanava_command(ctx, channel1, channel2, channel3, member, t, chance):
         for i in range(t):
             if member.voice:
                 rn = randint(0, 10)
@@ -357,8 +364,10 @@ try:
             else:
                 await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.")
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай, що тобі поки що пощастило. Але, я все пам'ятаю...")
-                await ctx.send(f"Залишилось {t-i}")
-                cur.execute(f'INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, {t-i}, {ctx.guild.id})')
+                await ctx.send(f"Залишилось занурень: {t-i}")
+                cur.execute(f'''INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, {t-i}, {ctx.guild.id})
+                                ON CONFLICT (user_id) DO UPDATE SET iter_left = kanava_data.iter_left + {t-i} 
+                                WHERE kanava_data.user_id = {member.id}''')
                 engine.commit()
                 return
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
@@ -369,7 +378,6 @@ try:
 
     @bot.command(name='t_greeting')
     async def greeting(ctx, member: discord.Member):
-        guild = ctx.guild
         await ctx.send(f'{member}')
         await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
         await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
@@ -388,8 +396,6 @@ try:
     @bot.command(name="slava_ukraine")
     async def slava_ukraine(ctx):
         await ctx.reply(f"**Героям слава, {random.choice(appeal)}!**")
-        await ctx.send(ctx.guild.name)
-        print(ctx.guild.name)
 
     @bot.command(pass_context=True, name='echo')
     async def echo(ctx, *, msg):
@@ -411,7 +417,7 @@ try:
         embed.add_field(name=f"**b!mute_info** {zaha_emoji}", value=f"Інформація про використання b!mute", inline=inline)
         embed.add_field(name=f"**b!invite**", value=f"Створити запрошення на сервер для ваших друзів", inline=inline)
         embed.add_field(name=f"**b!pfp @(Нікнейм)**", value=f"Отримати аватар зазначеного користувача", inline=inline)
-        embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про покарання методом занурення до канави", inline=inline)
+        embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про канаву та ваш рахунок", inline=inline)
         embed.add_field(name=f"**b!rates (Валюта) (Кількість)**", value=f"Найактуальніший курс валют", inline=inline)
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
@@ -578,6 +584,15 @@ try:
     @commands.has_permissions(manage_messages=True)
     async def kanava_info(ctx):
         await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допитуватися особисто Степаном Андрійовичем Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+
+        cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {ctx.message.author.id}")
+        num = cur.fetchone()[0]
+        engine.commit()
+
+        congr = ''
+        if num == 0:
+            congr = '**Вітаю!**'
+        await ctx.send(f"Ваша заборгованість: {num} занурень. {congr}")
 
     @bot.command()
     @commands.has_permissions(manage_messages=True)
