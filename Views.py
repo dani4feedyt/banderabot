@@ -24,7 +24,6 @@ class Select(discord.ui.View):
     def __init__(self):
         super().__init__()
 
-
     @discord.ui.button(label=X, row=1, style=discord.ButtonStyle.success)
     async def x_callback(self, interaction, button: discord.ui.Button):
         button.disabled = True

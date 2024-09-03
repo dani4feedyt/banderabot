@@ -216,20 +216,22 @@ try:
         if message.author.bot:
             return
 
-        if "підрахуй" in msg:
+        if any(i in msg for i in ["підр", "пидр", "счита", "раху", "pidr", "count"]):
 
-            if "," in msg:
-                msg = str(msg).replace(",", ".")
+            if bool(re.search(r'\d', msg)):
 
-            tuple_part = re.split(" ", msg)
-            outstring = ''.join(re.findall(r'[-+/()*^.]?\d?', ''.join(tuple_part)))
-            func = outstring.replace('^', '**')
-            # print(func)
-            solution = eval(func)
-            if len(str(solution)) <= 64:
-                await message.channel.send(solution)
-            else:
-                await message.channel.send("**Помилка.** Результат довший за 64 символа, тому не може бути надісланий у повідомленні.")
+                if "," in msg:
+                    msg = str(msg).replace(",", ".")
+
+                tuple_part = re.split(" ", msg)
+                outstring = ''.join(re.findall(r'[-+/()*^.]?\d?', ''.join(tuple_part)))
+                func = outstring.replace('^', '**')
+                # print(func)
+                solution = eval(func)
+                if len(str(solution)) <= 64:
+                    await message.channel.send(solution)
+                else:
+                    await message.channel.send("**Помилка.** Результат довший за 64 символа, тому не може бути надісланий у повідомленні.")
 
         if "іді" in msg:
             await message.channel.send('<:idi_nahui:1197676923745226822>')
@@ -325,7 +327,7 @@ try:
         await ctx.send(channel_return)
 
     @bot.command(name='kanava')
-    @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)  ##сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
 
         cur.execute(f'''INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, 0, {ctx.guild.id})
