@@ -216,7 +216,7 @@ try:
         if message.author.bot:
             return
 
-        if any(i in msg for i in ["підр", "пидр", "счита", "раху", "pidr", "count"]):
+        if any(i in msg for i in ["підр", "пидр", "счита", "раху", "pidr", "count", "пiдр"]):
 
             if bool(re.search(r'\d', msg)):
 
