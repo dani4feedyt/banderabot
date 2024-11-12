@@ -181,7 +181,7 @@ try:
             if "b!" not in message.content:
                 if rule_mes(message):
                     ctx = await bot.get_context(message)
-                    await mute(ctx, member=message.author, time=3, rule_n=rule_mes(message))
+                    await mute(ctx, member=message.author, time=3, rule_n=rule_mes(message), bot_source=True)
                     # await message.channel.send(rules_list[rule_mes(message)][0])
                     # await message.channel.send(rules_list[rule_mes(message)][1])
                     return
@@ -468,7 +468,7 @@ try:
             return
         if irritation == 11:
             await ctx.send(file=discord.File('b2.png'))
-            await mute(ctx, author, 1, 30, reason="Задовбав.")
+            await mute(ctx, author, 1, 30, reason="Задовбав.", bot_source=True)
             irritation = 0
             return
 
@@ -647,9 +647,9 @@ try:
 
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
-    async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
+    async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None, bot_source = False):
 
-        if reason == 'Задовбав.':
+        if bot_source:
             author = f"<@!{str(783069117602857031)}>"
         else:
             author = ctx.message.author.mention
