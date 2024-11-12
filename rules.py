@@ -1,5 +1,5 @@
 rules_list = {1:['Ніякого геншин імпакту!', 'https://tenor.com/view/no-genshin-impact-discord-rules-gif-20700280'],
-         2:['НСФВ контент подібного жанру заборонений!''https://tenor.com/view/davy-enardo-discord-gif-19344074'],
+         2:['НСФВ контент подібного жанру заборонений!', 'https://tenor.com/view/davy-enardo-discord-gif-19344074'],
          3:['Cпам заброронений!', 'https://tenor.com/view/cringetopia-rule3-gif-20196348'],
          4:['Заборонено ображати модерацію!', 'https://tenor.com/view/dimden-dimdem-discord-rules-discord-meme-gif-22604752'],
          5:['Буллінг заборонено (окрім Марка)', 'https://tenor.com/view/rule5-rule-dominic-bully-no_bully-gif-20706308'],
@@ -7,7 +7,7 @@ rules_list = {1:['Ніякого геншин імпакту!', 'https://tenor.c
          7:['Марк, піди подрочи', 'https://tenor.com/view/bruh-gif-19222296'],
          8:['Заборонено ображати інших (окрім Марка)', 'https://tenor.com/view/davy-enardo-discord-gif-19344047'],
          9:['Модераторів треба поважати', 'https://tenor.com/view/discord-rules-rules-gif-18972022'],
-         10:['Заборонено згадувати айзека, я так захочу пограти((', 'https://tenor.com/view/rule10-jiren-dragon-ball-super-binding-of-isaac-the-binding-of-isaac-gif-23048755'],
+         10:['Заборонено згадувати айзека, я так теж захочу пограти((', 'https://tenor.com/view/rule10-jiren-dragon-ball-super-binding-of-isaac-the-binding-of-isaac-gif-23048755'],
          11:['', 'https://tenor.com/view/rule-rule11-11-gif-21694891'],
          12:['', 'https://tenor.com/view/people-playground-rule12-gif-20419176'],
          13:['', 'https://tenor.com/view/1984-rule13-gif-21572417'],
@@ -34,6 +34,6 @@ rules_list = {1:['Ніякого геншин імпакту!', 'https://tenor.c
          34:['', 'https://tenor.com/view/giga-chad-gif-23044971'],
         }
 
-trigger_list = {1:["aйзек", "aйзач", "isaac", "isac"],
-                10:["геншин", "генш", "genshin", "gensh"]
+trigger_list = {1:["геншин", "генш", "genshin", "gensh"],
+                10:["айзек", "айзач", "isaac", "isac"]
 }

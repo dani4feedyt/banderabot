@@ -65,15 +65,7 @@ try:
             if any(msg.content.lower() == i for i in check_list):
                 return msg.content.lower()
 
-    def msg_end_temp(number):
-        msg_ending = "ь"
-        exep1 = ("1", "2", "3", "4")
-        exep2 = ("11", "12", "13", "14")
-        if str(number).endswith(exep2):
-            msg_ending = "ь"
-        elif str(number).endswith(exep1):
-            msg_ending = "ня"
-        return msg_ending
+
 
     @bot.event
     async def on_command(ctx):
@@ -100,7 +92,7 @@ try:
             data = cur.fetchone()
             # cur.execute(f"SELECT guild_id FROM kanava_data WHERE user_id = {m_id}")
             # guild = cur.fetchone()
-            # сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
+            #TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
             engine.commit()
             if data:
                 message = await member.guild.system_channel.send(f"Канава активована для користувача {member.mention}", delete_after=10)
@@ -178,17 +170,23 @@ try:
         await ctx.send(f'Я гадаю, що це... {output_labels}')
 
 
-    @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
-    async def on_message(message):
-        if "!b" not in message.content:
-            if rule_mes(message)[0]:
-                await message.channel.send(rules_list[rule_mes(message)[1]][1])
-                return
+    #TODO Указать в таблице правил количество наказания в минутах
+    @bot.event
 
-            if "бандер" in message.content.lower():
-                if message.author.id == 783069117602857031:
-                    await bot.process_commands(message)
-                else:
+    async def on_message(message):
+        if message.author.id == 783069117602857031:
+            await bot.process_commands(message)
+
+        else:
+            if "b!" not in message.content:
+                if rule_mes(message):
+                    ctx = await bot.get_context(message)
+                    await mute(ctx, member=message.author, time=3, rule_n=rule_mes(message))
+                    # await message.channel.send(rules_list[rule_mes(message)][0])
+                    # await message.channel.send(rules_list[rule_mes(message)][1])
+                    return
+
+                if "бандер" in message.content.lower():
                     await message.channel.send("Мене хтось кликав?")
                     try:
                         await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[0]), timeout=15)
@@ -213,16 +211,20 @@ try:
                             await asyncio.sleep(7)
                             await message.channel.send("Гаразд, пішов я по своїх справах...")
 
+                else:
+                    await bot.process_commands(message)
+
+            else:
+                await bot.process_commands(message)
+
 
     def rule_mes(sentence):
-        badwords = [[],[]]
         for rule in trigger_list:
             for word in trigger_list[rule]:
                 if word in sentence.content.lower():
-                    badwords[0].append(rule)
-                    badwords[1].append(word)
+                    return rule
+        return False
 
-        return badwords
 
 
 
@@ -344,7 +346,7 @@ try:
         await ctx.send(channel_return)
 
     @bot.command(name='kanava')
-    @commands.has_permissions(manage_messages=True)  ##сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
+    @commands.has_permissions(manage_messages=True)  #TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
 
         cur.execute(f'''INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, 0, {ctx.guild.id})
@@ -582,7 +584,9 @@ try:
     @bot.command(name="rule")
     async def rule(ctx, rule_n: int):
         if 1 <= rule_n <= len(rules_list):
-            await ctx.send(rules_list[rule_n][0] + rules_list[rule_n][1])
+            if rules_list[rule_n][0]:
+                await ctx.send(rules_list[rule_n][0])
+            await ctx.channel.send(rules_list[rule_n][1])
         else:
             await ctx.send("**Помилка.** Правила під таким номером не існує")
 
@@ -619,7 +623,7 @@ try:
         if num == 0 or num is None:
             congr = '**Вітаю!**'
             num = [0]
-        await ctx.send(f"Ваша заборгованість: **{num[0]}** занурен{msg_end_temp(num[0])}. {congr}")
+        await ctx.send(f"Ваша заборгованість: **{num[0]}** занурен{msg_end_temp_1(num[0])}. {congr}")
 
     @bot.command()
     @commands.has_permissions(mention_everyone=True)
@@ -631,7 +635,7 @@ try:
         if num == 0 or num is None:
             num = [0]
 
-        await ctx.send(f"Заборгованість {member.mention}: **{num[0]}** занурен{msg_end_temp(num[0])}.")
+        await ctx.send(f"Заборгованість {member.mention}: **{num[0]}** занурен{msg_end_temp_1(num[0])}.")
 
     @bot.command()
     async def mute_info(ctx):
@@ -644,32 +648,50 @@ try:
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
-        if 1 <= rule_n <= len(rules_list):
-            rule = (rules_list[rule_n][1])
-        else:
-            rule = None
-        guild = ctx.guild
+
         if reason == 'Задовбав.':
             author = f"<@!{str(783069117602857031)}>"
         else:
             author = ctx.message.author.mention
+
+        rule_txt = None
+        reason_changed = False
+        if 1 <= rule_n <= len(rules_list):
+            rule_gif = (rules_list[rule_n][1])
+            if rules_list[rule_n][0]:
+                rule_txt = rules_list[rule_n][0]
+                if reason is None:
+                    reason = rule_txt
+                    reason_changed = True
+        else:
+            rule_gif = None
+
+        guild = ctx.guild
         mutedRole = discord.utils.get(guild.roles, name="Muted")
+
         if not mutedRole:
             mutedRole = await guild.create_role(name="Muted")
             for channel in guild.channels:
                 await channel.set_permissions(mutedRole, speak=False, send_messages=True, read_message_history=True, read_messages=True, view_channel=False)
-        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author}** на **{time}** хвилин", color=0x013ADF)
+
+        embed = discord.Embed(title="Мут", description=f"**{member.mention}** був відправлений до муту модератором **{author}** на **{time}** хвилин{msg_end_temp_2(time)}", color=0x013ADF)
         embed.add_field(name="Порушення:", value=reason, inline=False)
         embed.add_field(name="Порушене правило:", value=f'**#{rule_n}**', inline=False)
+
         await ctx.send(embed=embed)
-        await ctx.send(rule)
+        if not reason_changed:
+            await ctx.send(rule_txt)
+        await ctx.send(rule_gif)
         await member.add_roles(mutedRole)
         await asyncio.sleep(1)
         await member.edit(voice_channel=None)
-        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author}** на **{time}** хвилин, за причиною: **"{reason}"**')
-        await member.send(rule)
+        await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author}** на **{time}** хвилин{msg_end_temp_2(time)}, за причиною: **"{reason}"**')
+
+        if not reason_changed:
+            await member.send(rule_txt)
+        await member.send(rule_gif)
         await asyncio.sleep(time * 60)
-        bot.dispatch('mute_command', ctx, member, rule, reason, mutedRole, guild)
+        bot.dispatch('mute_command', ctx, member, guild)
 
     @bot.event
     async def on_mute_command(ctx, member, guild):
@@ -743,7 +765,7 @@ try:
     @commands.has_permissions(manage_messages=True)
     async def clear(ctx, count = 100):
 
-        msg_ending = msg_end_temp(count)
+        msg_ending = msg_end_temp_1(count)
         await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending}? \n*Для підтверждення - напишіть "так" протягом 7 секунд* ', delete_after=60)
 
         try:
@@ -818,7 +840,7 @@ try:
             if count == 0:
                 last_mes = message
 
-        msg_ending = msg_end_temp(count)
+        msg_ending = msg_end_temp_1(count)
         if last_mes is not None:
             await last_mes.reply(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з цього повідомлення? '
                                  f'**({date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**)'
@@ -965,21 +987,18 @@ try:
         global error_desc
         err = "**Помилка. **"
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send(f"{err}Даної команди не існує.")
-            await ctx.send(error_temp(error))
+            await ctx.send(f"{err}Такої команди не існує.")
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send(f"{err}Йой, хлопче, в тебе не вистачає прав для виконання цієї команди!")
-            await ctx.send(error_temp(error))
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f"{err}Не вистачає аргументів для виконання команди, перевірте коректність написання.")
-            await ctx.send(error_temp(error))
         elif isinstance(error, commands.CommandInvokeError):
             await ctx.send(f"{err}Аргумент заданий некоректно.")
-            await ctx.send(error_temp(error))
         elif isinstance(error, commands.MemberNotFound):
             await ctx.send(f"{err}Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері.")
-            await ctx.send(error_temp(error))
-        await ctx.send(error_desc)
+        else:
+            await ctx.send(f"{err}Некоректна команда.")
+        await ctx.send(error_temp(error))
         error_desc = ""
 
   ###############################################ErrorHandling###############################################
@@ -988,7 +1007,7 @@ try:
 
     @bot.command(name='$start_t')
     async def t_start_time(ctx):
-        await ctx.send(f'Цього разу, час мого запуску склав' + ' ' + st)
+        await ctx.send(f'Цього разу час мого запуску склав' + ' ' + st)
 
     print(st)
     bot.run(settings['token'])
