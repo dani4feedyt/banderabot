@@ -12,6 +12,7 @@ try:
     from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
     from func_txt_f import *
+    from rules import *
     from txt_f import *
     from sys import argv, executable
     import json
@@ -179,35 +180,51 @@ try:
 
     @bot.event##################Намутить онмесседжи, что будут сканировать по правилам#########################
     async def on_message(message):
-        if "бандер" in message.content.lower():
-            if message.author.id == 783069117602857031:
-                await bot.process_commands(message)
-            else:
-                await message.channel.send("Мене хтось кликав?")
-                try:
-                    await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[0]), timeout=15)
-                except asyncio.TimeoutError:
-                    await message.channel.send("Гаразд, мені певно здалося...")
+        if "!b" not in message.content:
+            if rule_mes(message)[0]:
+                await message.channel.send(rules_list[rule_mes(message)[1]][1])
+                return
+
+            if "бандер" in message.content.lower():
+                if message.author.id == 783069117602857031:
+                    await bot.process_commands(message)
                 else:
-                    await message.channel.send("Що сталося?")
+                    await message.channel.send("Мене хтось кликав?")
                     try:
-                        await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[2]), timeout=15)
+                        await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[0]), timeout=15)
                     except asyncio.TimeoutError:
-                        a_list = [0, 1]
-                        distribution = [.9, .1]
-                        rand = random.choices(a_list, distribution)
-                        await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
-                        if rand == [1]:
-                            await message.channel.send(file=discord.File('b2.png'))
+                        await message.channel.send("Гаразд, мені певно здалося...")
                     else:
-                        if str(today) == f"{today.year}-01-01":
-                            await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
+                        await message.channel.send("Що сталося?")
+                        try:
+                            await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[2]), timeout=15)
+                        except asyncio.TimeoutError:
+                            a_list = [0, 1]
+                            distribution = [.9, .1]
+                            rand = random.choices(a_list, distribution)
+                            await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
+                            if rand == [1]:
+                                await message.channel.send(file=discord.File('b2.png'))
                         else:
-                            await message.channel.send(f"Вельми дякую, {random.choice(appeal)}, але ти, певно, помилився. Мій день народження **1 січня**.")
-                        await asyncio.sleep(7)
-                        await message.channel.send("Гаразд, пішов я по своїх справах...")
-        else:
-            await bot.process_commands(message)
+                            if str(today) == f"{today.year}-01-01":
+                                await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
+                            else:
+                                await message.channel.send(f"Вельми дякую, {random.choice(appeal)}, але ти, певно, помилився. Мій день народження **1 січня**.")
+                            await asyncio.sleep(7)
+                            await message.channel.send("Гаразд, пішов я по своїх справах...")
+
+
+    def rule_mes(sentence):
+        badwords = [[],[]]
+        for rule in trigger_list:
+            for word in trigger_list[rule]:
+                if word in sentence.content.lower():
+                    badwords[0].append(rule)
+                    badwords[1].append(word)
+
+        return badwords
+
+
 
     @bot.listen()
     async def on_message(message):
@@ -530,9 +547,9 @@ try:
             if rule_n is None:
                 rule_n = 0
             rule_n = int(rule_n)
-            if 1 <= rule_n <= len(links):
-                rule = (links[rule_n])
-                ruleA = f'**№{rule_n}**'
+            if 1 <= rule_n <= len(rules_list):
+                rule = (rules_list[rule_n][1])
+                ruleA = f'**№{rule_n}: {rules_list[rule_n][0]}**'
             else:
                 rule = '⁣'
                 ruleA = 'None'
@@ -563,9 +580,9 @@ try:
 
 
     @bot.command(name="rule")
-    async def rule(ctx, number: int):
-        if 1 <= number <= len(links):
-            await ctx.send(links[number])
+    async def rule(ctx, rule_n: int):
+        if 1 <= rule_n <= len(rules_list):
+            await ctx.send(rules_list[rule_n][0] + rules_list[rule_n][1])
         else:
             await ctx.send("**Помилка.** Правила під таким номером не існує")
 
@@ -627,8 +644,8 @@ try:
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
     async def mute(ctx, member: discord.Member, time: int, rule_n: int, *, reason=None):
-        if 1 <= rule_n <= len(links):
-            rule = (links[rule_n])
+        if 1 <= rule_n <= len(rules_list):
+            rule = (rules_list[rule_n][1])
         else:
             rule = None
         guild = ctx.guild
@@ -655,7 +672,7 @@ try:
         bot.dispatch('mute_command', ctx, member, rule, reason, mutedRole, guild)
 
     @bot.event
-    async def on_mute_command(ctx, member, rule, reason, mutedRole, guild):
+    async def on_mute_command(ctx, member, guild):
         id1 = member.id
         user = await ctx.message.guild.query_members(user_ids=[id1])
         user = user[0]
