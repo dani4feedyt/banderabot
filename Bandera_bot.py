@@ -862,7 +862,7 @@ try:
 
 
     @bot.command(name='spam', pass_context=True)
-    # @has_permissions(manage_roles=True, ban_members=True)
+    @has_permissions(send_polls=True)
     async def spam(ctx, member: discord.Member, count, interval, *, text_arg):
         count = int(count)
         interval = float(interval)
