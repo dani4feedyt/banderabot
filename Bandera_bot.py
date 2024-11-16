@@ -643,7 +643,7 @@ try:
 
     @bot.command()
     async def spam_info(ctx):
-        await ctx.send("•Щоб розпочати **спам**, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кулдаун між повідомленнями) (Кількість повідомлень) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
+        await ctx.send("•Щоб розпочати **спам**, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кількість повідомлень) (Кулдаун між повідомленнями) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
 
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
@@ -862,7 +862,7 @@ try:
 
 
     @bot.command(name='spam', pass_context=True)
-    @has_permissions(manage_roles=True, ban_members=True)
+    # @has_permissions(manage_roles=True, ban_members=True)
     async def spam(ctx, member: discord.Member, count, interval, *, text_arg):
         count = int(count)
         interval = float(interval)
