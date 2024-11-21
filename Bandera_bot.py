@@ -1,3 +1,5 @@
+import player
+
 try:
     import time
 
@@ -35,6 +37,9 @@ try:
     from image_rec import imagery
     from db_handler import engine, cur
 
+    from Views import Select
+    from player import Player
+
 
     #############################################__ИДЕИ__#############################################
     #1. Сделать предварительный выбор языка в b!info.
@@ -53,12 +58,15 @@ try:
     url = None
     irritation = 0
 
+
     main_ch_id = 695715314696061072
     g_guild = bot.get_guild(695715313911857186)
 
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
         months['feb'] = 29
+
+    player_inst = Player()
 
     def check(ctx, msg, check_list):
         if msg.author == ctx.author:
@@ -135,7 +143,6 @@ try:
 
     @bot.command(name='ttt')
     async def ticktacktoe(ctx):
-        from Views import Select
         title = "Ну що, готовий до гри?\n**Обирай гравця:**"
         await ctx.reply(title, view=Select())
 
@@ -269,19 +276,37 @@ try:
         timestamp = timestamp + datetime.timedelta(hours=2)
         await ctx.send(timestamp)
 
-    @bot.command()
-    async def save(ctx, *, msg):
-        fi = open("data.txt","a+") ######Пофиксить очистку каждый день######
-        fi.write(msg + " ")
 
-    # @bot.command()
-    # async def read(ctx):
-    #     from db_handler import result
-    #     await ctx.send(result)
+    @bot.command(name='play')
+    async def play(ctx, url: str):
+        message = await ctx.send("Шукаю музику за посиланням...")
 
-    @bot.command()
-    async def c_save(ctx):
-        fi = open("data.txt", "w").close()
+        player_inst.set_url(url)
+        if discord.utils.get(bot.voice_clients, guild=ctx.guild):
+            print("disconnected")
+            discord.utils.get(bot.voice_clients, guild=ctx.guild).stop()
+        await asyncio.sleep(1)
+
+        if os.path.exists('downloads'):
+            player_inst.flush_all()
+        await player_inst.download()
+        path = player_inst.get_audio_path()
+
+        author = ctx.message.author
+
+        voice_channel = author.voice.channel
+        print(voice_channel)
+        if not discord.utils.get(bot.voice_clients, guild=ctx.guild):
+            await voice_channel.connect()
+        voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+
+        voice.play(discord.FFmpegOpusAudio(executable='ffmpeg/bin/ffmpeg.exe', source = path))
+        await message.delete()
+        await ctx.send(f"Розпочато відтворення треку: \n**<<{player_inst.get_filename()}>>**")
+
+        await asyncio.sleep(player_inst.length()+180)
+        await player_inst.stop(voice)
+
 
     @bot.command(name='rg_8421')
     async def rg8421(ctx):
@@ -913,6 +938,8 @@ try:
 
     @bot.command(name='stop')
     async def stop(ctx):
+        await player_inst.stop(discord.utils.get(bot.voice_clients, guild=ctx.guild))
+
         global spam
         spam = False ##сюда можно встроить выключатели глобальных переменных для остановки комманд
         await ctx.send("Мене було зупинено, але мою жагу до свободи не спинити нікому!")
@@ -940,6 +967,13 @@ try:
     async def kanava_error(ctx, error):
         global error_desc
         error_desc = "||**b!kanava** *@(Нікнейм) (Кількість) {Довіра бота}*||"
+
+
+    @play.error
+    async def play_error(ctx, error):
+        global error_desc
+        error_desc = "Помилка у виконанні треку. Можливо посилання було введено некоректно."
+
 
 
     @clear_t.error

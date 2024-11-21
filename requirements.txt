@@ -1,5 +1,5 @@
 -f https://download.pytorch.org/whl/torch_stable.html
-torch==2.1.2+cpu
+torch~=2.1.2
 asyncstdlib==3.12.3
 beautifulsoup4==4.10.0
 discord.py==2.3.2
@@ -10,3 +10,6 @@ Requests==2.32.3
 selenium==3.141.0
 timm==1.0.3
 psycopg2==2.9.9
+discord~=2.3.2
+pytube~=15.0.0
+moviepy~=1.0.3
