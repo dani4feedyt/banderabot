@@ -1,7 +1,5 @@
-from pytube import YouTube
-from pytube.innertube import _default_clients
-
-_default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
 
 from moviepy.editor import *
 import os
@@ -26,7 +24,7 @@ class Player:
     root_folder = 'downloads'
 
     async def download(self):
-        yt = YouTube(self.url)
+        yt = YouTube(self.url, on_progress_callback=on_progress)
         t = yt.streams.filter().first()
         file = t.download("downloads")
 
