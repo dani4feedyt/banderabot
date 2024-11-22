@@ -1,4 +1,8 @@
 from pytube import YouTube
+from pytube.innertube import _default_clients
+
+_default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
+
 from moviepy.editor import *
 import os
 import shutil
@@ -22,7 +26,7 @@ class Player:
     root_folder = 'downloads'
 
     async def download(self):
-        yt = YouTube(self.url, use_oauth=True, allow_oauth_cache=True)
+        yt = YouTube(self.url)
         t = yt.streams.filter().first()
         file = t.download("downloads")
 
