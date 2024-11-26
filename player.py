@@ -24,7 +24,7 @@ class Player:
     root_folder = 'downloads'
 
     async def download(self):
-        yt = YouTube(self.url, on_progress_callback=on_progress)
+        yt = YouTube(self.url, allow_oauth_cache=True, on_progress_callback=on_progress, use_po_token=True, token_file = "verifier.json")
         t = yt.streams.filter().first()
         file = t.download("downloads")
 
