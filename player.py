@@ -22,9 +22,12 @@ class Player:
     base_path = ""
     filename = ""
     root_folder = 'downloads'
+    proxies = {
+        "https": "344444:444"
+    }
 
     async def download(self):
-        yt = YouTube(self.url, allow_oauth_cache=True, on_progress_callback=on_progress, use_po_token=True, token_file = "verifier.json")
+        yt = YouTube(self.url, proxies=self.proxies, allow_oauth_cache=True, on_progress_callback=on_progress, use_po_token=True, token_file = "verifier.json")
         t = yt.streams.filter().first()
         file = t.download("downloads")
 
