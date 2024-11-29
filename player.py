@@ -23,7 +23,7 @@ class Player:
     filename = ""
     root_folder = 'downloads'
     proxies = {
-        "http": "62.80.235.213:808" #####cвой айпи как прокси
+        "http": "194.28.224.63:8888" #####cвой айпи как прокси
     }
 
     async def download(self):
