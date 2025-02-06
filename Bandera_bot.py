@@ -100,7 +100,7 @@ try:
             data = cur.fetchone()
             # cur.execute(f"SELECT guild_id FROM kanava_data WHERE user_id = {m_id}")
             # guild = cur.fetchone()
-            #TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
+            # TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
             engine.commit()
             if data:
                 message = await member.guild.system_channel.send(f"Канава активована для користувача {member.mention}", delete_after=10)
@@ -177,7 +177,7 @@ try:
         await ctx.send(f'Я гадаю, що це... {output_labels}')
 
 
-    #TODO Указать в таблице правил количество наказания в минутах
+    # TODO Указать в таблице правил количество наказания в минутах
     @bot.event
 
     async def on_message(message):
@@ -360,7 +360,7 @@ try:
 
         await wait_msg.delete()
         await ctx.send(f"{random.choice(appeal).capitalize()}, {int(amount)} {name} становить **{rt}** грн!"
-                       f"\n||*Cтаном на {date}: 1 {name} = {val} UAH*||")
+                       f"\n||*Станом на {date}: 1 {name} = {val} UAH*||")
 
     @bot.command(name='fetch vc')
     async def t_voice(ctx, member: discord.Member):
