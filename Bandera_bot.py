@@ -8,6 +8,7 @@ try:
     import datetime
     import inspect
     import discord
+    from discord import app_commands
     import discord.ui
     from discord.ext import commands, tasks
     from discord.ext.commands import has_permissions, MissingPermissions
@@ -111,6 +112,7 @@ try:
     @bot.event
     async def on_ready():
         await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
+        await bot.tree.sync(guild=discord.Object(id=695715313911857186))
         msg1.start()
 
     @tasks.loop(hours=24)
@@ -140,6 +142,15 @@ try:
             if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
                 return
             await asyncio.sleep(30)
+
+
+    @bot.tree.command(
+        name="slashcomm",
+        description="Slash command",
+        guild=discord.Object(id=695715313911857186)
+    )
+    async def slash_command(interaction):
+        await interaction.response.send_message("Hello!")
 
     @bot.command(name='ttt')
     async def ticktacktoe(ctx):
