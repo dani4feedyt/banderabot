@@ -386,7 +386,7 @@ try:
         engine.commit()
 
         cur.execute(
-            f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+            f'SELECT server_id FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
             [member.guild.id, member.id])
         if cur.fetchone() is None:
             cur.execute(f'INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING',
