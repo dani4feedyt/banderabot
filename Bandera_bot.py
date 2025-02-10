@@ -60,7 +60,7 @@ try:
     irritation = 0
 
     main_ch_id = 695715314696061072
-    hs_guild_id = 695715313911857186
+    bpg_guild_id = 1338461268473806858
 
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
@@ -139,8 +139,8 @@ try:
     async def sync(ctx):
         if ctx.author.id == 486176412953346049:
             await bot.tree.sync()
-            bot.tree.copy_global_to(guild=ctx.guild)
-            await ctx.bot.tree.sync(guild=ctx.guild)
+            bot.tree.copy_global_to(guild=discord.Object(id=bpg_guild_id))
+            await ctx.bot.tree.sync(guild=discord.Object(id=bpg_guild_id))
             await ctx.send('Command tree synced.')
         else:
             await ctx.send("Permission error, why are you trying to do this, exactly?")
