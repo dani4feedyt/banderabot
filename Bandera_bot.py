@@ -138,9 +138,8 @@ try:
     @bot.command(name='sync', description='Owner only')
     async def sync(ctx):
         if ctx.author.id == 486176412953346049:
-            await bot.tree.sync()
             bot.tree.copy_global_to(guild=discord.Object(id=bpg_guild_id))
-            await ctx.bot.tree.sync(guild=discord.Object(id=bpg_guild_id))
+            await bot.tree.sync()
             await ctx.send('Command tree synced.')
         else:
             await ctx.send("Permission error, why are you trying to do this, exactly?")
