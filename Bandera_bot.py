@@ -59,9 +59,8 @@ try:
     url = None
     irritation = 0
 
-
     main_ch_id = 695715314696061072
-    g_guild = bot.get_guild(695715313911857186)
+    hs_guild_id = 695715313911857186
 
     months = {'jan': 31, 'feb': 28, 'mar': 31, 'apr': 30, 'may': 31, 'jun': 30, 'jly': 31, 'aug': 31, 'sep': 30, 'oct': 31, 'nov': 30, 'dec': 31}
     if today.year % 4 == 0:
@@ -74,21 +73,18 @@ try:
             if any(msg.content.lower() == i for i in check_list):
                 return msg.content.lower()
 
-
-
     @bot.event
     async def on_command(ctx):
         print(f"Triggered... <{ctx.command}>; server: <{ctx.guild.name}>; channel: <{ctx.channel.name}>; user: <{ctx.message.author}>")
 
     @bot.event
     async def on_member_join(member):
-        member_count = len(g_guild.members)
-        await member.send(f"**Вітаємо вас на сервері {g_guild.name}**!" +
+        await member.send(f"**Вітаємо вас на сервері {member.guild.name}**!" +
                           "\n\n•Я - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу." +
                           "\n•Для отримання більш розгорнутої інформації щодо мого функціоналу перейдіть до каналу **#info**" +
                           "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        await bot.get_channel(main_ch_id).send(f"Ласкаво просимо на сервер **{g_guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{member_count}**!")
+        await bot.get_channel(member.guild.system_channel).send(f"Ласкаво просимо на сервер **{member.guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{len(member.guild.members)}**!")
 
 
     @bot.event
@@ -112,42 +108,46 @@ try:
     @bot.event
     async def on_ready():
         await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
-        await bot.tree.sync(guild=discord.Object(id=695715313911857186))
-        msg1.start()
+        main_daily_pic.start()
 
     @tasks.loop(hours=24)
-    async def msg1():
-        message_channel = bot.get_channel(main_ch_id)
+    async def main_daily_pic():
         dw = str(datetime.datetime.today().weekday())
-        img_g = await message_channel.send(file=discord.File(f'd_t{dw}.png'))
-        img_id = img_g.id
+        for guild in bot.guilds:
+            print(guild)
+            print(guild.id)
+            img_g = await guild.system_channel.send(file=discord.File(f'd_t{dw}.png'))
 
-        result = []
-        cur.execute('SELECT * FROM img_data;')
+            cur.execute("SELECT img_message_id FROM img_data WHERE guild_id = %s;", [guild.id])
 
-        for row in cur.fetchall():
-            result.append(row)
-        msg = await message_channel.fetch_message(int(result[0][1]))
-        print(msg)
-        await msg.delete()
+            msg = await guild.system_channel.fetch_message(int(cur.fetchall()[0][0]))
+            await msg.delete()
 
-        cur.execute('DELETE FROM img_data WHERE id =(SELECT MAX(id) FROM img_data)')
-        cur.execute(f'INSERT INTO img_data(discord_id) VALUES({img_id})')
-        engine.commit()
+            cur.execute(f'UPDATE img_data SET img_message_id = %s, guild_id = %s WHERE guild_id = %s;', [img_g.id, guild.id, guild.id])
+            engine.commit()
 
 
-    @msg1.before_loop
-    async def before_msg1():
+    @main_daily_pic.before_loop
+    async def before_main_daily_pic():
         for _ in range(60*60*24):
             if str(datetime.datetime.now().hour) == '7' and str(datetime.datetime.now().minute) == '30':
                 return
             await asyncio.sleep(30)
 
 
+    @bot.command(name='sync', description='Owner only')
+    async def sync(ctx):
+        if ctx.author.id == 486176412953346049:
+            await bot.tree.sync()
+            bot.tree.copy_global_to(guild=ctx.guild)
+            await ctx.bot.tree.sync(guild=ctx.guild)
+            await ctx.send('Command tree synced.')
+        else:
+            await ctx.send("Permission error, why are you trying to do this, exactly?")
+
     @bot.tree.command(
-        name="slashcomm",
-        description="Slash command",
-        guild=discord.Object(id=695715313911857186)
+        name="fm",
+        description="Slash command"
     )
     async def slash_command(interaction):
         await interaction.response.send_message("Hello!")
