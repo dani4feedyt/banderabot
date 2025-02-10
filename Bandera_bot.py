@@ -37,6 +37,7 @@ try:
     from datetime import date
     from image_rec import imagery
     from db_handler import engine, cur
+    from psycopg2.extras import Json
 
     from Views import Select
     from player import Player
@@ -92,11 +93,9 @@ try:
         if before.channel is None and after.channel:
             m_id = member.id
             print(m_id)
-            channel = after.channel
-            cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {m_id}")
+            cur.execute(f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+                        [member.guild.id, member.id])
             data = cur.fetchone()
-            # cur.execute(f"SELECT guild_id FROM kanava_data WHERE user_id = {m_id}")
-            # guild = cur.fetchone()
             # TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
             engine.commit()
             if data:
@@ -271,9 +270,10 @@ try:
             await message.channel.send('<:idi_nahui:1197676923745226822>')
 
 
-    @bot.command(name='fetch id')
+    @bot.command(name='fetch_id')
     async def id(ctx, member: discord.User):
         await ctx.send(member.id)
+        await ctx.send(member.name)
         await ctx.send(datetime.datetime.now().time())
 
     @bot.command(name='fetch timestamp')
@@ -381,13 +381,17 @@ try:
     @commands.has_permissions(manage_messages=True)  #TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
 
-        cur.execute(f'''INSERT INTO kanava_data(user_id, iter_left, guild_id) VALUES({member.id}, 0, {ctx.guild.id})
-                                ON CONFLICT DO NOTHING''')
+        cur.execute(f'INSERT INTO kanava_user_data(user_id, user_nickname) VALUES(%s, %s) ON CONFLICT DO NOTHING',
+                    [member.id, member.name])
+        engine.commit()
+
+        cur.execute(f'INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING',
+                    [ctx.guild.id, member.id, 0])
         engine.commit()
 
         if ctx.author.id != 783069117602857031:
-            cur.execute(f'''UPDATE kanava_data SET iter_left = kanava_data.iter_left + {t} 
-                                    WHERE kanava_data.user_id = {member.id}''')
+            cur.execute(f'UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+                        [t, ctx.guild.id, member.id])
             engine.commit()
 
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
@@ -427,12 +431,13 @@ try:
                 await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
                 await ctx.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
-                cur.execute(f'''UPDATE kanava_data SET iter_left = kanava_data.iter_left - {i} 
-                                WHERE kanava_data.user_id = {member.id}''')
+                cur.execute(f'UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+                    [t, ctx.guild.id, member.id])
                 engine.commit()
                 return
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
-        cur.execute(f'DELETE FROM kanava_data WHERE user_id ={member.id}')
+        cur.execute(f'DELETE FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+                    [ctx.guild.id, member.id])
         engine.commit()
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.edit(voice_channel=channel3)
@@ -647,7 +652,8 @@ try:
     async def kanava_info(ctx):
         await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допитуватися особисто Степаном Андрійовичем Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
 
-        cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {ctx.author.id}")
+        cur.execute(f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+                        [ctx.guild.id, ctx.author.id])
         num = cur.fetchone()
         engine.commit()
 
@@ -660,7 +666,8 @@ try:
     @bot.command()
     @commands.has_permissions(mention_everyone=True)
     async def kanava_score(ctx, member: discord.Member):
-        cur.execute(f"SELECT iter_left FROM kanava_data WHERE user_id = {member.id}")
+        cur.execute(f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+                        [ctx.guild.id, member.id])
         num = cur.fetchone()
         engine.commit()
 

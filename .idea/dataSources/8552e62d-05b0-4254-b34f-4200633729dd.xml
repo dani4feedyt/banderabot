@@ -8,7 +8,7 @@
 16384||10|T|G
 16418||-9223372036854775808|C|G
 16418||16386|C|G</Grants>
-      <IntrospectionStateNumber>60356</IntrospectionStateNumber>
+      <IntrospectionStateNumber>60566</IntrospectionStateNumber>
       <ServerVersion>16.3</ServerVersion>
       <StartupTime>1721501330</StartupTime>
       <TimeZones>true ACDT
@@ -810,7 +810,7 @@ false Zulu
 14149||10|C|G
 14149||-9223372036854775808|U|G
 14149||10|U|G</Grants>
-      <IntrospectionStateNumber>60356</IntrospectionStateNumber>
+      <IntrospectionStateNumber>60566</IntrospectionStateNumber>
       <ObjectId>5</ObjectId>
       <OwnerName>dani4feed</OwnerName>
     </database>
@@ -4288,8 +4288,8 @@ default_transaction_read_only=off</Config>
     <schema id="272" parent="3" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>60356</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-02-10.11:50:13</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>60566</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-02-10.23:00:33</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4318,39 +4318,37 @@ default_transaction_read_only=off</Config>
       <StateNumber>900</StateNumber>
       <OwnerName>dani4feed</OwnerName>
     </sequence>
-    <sequence id="276" parent="272" name="kanava_data_id_seq">
-      <DasType>integer|0s</DasType>
-      <ObjectId>16481</ObjectId>
-      <SequenceIdentity>1</SequenceIdentity>
-      <StartValue>1</StartValue>
-      <StateNumber>1796</StateNumber>
-      <OwnerName>dani4feed</OwnerName>
-    </sequence>
-    <table id="277" parent="272" name="account">
+    <table id="276" parent="272" name="account">
       <ObjectId>16498</ObjectId>
       <StateNumber>44940</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>dani4feed</OwnerName>
     </table>
-    <table id="278" parent="272" name="candidates">
+    <table id="277" parent="272" name="candidates">
       <ObjectId>16507</ObjectId>
       <StateNumber>44579</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>dani4feed</OwnerName>
     </table>
-    <table id="279" parent="272" name="img_data">
+    <table id="278" parent="272" name="img_data">
       <ObjectId>16473</ObjectId>
       <StateNumber>60350</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>dani4feed</OwnerName>
     </table>
-    <table id="280" parent="272" name="kanava_data">
-      <ObjectId>16482</ObjectId>
-      <StateNumber>8665</StateNumber>
+    <table id="279" parent="272" name="kanava_servers">
+      <ObjectId>16524</ObjectId>
+      <StateNumber>60547</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>dani4feed</OwnerName>
     </table>
-    <column id="281" parent="277" name="id">
+    <table id="280" parent="272" name="kanava_user_data">
+      <ObjectId>16482</ObjectId>
+      <StateNumber>60564</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>dani4feed</OwnerName>
+    </table>
+    <column id="281" parent="276" name="id">
       <DasType>integer|0s</DasType>
       <DefaultExpression>nextval(&apos;account_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -4359,35 +4357,35 @@ default_transaction_read_only=off</Config>
       <SequenceId>16497</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="282" parent="277" name="name">
+    <column id="282" parent="276" name="name">
       <DasType>text|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>44575</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="283" parent="277" name="surname">
+    <column id="283" parent="276" name="surname">
       <DasType>text|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>44575</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="284" parent="277" name="email">
+    <column id="284" parent="276" name="email">
       <DasType>text|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>44575</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="285" parent="277" name="ip">
+    <column id="285" parent="276" name="ip">
       <DasType>text|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>44575</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="286" parent="277" name="have_voted">
+    <column id="286" parent="276" name="have_voted">
       <DasType>boolean|0s</DasType>
       <DefaultExpression>false</DefaultExpression>
       <NotNull>1</NotNull>
@@ -4395,7 +4393,7 @@ default_transaction_read_only=off</Config>
       <StateNumber>44940</StateNumber>
       <TypeId>16</TypeId>
     </column>
-    <index id="287" parent="277" name="account_pkey">
+    <index id="287" parent="276" name="account_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16504</ObjectId>
@@ -4404,14 +4402,14 @@ default_transaction_read_only=off</Config>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="288" parent="277" name="account_pkey">
+    <key id="288" parent="276" name="account_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16505</ObjectId>
       <Primary>1</Primary>
       <StateNumber>44575</StateNumber>
       <UnderlyingIndexId>16504</UnderlyingIndexId>
     </key>
-    <column id="289" parent="278" name="id">
+    <column id="289" parent="277" name="id">
       <DasType>integer|0s</DasType>
       <DefaultExpression>nextval(&apos;candidates_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -4420,27 +4418,27 @@ default_transaction_read_only=off</Config>
       <SequenceId>16506</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="290" parent="278" name="name">
+    <column id="290" parent="277" name="name">
       <DasType>text|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>44579</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="291" parent="278" name="surname">
+    <column id="291" parent="277" name="surname">
       <DasType>text|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>44579</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="292" parent="278" name="votes">
+    <column id="292" parent="277" name="votes">
       <DasType>integer|0s</DasType>
       <Position>4</Position>
       <StateNumber>44579</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <index id="293" parent="278" name="candidates_pkey">
+    <index id="293" parent="277" name="candidates_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16513</ObjectId>
@@ -4449,14 +4447,14 @@ default_transaction_read_only=off</Config>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="294" parent="278" name="candidates_pkey">
+    <key id="294" parent="277" name="candidates_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16514</ObjectId>
       <Primary>1</Primary>
       <StateNumber>44579</StateNumber>
       <UnderlyingIndexId>16513</UnderlyingIndexId>
     </key>
-    <column id="295" parent="279" name="id">
+    <column id="295" parent="278" name="id">
       <DasType>integer|0s</DasType>
       <DefaultExpression>nextval(&apos;img_data_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -4465,21 +4463,21 @@ default_transaction_read_only=off</Config>
       <SequenceId>16472</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="296" parent="279" name="img_message_id">
+    <column id="296" parent="278" name="img_message_id">
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>60337</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <column id="297" parent="279" name="guild_id">
+    <column id="297" parent="278" name="guild_id">
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>60355</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <index id="298" parent="279" name="img_data_pkey">
+    <index id="298" parent="278" name="img_data_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16477</ObjectId>
@@ -4488,79 +4486,88 @@ default_transaction_read_only=off</Config>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="299" parent="279" name="img_data_discord_id_key">
+    <index id="299" parent="278" name="img_data_discord_id_key">
       <ColNames>img_message_id</ColNames>
       <ObjectId>16479</ObjectId>
       <StateNumber>60350</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="300" parent="279" name="img_data_pkey">
+    <key id="300" parent="278" name="img_data_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16478</ObjectId>
       <Primary>1</Primary>
       <StateNumber>900</StateNumber>
       <UnderlyingIndexId>16477</UnderlyingIndexId>
     </key>
-    <key id="301" parent="279" name="img_data_discord_id_key">
+    <key id="301" parent="278" name="img_data_discord_id_key">
       <ObjectId>16480</ObjectId>
       <StateNumber>900</StateNumber>
       <UnderlyingIndexId>16479</UnderlyingIndexId>
     </key>
-    <column id="302" parent="280" name="id">
-      <DasType>integer|0s</DasType>
-      <DefaultExpression>nextval(&apos;kanava_data_id_seq&apos;::regclass)</DefaultExpression>
+    <column id="302" parent="279" name="server_id">
+      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <StateNumber>1796</StateNumber>
-      <SequenceId>16481</SequenceId>
-      <TypeId>23</TypeId>
+      <StateNumber>60532</StateNumber>
+      <TypeId>20</TypeId>
     </column>
-    <column id="303" parent="280" name="user_id">
+    <column id="303" parent="279" name="user_id">
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>60535</StateNumber>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="304" parent="279" name="iter_left">
+      <DasType>bigint|0s</DasType>
+      <Position>3</Position>
+      <StateNumber>60539</StateNumber>
+      <TypeId>20</TypeId>
+    </column>
+    <foreign-key id="305" parent="279" name="kanava_servers_kanava_data_user_id_fk">
+      <ColNames>user_id</ColNames>
+      <ObjectId>16529</ObjectId>
+      <StateNumber>60547</StateNumber>
+      <RefKeyColPositions>2</RefKeyColPositions>
+      <RefTableId>16482</RefTableId>
+    </foreign-key>
+    <column id="306" parent="280" name="user_id">
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>1796</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <column id="304" parent="280" name="iter_left">
-      <DasType>integer|0s</DasType>
-      <Position>3</Position>
-      <StateNumber>1796</StateNumber>
-      <TypeId>23</TypeId>
+    <column id="307" parent="280" name="user_nickname">
+      <DasType>text|0s</DasType>
+      <Position>6</Position>
+      <StateNumber>60558</StateNumber>
+      <TypeId>25</TypeId>
     </column>
-    <column id="305" parent="280" name="guild_id">
-      <DasType>bigint|0s</DasType>
-      <Position>4</Position>
-      <StateNumber>8669</StateNumber>
-      <TypeId>20</TypeId>
-    </column>
-    <index id="306" parent="280" name="kanava_data_pkey">
-      <ColNames>id</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16486</ObjectId>
+    <index id="308" parent="280" name="kanava_data_pk">
+      <ColNames>user_id</ColNames>
+      <ObjectId>16527</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>8665</StateNumber>
+      <StateNumber>60558</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="307" parent="280" name="kanava_data_user_id_key">
+    <index id="309" parent="280" name="kanava_data_user_id_key">
       <ColNames>user_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16488</ObjectId>
-      <StateNumber>8665</StateNumber>
+      <StateNumber>60558</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="308" parent="280" name="kanava_data_pkey">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16487</ObjectId>
+    <key id="310" parent="280" name="kanava_data_pk">
+      <ObjectId>16528</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>1796</StateNumber>
-      <UnderlyingIndexId>16486</UnderlyingIndexId>
+      <StateNumber>60545</StateNumber>
+      <UnderlyingIndexId>16527</UnderlyingIndexId>
     </key>
-    <key id="309" parent="280" name="kanava_data_user_id_key">
-      <NameSurrogate>1</NameSurrogate>
+    <key id="311" parent="280" name="kanava_data_user_id_key">
       <ObjectId>16489</ObjectId>
       <StateNumber>1796</StateNumber>
       <UnderlyingIndexId>16488</UnderlyingIndexId>
