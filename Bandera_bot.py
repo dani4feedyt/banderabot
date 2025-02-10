@@ -146,16 +146,18 @@ try:
             await ctx.send("Permission error, why are you trying to do this, exactly?")
 
     @bot.tree.command(
-        name="fm",
-        description="Slash command"
+        name="slavaukraine",
+        description="Патріотично"
     )
     async def slash_command(interaction):
-        await interaction.response.send_message("Hello!")
+        await interaction.response.send_message("Героям слава, друже.")
 
-    @bot.command(name='ttt')
-    async def ticktacktoe(ctx):
-        title = "Ну що, готовий до гри?\n**Обирай гравця:**"
-        await ctx.reply(title, view=Select())
+    @bot.tree.command(
+        name='ticktacktoe',
+        description="Зіграти в хрестики-нолики зі мною"
+        )
+    async def ticktacktoe(interaction):
+        await interaction.response.send_message("Ну що, готовий до гри?\n**Обирай гравця:**", view=Select())
 
     @bot.command(name='identify')
     async def identify(ctx, n_outputs=5):
@@ -189,8 +191,8 @@ try:
 
 
     # TODO Указать в таблице правил количество наказания в минутах
-    @bot.event
 
+    @bot.event
     async def on_message(message):
         if message.author.id == 783069117602857031:
             await bot.process_commands(message)
@@ -200,8 +202,6 @@ try:
                 if rule_mes(message):
                     ctx = await bot.get_context(message)
                     await mute(ctx, member=message.author, time=3, rule_n=rule_mes(message), bot_source=True)
-                    # await message.channel.send(rules_list[rule_mes(message)][0])
-                    # await message.channel.send(rules_list[rule_mes(message)][1])
                     return
 
                 if "бандер" in message.content.lower():
@@ -244,8 +244,6 @@ try:
         return False
 
 
-
-
     @bot.listen()
     async def on_message(message):
         msg = message.content.lower()
@@ -272,7 +270,6 @@ try:
 
         if "іді" in msg:
             await message.channel.send('<:idi_nahui:1197676923745226822>')
-
 
 
     @bot.command(name='fetch id')
