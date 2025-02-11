@@ -388,15 +388,16 @@ try:
         cur.execute(
             f'SELECT server_id FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
             [member.guild.id, member.id])
-        if cur.fetchone() is None:
+        result = cur.fetchone()
+        if result is None:
             cur.execute(f'INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING',
-                        [ctx.guild.id, member.id, 0])
-            engine.commit()
+                        [ctx.guild.id, member.id, t])
 
-        if ctx.author.id != 783069117602857031:
-            cur.execute(f'UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
-                        [t, ctx.guild.id, member.id])
-            engine.commit()
+        else:
+            if ctx.author.id != 783069117602857031:
+                cur.execute(f'UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+                            [t, ctx.guild.id, member.id])
+        engine.commit()
 
         channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
         if channel1 is None:
@@ -436,7 +437,7 @@ try:
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
                 await ctx.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
                 cur.execute(f'UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
-                    [t, ctx.guild.id, member.id])
+                    [i, ctx.guild.id, member.id])
                 engine.commit()
                 return
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
@@ -653,32 +654,24 @@ try:
 
 
     @bot.command()
-    async def kanava_info(ctx):
-        await ctx.send("•Щоб почати занурювати користувача у **канаву**, введіть його нікнейм, кількість занурень та поблажливість бота у форматі: **b!kanava @(Нікнейм) (Кількість) (Довіра бота)**\n•Людина, що знаходиться під впливом цієї команди, буде занурюватися в канаву та допитуватися особисто Степаном Андрійовичем Бандерою\n\n||*Наприклад: b!kanava @user#5234 50*||")
+    async def kanava_info(ctx, member: discord.Member = None):
+        await ctx.send("• Щоб почати допитувати користувача у **канаві**, введіть його нікнейм, кількість занурень та рівень мого милосердя у форматі: **b!kanava @(Нікнейм) (Кількість) (Милосердя)**\n"
+                       "• Той, хто знаходиться під впливом цієї команди, буде допитуватися особисто Степаном Андрійовичем Бандерою (мною)\n\n"
+                       "||*Наприклад: b!kanava @user#5234 50*||")
+        if member is None:
+            member = ctx.message.author
 
-        cur.execute(f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
-                        [ctx.guild.id, ctx.author.id])
-        num = cur.fetchone()
-        engine.commit()
-
-        congr = ''
-        if num == 0 or num is None:
-            congr = '**Вітаю!**'
-            num = [0]
-        await ctx.send(f"Ваша заборгованість: **{num[0]}** занурен{msg_end_temp_1(num[0])}. {congr}")
-
-    @bot.command()
-    @commands.has_permissions(mention_everyone=True)
-    async def kanava_score(ctx, member: discord.Member):
-        cur.execute(f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
-                        [ctx.guild.id, member.id])
+        cur.execute(
+            f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
+            [ctx.guild.id, member.id])
         num = cur.fetchone()
         engine.commit()
 
         if num == 0 or num is None:
-            num = [0]
+            await ctx.send(f"У {member.mention} немає незгод зі мною. Так тримати!")
+        else:
+            await ctx.send(f"Утікач {member.mention} повинен відбути ще **{num[0]}** занурен{msg_end_temp_1(num[0])}. Я до нього дістануся!")
 
-        await ctx.send(f"Заборгованість {member.mention}: **{num[0]}** занурен{msg_end_temp_1(num[0])}.")
 
     @bot.command()
     async def mute_info(ctx):
