@@ -413,25 +413,28 @@ try:
 
         for i in range(t):
             if member.voice:
-                rn = randint(0, 10)
-                ch = round(chance/10)
-                await member.edit(voice_channel=channel1)
-                await asyncio.sleep(0.5)
-                await member.edit(voice_channel=channel2)
-                await asyncio.sleep(0.5)
-                await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                 try:
-                    await bot.wait_for("message", check=lambda message: check(message, message, (checklists[0] + checklists[1])), timeout=1.5)
-                except asyncio.TimeoutError:
-                    continue
-                else:
-                    if rn <= ch:
-                        await member.send("Гаразд. На цей раз я тобі повірю. Хлопці, витягайте його!")
-                        break
-                    elif rn > ch:
-                        await member.send("Ага, так я тобі і повірив... Хлопці, продовжуємо!")
-                        await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
+                    rn = randint(0, 10)
+                    ch = round(chance/10)
+                    await member.edit(voice_channel=channel1)
+                    await asyncio.sleep(0.5)
+                    await member.edit(voice_channel=channel2)
+                    await asyncio.sleep(0.5)
+                    await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
+                    try:
+                        await bot.wait_for("message", check=lambda message: check(message, message, (checklists[0] + checklists[1])), timeout=1.5)
+                    except asyncio.TimeoutError:
                         continue
+                    else:
+                        if rn <= ch:
+                            await member.send("Гаразд. На цей раз я тобі повірю. Хлопці, витягайте його!")
+                            break
+                        elif rn > ch:
+                            await member.send("Ага, так я тобі і повірив... Хлопці, продовжуємо!")
+                            await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
+                            continue
+                except discord.errors.HTTPException:
+                    continue
             else:
                 await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
@@ -445,7 +448,10 @@ try:
                     [ctx.guild.id, member.id])
         engine.commit()
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        await member.edit(voice_channel=channel3)
+        try:
+            await member.edit(voice_channel=channel3)
+        except discord.errors.HTTPException:
+            return
 
     @bot.command(name='t_greeting')
     async def greeting(ctx, member: discord.Member):
@@ -720,7 +726,10 @@ try:
         await ctx.send(rule_gif)
         await member.add_roles(mutedRole)
         await asyncio.sleep(1)
-        await member.edit(voice_channel=None)
+        try:
+            await member.edit(voice_channel=None)
+        except discord.errors.HTTPException:
+            return
         await member.send(f'На вас було накладено мут на сервері **{guild.name}** модератором **{author}** на **{time}** хвилин{msg_end_temp_2(time)}, за причиною: **"{reason}"**')
 
         if not reason_changed:
@@ -759,7 +768,10 @@ try:
             await member.send(f"З вас було знято мут на сервері **{ctx.guild.name}**. Ви можете вільно продовжити спілкування!")
             embed = discord.Embed(title="Мут знято", description=f"**{author.mention}** зняв мут з **{member.mention}**. Приємного спілкування!", colour=0x013ADF)
             await ctx.send(embed=embed)
-            await member.edit(voice_channel=None)
+            try:
+                await member.edit(voice_channel=None)
+            except discord.errors.HTTPException:
+                return
         else:
             await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
 
