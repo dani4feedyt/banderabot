@@ -136,12 +136,20 @@ try:
             await asyncio.sleep(30)
 
 
-    @bot.command(name='sync', description='Owner only')
-    async def sync(ctx):
+    @bot.command(name='sync', description='Owner only')# Global - Local - CL (for instant implement)
+    async def sync(ctx, globally=None):
         if ctx.author.id == 486176412953346049:
-            bot.tree.copy_global_to(guild=discord.Object(id=bpg_guild_id))
-            await bot.tree.sync()
-            await ctx.send('Command tree synced.')
+            if not globally:
+                bot.tree.copy_global_to(guild=discord.Object(id=ctx.guild.id))
+                await bot.tree.sync(guild=discord.Object(id=ctx.guild.id))
+                await ctx.send('Command tree test-synced for this server.')
+            elif globally == "cl":
+                bot.tree.clear_commands(guild=discord.Object(id=ctx.guild.id))
+                await bot.tree.sync(guild=discord.Object(id=ctx.guild.id))
+                await ctx.send('Command tree cleared for this server.')
+            else:
+                await bot.tree.sync()
+                await ctx.send('Command tree synced globally.')
         else:
             await ctx.send("Permission error, why are you trying to do this, exactly?")
 
@@ -272,11 +280,13 @@ try:
             await message.channel.send('<:idi_nahui:1197676923745226822>')
 
 
-    @bot.command(name='fetch_id')
-    async def id(ctx, member: discord.User):
-        await ctx.send(member.id)
-        await ctx.send(member.name)
-        await ctx.send(datetime.datetime.now().time())
+    @bot.tree.command(
+        name='fetchid',
+        description="Типувати користувача",
+    )
+    #@has_permissions(manage_messages=True)
+    async def id(interaction, member: discord.User):
+        await interaction.response.send_message(f'{member.name}, {member.id}, {datetime.datetime.now().time()}')
 
     @bot.command(name='fetch timestamp')
     async def fetch(ctx, msg_id: int):
