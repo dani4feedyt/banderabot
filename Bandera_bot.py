@@ -80,13 +80,16 @@ try:
 
     @bot.event
     async def on_member_join(member):
-        await member.send(f"**Вітаємо вас на сервері {member.guild.name}**!" +
-                          "\n\n•Я - **Бандера бот**, ваш персональний помічник, створений *dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу." +
-                          "\n•Для отримання більш розгорнутої інформації щодо мого функціоналу перейдіть до каналу **#info**" +
-                          "\n•Для ознайомлення з правилами серверу перейдіть до каналу **#правила**")
+        await member.send(f"Вітаю тебе на сервері **{member.guild.name}**!\n"
+                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*, який можливо навіть колись якось вам допоможе!\n\n"
+                          f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
+                          f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
+                          f"У випадку коли такого каналу немає, мої правила можна побачити використавши команду **b!rules**\n\n"
+                          f"Для отримання більш розгорнутої інформації щодо мого функціоналу, скористайся **b!info**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        await bot.get_channel(member.guild.system_channel).send(f"Ласкаво просимо на сервер **{member.guild.name}**, {member.mention}! Наші ряди поповнилися ще одним націоналістом. Нас вже **{len(member.guild.members)}**!")
-
+        await member.guild.system_channel.send(f"Ласкаво просимо на сервер **{member.guild.name}**, {member.mention}!"
+                                                                f" Наші ряди поповнилися ще одним гідним (?) націоналістом. "
+                                                                f"Нас вже аж **{len(member.guild.members)}**!")
 
     @bot.event
     async def on_voice_state_update(member, before, after):
@@ -96,7 +99,6 @@ try:
             cur.execute(f'SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s',
                         [member.guild.id, member.id])
             data = cur.fetchone()
-            # TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
             engine.commit()
             if data:
                 message = await member.guild.system_channel.send(f"Канава активована для користувача {member.mention}", delete_after=10)
@@ -106,7 +108,7 @@ try:
 
     @bot.event
     async def on_ready():
-        await bot.change_presence(activity=discord.Game('очке своим пальчиком | b!info'))
+        await bot.change_presence(activity=discord.Game('дупі своїм пальчиком | b!info'))
         main_daily_pic.start()
 
     @tasks.loop(hours=24)
@@ -378,7 +380,7 @@ try:
         await ctx.send(channel_return)
 
     @bot.command(name='kanava')
-    @commands.has_permissions(manage_messages=True)  #TODO сделать проверку на гилд айди чтобы избежать сетки канав на нескольких серверах
+    @commands.has_permissions(manage_messages=True)
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
 
         cur.execute(f'INSERT INTO kanava_user_data(user_id, user_nickname) VALUES(%s, %s) ON CONFLICT DO NOTHING',
@@ -455,9 +457,14 @@ try:
 
     @bot.command(name='t_greeting')
     async def greeting(ctx, member: discord.Member):
-        await ctx.send(f'{member}')
-        await member.send(f"Вітаємо вас на сервері {ctx.guild.name}!\nЯ - **Бандера бот**, ваш персональний помічник, створений *@dani4feedyt#5200*, який допоможе вам швидко зрозуміти правила та порядки серверу.\nДля отримання більш розгорнутої інформації, перейдіть до каналу **#info**")
-        await member.send("https://media.discordapp.net/attachments/618165831943061791/819546666272161802/CSuO7F_wPr0.png?width=541&height=676")
+        await member.send(f"Вітаю тебе на сервері **{ctx.guild.name}**!\n"
+                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*, який можливо навіть колись якось вам допоможе!\n\n"
+                          f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
+                          f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
+                          f"У випадку коли такого каналу немає, мої правила можна побачити використавши команду **b!rules**\n\n"
+                          f"Для отримання більш розгорнутої інформації щодо мого функціоналу, скористайся **b!info**")
+        await member.send(
+            "https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
 
     @bot.command(name='t_invite')
     async def invite(ctx, member: discord.Member, age: int = 60):
@@ -661,9 +668,9 @@ try:
 
     @bot.command()
     async def kanava_info(ctx, member: discord.Member = None):
-        await ctx.send("• Щоб почати допитувати користувача у **канаві**, введіть його нікнейм, кількість занурень та рівень мого милосердя у форматі: **b!kanava @(Нікнейм) (Кількість) (Милосердя)**\n"
+        await ctx.send("• Щоб почати допитувати користувача у **канаві**, введіть його нікнейм, кількість занурень та рівень мого милосердя у форматі: **b!kanava @(Нікнейм) (Кількість) (Милосердя *<%>*)**\n"
                        "• Той, хто знаходиться під впливом цієї команди, буде допитуватися особисто Степаном Андрійовичем Бандерою (мною)\n\n"
-                       "||*Наприклад: b!kanava @user#5234 50*||")
+                       "||*Наприклад: b!kanava @user#5234 10*||")
         if member is None:
             member = ctx.message.author
 
@@ -681,11 +688,17 @@ try:
 
     @bot.command()
     async def mute_info(ctx):
-        await ctx.send("•Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час у хвилинах) (Номер порушеного правила) (Деталі порушення)**\n•Людина, на яку було накладено мут, буде виключена із більшості голосових та текстових каналів і отримає особисте повідомлення з причиною муту\n•При закінченні терміну дії, мут буде автоматично знято\n•Для дострокового зняття муту скористайтеся командою **b!unmute**\n\n||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
+        await ctx.send("• Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час *<хв>*) (Номер правила) (Деталі порушення)**\n"
+                       "• Людина, на яку було накладено мут, буде тимчасово заблокована на майже всіх голосових та текстових каналах\n"
+                       "• При закінченні терміну дії, мут буде автоматично знятий\n"
+                       "• Для дострокового зняття муту: **b!unmute @(Нікнейм)**\n\n"
+                       "||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     @bot.command()
     async def spam_info(ctx):
-        await ctx.send("•Щоб розпочати **спам**, введіть параметри швидкості та кількості слів у форматі: **b!spam (Кількість повідомлень) (Кулдаун між повідомленнями) (Слово для спаму)**\n\n||*Наприклад: b!spam 0.5 5 Бандера Бот - найкращий!*||")
+        await ctx.send("• Щоб розпочати **спам** у особистий чат обраного користувача, введіть параметри кількості повідомлень, інтервал надсилання та зміст у форматі:"
+                       " **b!spam @(Нікнейм) (Кількість) (Інтервал *<мс>*) (Повідомлення)**"
+                       "\n\n||*Наприклад: b!spam @user#5234 100 0.5 Бандера Бот - найкращий!*||")
 
     @bot.command(name="mute")
     @commands.has_permissions(manage_messages=True)
