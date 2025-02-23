@@ -1,6 +1,6 @@
 -f https://download.pytorch.org/whl/torch_stable.html
 torch==2.1.2+cpu
-
+torchvision==0.16.2+cpu
 asyncstdlib==3.12.3
 beautifulsoup4==4.10.0
 discord.py==2.3.2
