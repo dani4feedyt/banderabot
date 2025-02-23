@@ -1,5 +1,5 @@
 ##-f https://download.pytorch.org/whl/torch_stable.html
-torch[serialization]==2.1.2
+torch==1.9.1-cp39-cp39-win_amd64.whl
 asyncstdlib==3.12.3
 beautifulsoup4==4.10.0
 discord.py==2.3.2
