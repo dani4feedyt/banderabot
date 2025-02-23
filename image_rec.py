@@ -2,7 +2,7 @@ import numpy as np
 import json
 from PIL import Image
 import timm
-import torch
+import torch.serialization
 from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
 
