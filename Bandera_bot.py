@@ -189,7 +189,7 @@ try:
         await interaction.edit_original_response(content=f"Я гадаю, що це... {output_labels}")
 
 
-    # TODO Указать в таблице правил количество наказания в минутахx
+    # TODO Указать в таблице правил количество наказания в минутах
 
     @bot.event
     async def on_message(message):
