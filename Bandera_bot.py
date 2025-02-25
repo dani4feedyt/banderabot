@@ -165,38 +165,35 @@ try:
     async def ticktacktoe(interaction):
         await interaction.response.send_message("Ну що, готовий до гри?\n**Обирай гравця:**", view=Select())
 
-    @bot.tree.command(
-        name="identify",
-        description=""
+    @bot.tree.context_menu(
+        name="identify"
+        # description="Справжній імадж рекоґнішен."
+        #             " Використовувати у відповідь на картинку, або надіслати разом з нею."
         )
-    async def identify(ctx, n_outputs=5):
-        mes = await ctx.send(f"*Хмм... дайте поміркувати...*")
+    async def identify(interaction, message: discord.Message):
+        resp_mes = await interaction.response.send_message(f"*Хмм... дайте поміркувати...*")
         f_path = f"src/last_img.jpg"
-        im_url = ""
+        print(message)
 
-        if ctx.message.attachments:
-            im_url = ctx.message.attachments[0].url
-        if not ctx.message.attachments:
-            msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-            if msg.attachments:
-                im_url = msg.attachments[0].url
-                # print(im_url)
-            else:
-                await ctx.send(f"**Помилка**. У повідомленні відсутнє зображення.")
-                return
+        if message.attachments:
+            print(message.attachments)
+            im_url = message.attachments[0].url
+        else:
+            await interaction.response.send_message(f"**Помилка**. У повідомленні відсутнє зображення.")
+            return
 
         myfile = requests.get(im_url)
         open(f_path, "wb").write(myfile.content)
 
-        lables_list = imagery(f_path, n_outputs)
+        lables_list = imagery(f_path, 5)##5 lables output
         output_labels = str()
         for i in range(len(lables_list[0])):
             output_labels += lables_list[0][i]
             output_labels += f" *({lables_list[1][i]})*"
             if i < len(lables_list[0]) - 1:
                 output_labels += "; "
-        await mes.delete()
-        await ctx.send(f"Я гадаю, що це... {output_labels}")
+        await resp_mes.delete()
+        await interaction.response.send_message(f"Я гадаю, що це... {output_labels}")
 
 
     # TODO Указать в таблице правил количество наказания в минутах
