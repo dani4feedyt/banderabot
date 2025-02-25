@@ -167,22 +167,24 @@ try:
 
     @bot.tree.command(
         name="identify",
-        description=""
+        description="Я спробую розпізнати які об'єкти знаходяться на зображенні."
+                    " Надішли цю команду у відповідь на повідомлення із зображенням,"
+                    " або надішли картинку одразу із командою."
         )
-    async def identify(ctx, n_outputs=5):
-        mes = await ctx.send(f"*Хмм... дайте поміркувати...*")
+    async def identify(interaction, n_outputs=5):
+        mes = await interaction.response.send_message(f"*Хмм... дайте поміркувати...*")
         f_path = f"src/last_img.jpg"
         im_url = ""
 
-        if ctx.message.attachments:
-            im_url = ctx.message.attachments[0].url
-        if not ctx.message.attachments:
-            msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+        if interaction.message.attachments:
+            im_url = interaction.message.attachments[0].url
+        if not interaction.message.attachments:
+            msg = await interaction.channel.fetch_message(interaction.message.reference.message_id)
             if msg.attachments:
                 im_url = msg.attachments[0].url
                 # print(im_url)
             else:
-                await ctx.send(f"**Помилка**. У повідомленні відсутнє зображення.")
+                await interaction.response.send_message(f"**Помилка**. У повідомленні відсутнє зображення.")
                 return
 
         myfile = requests.get(im_url)
@@ -196,7 +198,7 @@ try:
             if i < len(lables_list[0]) - 1:
                 output_labels += "; "
         await mes.delete()
-        await ctx.send(f"Я гадаю, що це... {output_labels}")
+        await interaction.response.send_message(f"Я гадаю, що це... {output_labels}")
 
 
     # TODO Указать в таблице правил количество наказания в минутах
