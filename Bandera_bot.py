@@ -165,35 +165,28 @@ try:
     async def ticktacktoe(interaction):
         await interaction.response.send_message("Ну що, готовий до гри?\n**Обирай гравця:**", view=Select())
 
-    @bot.tree.context_menu(
-        name="identify"
-        # description="Справжній імадж рекоґнішен."
-        #             " Використовувати у відповідь на картинку, або надіслати разом з нею."
-        )
+    @bot.tree.context_menu(name="Identify")
     async def identify(interaction, message: discord.Message):
-        resp_mes = await interaction.response.send_message(f"*Хмм... дайте поміркувати...*")
-        f_path = f"src/last_img.jpg"
-        print(message)
+        await interaction.response.send_message(f"*Хмм... дайте поміркувати...*")
+        last_img = f"src/last_img.jpg"
 
         if message.attachments:
-            print(message.attachments)
             im_url = message.attachments[0].url
         else:
             await interaction.response.send_message(f"**Помилка**. У повідомленні відсутнє зображення.")
             return
 
-        myfile = requests.get(im_url)
-        open(f_path, "wb").write(myfile.content)
+        file = requests.get(im_url)
+        open(last_img, "wb").write(file.content)
 
-        lables_list = imagery(f_path, 5)##5 lables output
+        lable_list = imagery(last_img, 5)##5 lables output
         output_labels = str()
-        for i in range(len(lables_list[0])):
-            output_labels += lables_list[0][i]
-            output_labels += f" *({lables_list[1][i]})*"
-            if i < len(lables_list[0]) - 1:
+        for i in range(len(lable_list[0])):
+            output_labels += lable_list[0][i]
+            output_labels += f" *({lable_list[1][i]})*"
+            if i < len(lable_list[0]) - 1:
                 output_labels += "; "
-        await resp_mes.delete()
-        await interaction.response.send_message(f"Я гадаю, що це... {output_labels}")
+        await interaction.edit_original_response(content=f"Я гадаю, що це... {output_labels}")
 
 
     # TODO Указать в таблице правил количество наказания в минутах
@@ -653,12 +646,17 @@ try:
         else:
             await ctx.send("**Помилка.** Правила під таким номером не існує")
 
-    @bot.command(name="pasta")
-    async def pasta(ctx, number: int):
+    @bot.tree.command(
+        name="pasta",
+        description="Крилатий вислів про Колюмбас (1-4)"
+        )
+    async def pasta(interaction, number: int):
         if 1 <= number < 5:
-            await ctx.send(Quotes1[number])
+            await interaction.response.send_message(Quotes1[number])
         else:
-            await ctx.send("**Помилка.** Вислів під цим номером ще не було вигадано, або не було занесено до моєї бази даних. \n*Для детальної інформації звертайтеся до @dani4feedyt#5200*")
+            await interaction.response.send_message("**Помилка.** Вислів під цим номером ще не було вигадано,"
+                                                    " або не було занесено до моєї бази даних. \n"
+                                                    "*Для детальної інформації звертайтеся до @dani4feedyt#5200*")
 
     @bot.command(name="quote")
     async def quote(ctx: commands.Context):
