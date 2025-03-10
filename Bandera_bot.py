@@ -381,7 +381,7 @@ try:
         await ctx.send(channel_return)
 
     @bot.command(name="kanava")
-    @commands.has_any_role("канавье")
+    @commands.has_any_role("канавъе")
     async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
 
         cur.execute(f"INSERT INTO kanava_user_data(user_id, user_nickname) VALUES(%s, %s) ON CONFLICT DO NOTHING",
