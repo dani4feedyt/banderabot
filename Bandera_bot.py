@@ -100,6 +100,7 @@ try:
             engine.commit()
             if data:
                 message = await member.guild.system_channel.send(f"Канава активована для користувача {member.mention}", delete_after=10)
+                ##await bot.get_slash_command("kanava")
                 ctx = await bot.get_context(message)
                 await kanava(ctx, member=member, t=data[0])
                 print(data[0])
@@ -380,9 +381,9 @@ try:
             return
         await ctx.send(channel_return)
 
-    @bot.command(name="kanava")
-    @commands.has_any_role("канавъе")
-    async def kanava(ctx, member: discord.Member, t=10, chance: int = 30):
+    @bot.tree.command(name="kanava") #TODO в проде криво перекидывает в канал, починить
+    @app_commands.checks.has_any_role("канавъе")
+    async def kanava(interaction, member: discord.Member, t: int = 10, chance: int = 30):
 
         cur.execute(f"INSERT INTO kanava_user_data(user_id, user_nickname) VALUES(%s, %s) ON CONFLICT DO NOTHING",
                     [member.id, member.name])
@@ -394,20 +395,20 @@ try:
         result = cur.fetchone()
         if result is None:
             cur.execute(f"INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
-                        [ctx.guild.id, member.id, t])
+                        [member.guild.id, member.id, t])
 
         else:
-            if ctx.author.id != 783069117602857031:
+            if interaction.user.id != 783069117602857031:
                 cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-                            [t, ctx.guild.id, member.id])
+                            [t, member.guild.id, member.id])
         engine.commit()
 
-        channel1 = discord.utils.get(ctx.guild.voice_channels, name="ГУЛАГ (AFK)")
+        channel1 = discord.utils.get(member.guild.voice_channels, name="ГУЛАГ (AFK)")
         if channel1 is None:
-            await ctx.guild.create_voice_channel("ГУЛАГ (AFK)")
-        channel2 = discord.utils.get(ctx.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
+            await member.guild.create_voice_channel("ГУЛАГ (AFK)")
+        channel2 = discord.utils.get(member.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
         if channel2 is None:
-            await ctx.guild.create_voice_channel("Канава/МАрк (Марк и Марк)")
+            await member.guild.create_voice_channel("Канава/МАрк (Марк и Марк)")
 
         if member.voice:
             channel3 = member.voice.channel
@@ -416,6 +417,7 @@ try:
 
         for i in range(t):
             if member.voice:
+                await interaction.response.send_message(f"Канава активована для користувача {member.mention}", delete_after=10)
                 try:
                     rn = randint(0, 10)
                     ch = round(chance/10)
@@ -439,16 +441,16 @@ try:
                 except discord.errors.HTTPException:
                     continue
             else:
-                await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
+                await interaction.response.send_message(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
                 await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
-                await ctx.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
+                await interaction.response.send_message(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
                 cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-                    [i, ctx.guild.id, member.id])
+                    [i, member.guild.id, member.id])
                 engine.commit()
                 return
         await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
         cur.execute(f"DELETE FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-                    [ctx.guild.id, member.id])
+                    [member.guild.id, member.id])
         engine.commit()
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         try:
