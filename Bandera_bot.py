@@ -36,6 +36,7 @@ try:
     from image_rec import imagery
     from db_handler import engine, cur
     from psycopg2.extras import Json
+    from typing import Optional
 
     from Views import Select
     from player import Player
@@ -375,7 +376,7 @@ try:
 
         @app_commands.command(name="kanava")
         @app_commands.checks.has_any_role("канавъе")
-        async def kanava(self, interaction, member: discord.Member, t: int = 10, chance: int = 30):
+        async def kanava(self, interaction, member: discord.Member, t: int = 10, chance: Optional[int] = 30):
             ctx = await bot.get_context(interaction)
             await self.kanava_worker(ctx, member, t, chance)
 
@@ -468,7 +469,7 @@ try:
                     message = await member.guild.system_channel.send(
                         f"Канава активована для користувача {member.mention}", delete_after=10)
                     ctx = await bot.get_context(message)
-                    await self.kanava_worker(ctx, member=member, t=data[0], chance=50)
+                    await self.kanava_worker(ctx, member=member, t=data[0], chance=30)
                     print(data[0])
 
     @bot.command(name="t_greeting")
