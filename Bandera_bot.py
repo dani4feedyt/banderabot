@@ -373,9 +373,13 @@ try:
         def __init__(self, bot):
             self.bot = bot
 
-        @app_commands.command(name="kanava") #TODO в проде криво перекидывает в канал, починить
+        @app_commands.command(name="kanava")
         @app_commands.checks.has_any_role("канавъе")
         async def kanava(self, interaction, member: discord.Member, t: int = 10, chance: int = 30):
+            ctx = await bot.get_context(interaction)
+            await self.kanava_worker(ctx, member, t, chance)
+
+        async def kanava_worker(self, ctx, member: discord.Member, t: int, chance: int):
 
             cur.execute(f"INSERT INTO kanava_user_data(user_id, user_nickname) VALUES(%s, %s) ON CONFLICT DO NOTHING",
                         [member.id, member.name])
@@ -390,7 +394,7 @@ try:
                             [member.guild.id, member.id, t])
 
             else:
-                if interaction.user.id != 783069117602857031:
+                if ctx.author.id != 783069117602857031:
                     cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                                 [t, member.guild.id, member.id])
             engine.commit()
@@ -407,7 +411,7 @@ try:
             else:
                 channel3 = None
 
-            await interaction.response.send_message(f"Канава активована для користувача {member.mention}", delete_after=10)
+            await ctx.send(f"Канава активована для користувача {member.mention}", delete_after=10)
             for i in range(t):
                 if member.voice:
                     try:
@@ -433,9 +437,9 @@ try:
                     except discord.errors.HTTPException:
                         continue
                 else:
-                    await interaction.channel.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
+                    await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
                     await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
-                    await interaction.channel.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
+                    await ctx.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
                     cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                         [i, member.guild.id, member.id])
                     engine.commit()
@@ -463,9 +467,8 @@ try:
                 if data:
                     message = await member.guild.system_channel.send(
                         f"Канава активована для користувача {member.mention}", delete_after=10)
-                    ##await bot.get_slash_command("kanava")
                     ctx = await bot.get_context(message)
-                    await self.kanava(ctx, member=member, t=data[0])
+                    await self.kanava_worker(ctx, member=member, t=data[0], chance=50)
                     print(data[0])
 
     @bot.command(name="t_greeting")
