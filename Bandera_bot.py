@@ -378,6 +378,7 @@ try:
         @app_commands.checks.has_any_role("канавъе")
         async def kanava(self, interaction, member: discord.Member, t: int = 10, chance: Optional[int] = 30):
             ctx = await bot.get_context(interaction)
+            await ctx.send(f"Канава активована для користувача {member.mention}", delete_after=10)
             await self.kanava_worker(ctx, member, t, chance)
 
         async def kanava_worker(self, ctx, member: discord.Member, t: int, chance: int):
@@ -412,7 +413,7 @@ try:
             else:
                 channel3 = None
 
-            await ctx.send(f"Канава активована для користувача {member.mention}", delete_after=10)
+
             for i in range(t):
                 if member.voice:
                     try:
