@@ -89,25 +89,12 @@ try:
                                                                 f" Наші ряди поповнилися ще одним гідним (?) націоналістом. "
                                                                 f"Нас вже аж **{len(member.guild.members)}**!")
 
-    @bot.event
-    async def on_voice_state_update(member, before, after):
-        if before.channel is None and after.channel:
-            m_id = member.id
-            print(m_id)
-            cur.execute(f"SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-                        [member.guild.id, member.id])
-            data = cur.fetchone()
-            engine.commit()
-            if data:
-                message = await member.guild.system_channel.send(f"Канава активована для користувача {member.mention}", delete_after=10)
-                ##await bot.get_slash_command("kanava")
-                ctx = await bot.get_context(message)
-                await kanava(ctx, member=member, t=data[0])
-                print(data[0])
+
 
     @bot.event
     async def on_ready():
         await bot.change_presence(activity=discord.Game("дупі своїм пальчиком | b!info"))
+        await bot.add_cog(Kanava(bot))
         main_daily_pic.start()
 
     @tasks.loop(hours=24)
@@ -381,82 +368,105 @@ try:
             return
         await ctx.send(channel_return)
 
-    @bot.tree.command(name="kanava") #TODO в проде криво перекидывает в канал, починить
-    @app_commands.checks.has_any_role("канавъе")
-    async def kanava(interaction, member: discord.Member, t: int = 10, chance: int = 30):
 
-        cur.execute(f"INSERT INTO kanava_user_data(user_id, user_nickname) VALUES(%s, %s) ON CONFLICT DO NOTHING",
-                    [member.id, member.name])
-        engine.commit()
+    class Kanava(commands.Cog):
+        def __init__(self, bot):
+            self.bot = bot
 
-        cur.execute(
-            f"SELECT server_id FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-            [member.guild.id, member.id])
-        result = cur.fetchone()
-        if result is None:
-            cur.execute(f"INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
-                        [member.guild.id, member.id, t])
+        @app_commands.command(name="kanava") #TODO в проде криво перекидывает в канал, починить
+        @app_commands.checks.has_any_role("канавъе")
+        async def kanava(self, interaction, member: discord.Member, t: int = 10, chance: int = 30):
 
-        else:
-            if interaction.user.id != 783069117602857031:
-                cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-                            [t, member.guild.id, member.id])
-        engine.commit()
+            cur.execute(f"INSERT INTO kanava_user_data(user_id, user_nickname) VALUES(%s, %s) ON CONFLICT DO NOTHING",
+                        [member.id, member.name])
+            engine.commit()
 
-        channel1 = discord.utils.get(member.guild.voice_channels, name="ГУЛАГ (AFK)")
-        if channel1 is None:
-            await member.guild.create_voice_channel("ГУЛАГ (AFK)")
-        channel2 = discord.utils.get(member.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
-        if channel2 is None:
-            await member.guild.create_voice_channel("Канава/МАрк (Марк и Марк)")
+            cur.execute(
+                f"SELECT server_id FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                [member.guild.id, member.id])
+            result = cur.fetchone()
+            if result is None:
+                cur.execute(f"INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
+                            [member.guild.id, member.id, t])
 
-        if member.voice:
-            channel3 = member.voice.channel
-        else:
-            channel3 = None
-
-        for i in range(t):
-            if member.voice:
-                await interaction.response.send_message(f"Канава активована для користувача {member.mention}", delete_after=10)
-                try:
-                    rn = randint(0, 10)
-                    ch = round(chance/10)
-                    await member.edit(voice_channel=channel1)
-                    await asyncio.sleep(0.5)
-                    await member.edit(voice_channel=channel2)
-                    await asyncio.sleep(0.5)
-                    await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
-                    try:
-                        await bot.wait_for("message", check=lambda message: check(message, message, (checklists[0] + checklists[1])), timeout=1.5)
-                    except asyncio.TimeoutError:
-                        continue
-                    else:
-                        if rn <= ch:
-                            await member.send("Гаразд. На цей раз я тобі повірю. Хлопці, витягайте його!")
-                            break
-                        elif rn > ch:
-                            await member.send("Ага, так я тобі і повірив... Хлопці, продовжуємо!")
-                            await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
-                            continue
-                except discord.errors.HTTPException:
-                    continue
             else:
-                await interaction.response.send_message(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
-                await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
-                await interaction.response.send_message(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
-                cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-                    [i, member.guild.id, member.id])
-                engine.commit()
+                if interaction.user.id != 783069117602857031:
+                    cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                                [t, member.guild.id, member.id])
+            engine.commit()
+
+            channel1 = discord.utils.get(member.guild.voice_channels, name="ГУЛАГ (AFK)")
+            if channel1 is None:
+                await member.guild.create_voice_channel("ГУЛАГ (AFK)")
+            channel2 = discord.utils.get(member.guild.voice_channels, name="Канава/МАрк (Марк и Марк)")
+            if channel2 is None:
+                await member.guild.create_voice_channel("Канава/МАрк (Марк и Марк)")
+
+            if member.voice:
+                channel3 = member.voice.channel
+            else:
+                channel3 = None
+
+            await interaction.response.send_message(f"Канава активована для користувача {member.mention}", delete_after=10)
+            for i in range(t):
+                if member.voice:
+                    try:
+                        rn = randint(0, 10)
+                        ch = round(chance/10)
+                        await member.edit(voice_channel=channel1)
+                        await asyncio.sleep(0.5)
+                        await member.edit(voice_channel=channel2)
+                        await asyncio.sleep(0.5)
+                        await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
+                        try:
+                            await bot.wait_for("message", check=lambda message: check(message, message, (checklists[0] + checklists[1])), timeout=1.5)
+                        except asyncio.TimeoutError:
+                            continue
+                        else:
+                            if rn <= ch:
+                                await member.send("Гаразд. На цей раз я тобі повірю. Хлопці, витягайте його!")
+                                break
+                            elif rn > ch:
+                                await member.send("Ага, так я тобі і повірив... Хлопці, продовжуємо!")
+                                await member.send("https://tenor.com/view/bandera-ussr-russia-ukraine-%D1%81%D1%81%D1%81%D1%80-gif-22544933")
+                                continue
+                    except discord.errors.HTTPException:
+                        continue
+                else:
+                    await interaction.channel.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
+                    await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
+                    await interaction.channel.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
+                    cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                        [i, member.guild.id, member.id])
+                    engine.commit()
+                    return
+            await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
+            cur.execute(f"DELETE FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                        [member.guild.id, member.id])
+            engine.commit()
+            await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
+            try:
+                await member.edit(voice_channel=channel3)
+            except discord.errors.HTTPException:
                 return
-        await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
-        cur.execute(f"DELETE FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+
+        @commands.Cog.listener()
+        async def on_voice_state_update(self, member, before, after):
+            if before.channel is None and after.channel:
+                m_id = member.id
+                print(m_id)
+                cur.execute(
+                    f"SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                     [member.guild.id, member.id])
-        engine.commit()
-        await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        try:
-            await member.edit(voice_channel=channel3)
-        except discord.errors.HTTPException:
-            return
+                data = cur.fetchone()
+                engine.commit()
+                if data:
+                    message = await member.guild.system_channel.send(
+                        f"Канава активована для користувача {member.mention}", delete_after=10)
+                    ##await bot.get_slash_command("kanava")
+                    ctx = await bot.get_context(message)
+                    await self.kanava(ctx, member=member, t=data[0])
+                    print(data[0])
 
     @bot.command(name="t_greeting")
     async def greeting(ctx, member: discord.Member):
@@ -634,8 +644,11 @@ try:
                 embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
                 await ctx.send(embed=embed)
                 await ctx.send(rule)
-                await user.send(f"Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}")
-                await user.send(rule)
+                try:
+                    await user.send(f"Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}")
+                    await user.send(rule)
+                except discord.HTTPException:
+                    pass
                 await user.kick(reason=reason)
 
 
@@ -1007,7 +1020,7 @@ try:
         error_desc = "Введіть запит у коректному форматі.\n||**b!rates** *(Кількість) (Валюта)*||"
 
 
-    @kanava.error
+    @Kanava.kanava.error
     async def kanava_error(ctx, error):
         global error_desc
         error_desc = "||**b!kanava** *@(Нікнейм) (Кількість) {Довіра бота}*||"
