@@ -413,7 +413,6 @@ try:
             else:
                 channel3 = None
 
-
             for i in range(t):
                 if member.voice:
                     try:
@@ -636,7 +635,7 @@ try:
             else:
                 reasonT = "Порушення:"
                 reasonA = reason
-            await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з сереверу?", delete_after=60)
+            await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з серверу?", delete_after=60)
 
             try:
                 await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
@@ -1021,14 +1020,15 @@ try:
 
     @rates.error
     async def rates_error(ctx, error):
-        global error_desc
         error_desc = "Введіть запит у коректному форматі.\n||**b!rates** *(Кількість) (Валюта)*||"
 
 
     @Kanava.kanava.error
-    async def kanava_error(ctx, error):
-        global error_desc
-        error_desc = "||**b!kanava** *@(Нікнейм) (Кількість) {Довіра бота}*||"
+    async def kanava_error(_, interaction, error):
+        print(_, interaction, error)
+        await interaction.response.send_message(f"Error. {error}\n||**b!kanava** *@(Нікнейм) (Кількість) (**Довіра бота)*||", ephemeral=True)
+        return
+
 
 
     @play.error
