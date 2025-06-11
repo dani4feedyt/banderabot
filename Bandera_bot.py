@@ -48,12 +48,13 @@ try:
     #2. Написать универсальную распознавалку текстового ответа как функцию (например как в 150:17).
     #############################################__ИДЕИ__#############################################
 
+    load_dotenv()
+
     bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents=discord.Intents.all())
     version = "release 3.3"
     patch_note = "last updated: 06.04.24"
     w = "Bandera_bot.py"
     today = datetime.date.today()
-    load_dotenv()
     print(today)
 
     spam = True
