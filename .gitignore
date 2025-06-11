@@ -2,4 +2,5 @@
 /downloads/
 /.idea/
 /ffmpeg/
-/amazon-rds-ca-cert.pem/
+amazon-rds-ca-cert.pem
+.env

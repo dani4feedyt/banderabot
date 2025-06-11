@@ -19,6 +19,7 @@ try:
     import json
     import requests
     import os
+    from dotenv import load_dotenv
     import sys
     import random
     import re
@@ -47,12 +48,12 @@ try:
     #2. Написать универсальную распознавалку текстового ответа как функцию (например как в 150:17).
     #############################################__ИДЕИ__#############################################
 
-    bot = commands.Bot(command_prefix=settings["prefix"], intents=discord.Intents.all())
+    bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents=discord.Intents.all())
     version = "release 3.3"
     patch_note = "last updated: 06.04.24"
     w = "Bandera_bot.py"
     today = datetime.date.today()
-    # img_id = 0
+    load_dotenv()
     print(today)
 
     spam = True
@@ -1106,7 +1107,7 @@ try:
         await ctx.send(f"Цього разу час мого запуску склав " + st)
 
     print(st)
-    bot.run(settings["token"])
+    bot.run(os.getenv("DISCORD_TOKEN"))
 
 except GeneratorExit:
     print("Error_12.1 (Generator_Error)")
