@@ -4,3 +4,4 @@
 /ffmpeg/
 amazon-rds-ca-cert.pem
 .env
+__pycache__/
