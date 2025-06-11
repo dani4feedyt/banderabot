@@ -10,7 +10,7 @@ try:
     import discord.ui
     from discord.ext import commands, tasks
     from discord.ext.commands import has_permissions, MissingPermissions
-    from Bandera_cfg import settings
+    #from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
     from func_txt_f import *
     from rules import *
