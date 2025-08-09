@@ -15,6 +15,12 @@ jobs:
       - name: Mark repo as safe directory
         run: git config --global --add safe.directory /mnt/Pull1/Scripts/banderabot
 
+      - name: Reset local changes
+        run: |
+          cd /mnt/Pull1/Scripts/banderabot
+          git reset --hard
+          git clean -fd  
+
       - name: Pull latest changes in local repo
         run: |
           cd /mnt/Pull1/Scripts/banderabot
