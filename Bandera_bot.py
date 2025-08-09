@@ -147,7 +147,7 @@ try:
         description="Патріотично"
     )
     async def slash_command(interaction):
-        await interaction.response.send_message(f"Героям слава, друже. \n{version}")
+        await interaction.response.send_message(f"Героям слава, друже. \n**Моя поточна версія: {version}**")
 
     @bot.tree.command(
         name="ticktacktoe",
