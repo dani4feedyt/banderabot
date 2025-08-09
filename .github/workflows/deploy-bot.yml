@@ -12,6 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Mark repo as safe directory
+        run: git config --global --add safe.directory /mnt/Pull1/Scripts/banderabot
+
       - name: Pull latest changes in local repo
         run: |
           cd /mnt/Pull1/Scripts/banderabot
