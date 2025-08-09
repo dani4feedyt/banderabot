@@ -39,7 +39,9 @@ try:
     from psycopg2.extras import Json
     from typing import Optional
 
-    from Views import Select
+    from views import *
+
+    from ttt_view import Select
     from player import Player
 
 
@@ -872,82 +874,40 @@ try:
                 await ctx.send("**Помилка.** Ви не можете видалити більше ніж 150 повідомлень.", delete_after=60)
 
 
-    @bot.command(pass_context=True, name="clear_t")
-    @commands.has_permissions(manage_messages=True)
-    async def clear_t(ctx, d=00, m=00, h=00, mi=00, gmt=+3):
+    @bot.tree.context_menu(name="Clear until here")
+    @app_commands.checks.has_permissions(manage_messages=True)
+    async def clear_int(interaction, message: discord.Message):
 
-        ye = today.year
+        await interaction.response.send_message("*Зачекайте, підраховую повідомлення…*", delete_after=30)
 
-        try:
-            msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+        msg_count = 0
+        async for message in message.channel.history(limit=None, after=message.created_at, oldest_first=True):
+            msg_count += 1
 
-        except AttributeError:
-
-            utc_d = int(d)
-            utc_m = int(m)
-            gmt = int(gmt)
-
-            utc_h = h - gmt
-            if utc_h < 0:
-                utc_d -= 1
-                utc_h = 24 - gmt
-            if utc_d == 0:
-                utc_m -= 1
-                utc_d = list(months.values())[utc_m - 1]
-            if utc_m == 0:
-                utc_m = 12
-                ye -= 1
-
-            date_t = datetime.datetime(year=int(ye), month=int(utc_m), day=int(utc_d), hour=int(utc_h), minute=int(mi),
-                                       tzinfo=datetime.timezone.utc)
-            print(date_t)
-        else:
-            date_t = msg.created_at
-            date_t = date_t.replace(microsecond=date_t.microsecond-1000)
-            h = date_t.hour
-            mi = date_t.minute
-            d = date_t.day
-            m = date_t.month
-            gmt = "+0"
-            print(date_t)
-
-        date = [h, mi, d, m]
-        date_str = [str(i) for i in date]
-        print(date)
-
-        a = 0
-        for i in date_str:
-            if len(i) == 1:
-                date_str[a] = '0' + i
-            a += 1
-
-        last_mes = None
-        count = 0
-        await ctx.send("*Зачекайте, підраховую повідомлення…*", delete_after=30)
-        async for count, message in asyncstdlib.enumerate(ctx.channel.history(limit=None, after=date_t, oldest_first=True)):
-            if count == 0:
-                last_mes = message
-
-        msg_ending = msg_end_temp_1(count)
-        if last_mes is not None:
-            await last_mes.reply(f"Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending} починаючи з цього повідомлення? "
-                                 f"**({date_str[0]}:{date_str[1]} {date_str[2]}-{date_str[3]}-{ye}** за часовим поясом **GMT{gmt}**)"
-                                 f'\n*Для підтверждення - напишіть "так" протягом 30 секунд*', delete_after=30)
-
-            try:
-                await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
-            except asyncio.TimeoutError:
-                await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
-                return
+        async def grnb_press():
+            if msg_count > 500:
+                await interaction.edit_original_response(
+                    content="**Помилка.** Ви не можете видалити більше 500 повідомлень!",
+                    view=None)
+            elif msg_count == 0:
+                await interaction.edit_original_response(
+                    content="**Помилка.** Недостатньо повідомлень для видалення!",
+                    view=None)
             else:
-                if int(count) <= 500:
-                    await ctx.channel.purge(limit=int(count) + 2)
-                    await ctx.send(f"Було видалено **{count}** повідомлен{msg_ending}!", delete_after=60)
-                else:
-                    await ctx.send("**Помилка.** Ви не можете видаляти більше 500 повідомлень!", delete_after=60)
-        else:
-            await ctx.send("**Помилка.** Обраного повідомлення не існує. Спробуйте змінити часовий пояс.", delete_after=60)
+                await message.channel.purge(limit=msg_count+1)
+                await message.channel.send(
+                    f"Було видалено **{msg_count}** повідомлен{msg_end_temp_1(msg_count)}!",
+                    delete_after=60)
 
+        async def redb_press():
+            await interaction.edit_original_response(content="Видалення скасовано", view=None)
+            return
+
+        await interaction.edit_original_response(
+            content=f"Ви дійсно бажаєте очистити **{msg_count}**"
+                    f" повідомлен{msg_end_temp_1(msg_count)} починаючи з цього повідомлення? "
+                    f"**({message.created_at}**)",
+            view=G_R(interaction.user, grnb_press, redb_press))
 
     @bot.command(name="spam", pass_context=True)
     @has_permissions(kick_members=True)
@@ -1031,20 +991,11 @@ try:
         await interaction.response.send_message(f"Error. {error}\n||**b!kanava** *@(Нікнейм) (Кількість) (**Довіра бота)*||", ephemeral=True)
         return
 
-
-
+2
     @play.error
     async def play_error(ctx, error):
         global error_desc
         error_desc = "Помилка у виконанні треку. Можливо посилання було введено некоректно."
-
-
-
-    @clear_t.error
-    async def clear_t_error(ctx, error):
-        global error_desc
-        error_desc = "Введіть дату та час у коректному форматі.\n||**b!clear_t** *(День) (Місяць) (Години) (Хвилини) {Часовий пояс}*||"
-
 
     @pfp.error
     async def pfp_error(ctx, error):
@@ -1079,6 +1030,15 @@ try:
         global error_desc
         error_desc = "||**b!spam** *(Кількість повідомлень) (Кулдаун між повідомленнями) (Слово для спаму)*||"
 
+
+    async def on_app_command_error(interaction, error):
+        if isinstance(error, app_commands.MissingPermissions):
+            await interaction.response.send_message(
+                "Помилка. В тебе бракує повноважень.",
+                ephemeral=True
+            )
+
+
     @bot.event
     async def on_command_error(ctx, error):
         print(error)
@@ -1099,6 +1059,9 @@ try:
         await ctx.send(error_temp(error))
         error_desc = ""
 
+
+    bot.tree.on_error = on_app_command_error
+
   ###############################################ErrorHandling###############################################
 
     st = ("--- %s секунд ---" % round((time.time() - start_time), 3))
@@ -1108,6 +1071,9 @@ try:
         await ctx.send(f"Цього разу час мого запуску склав " + st)
 
     print(st)
+
+
+
     bot.run(os.getenv("DISCORD_TOKEN"))
 
 except GeneratorExit:
