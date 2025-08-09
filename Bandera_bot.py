@@ -51,8 +51,8 @@ try:
     load_dotenv()
 
     bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents=discord.Intents.all())
-    version = "release 3.3"
-    patch_note = "last updated: 06.04.24"
+    version = "release beta 0.1"
+    patch_note = "last updated: 09.08.25"
     w = "Bandera_bot.py"
     today = datetime.date.today()
     print(today)
