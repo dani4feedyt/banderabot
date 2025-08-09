@@ -12,6 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Pull latest changes in local repo
+        run: |
+          cd /mnt/Pull1/Scripts/banderabot
+          git pull origin main
+
       - name: Build and restart bot container
         run: |
            /mnt/Pull1/Scripts/docker-compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml down
