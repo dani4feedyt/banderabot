@@ -660,14 +660,19 @@ try:
                 await user.kick(reason=reason)
 
 
-    @bot.command(name="rule")
-    async def rule(ctx, rule_n: int):
+    @bot.tree.command(
+        name="rule",
+        description="Подивитися правила серверу (1-34)"
+    )
+    async def rule(interaction, rule_n: int):
         if 1 <= rule_n <= len(rules_list):
             if rules_list[rule_n][0]:
-                await ctx.send(rules_list[rule_n][0])
-            await ctx.channel.send(rules_list[rule_n][1])
+                await interaction.response.send_message(rules_list[rule_n][0])
+                await interaction.channel.send(rules_list[rule_n][1])
+            else:
+                await interaction.response.send_message(rules_list[rule_n][1])
         else:
-            await ctx.send("**Помилка.** Правила під таким номером не існує")
+            await interaction.response.send_message("**Помилка.** Правила під таким номером не існує")
 
     @bot.tree.command(
         name="pasta",
