@@ -43,6 +43,7 @@ try:
 
     from ttt_view import Select
     from player import Player
+    from lang_transformer import Translator
 
 
     #############################################__ИДЕИ__#############################################
@@ -71,6 +72,7 @@ try:
         months["feb"] = 29
 
     player_inst = Player()
+    translator = Translator('en', 'uk')
 
     def check(ctx, msg, check_list):
         if msg.author == ctx.author:
@@ -592,18 +594,18 @@ try:
                 await ctx.send(pfp_ph[-1])
 
 
-    @bot.command(name="birb")
-    async def birb(ctx):
-        t2 = ["Випадковий птах для тебе",
-               "Тримай птаха", "Випадковий птах, як ти й просив",
-               "Світлина випадкового птаха", "Світлина птаха, як ти й просив",
-               "Тримай пташку", "Тримай світлину птаха", "Птах, як ти й побажав",
-               "Світлина птаха"]
+    @bot.tree.command(
+        name="birb",
+        description="Отримати випадкову світлину пташуні:3"
+    )
+    async def birb(interaction):
         response = requests.get("https://some-random-api.com/animal/bird")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color=0x013ADF, title=f"{random.choice(t2)}, {random.choice(appeal)}:")
+        embed = discord.Embed(color=0x013ADF, title=f"{random.choice(birb_ph)}, {random.choice(appeal)}:")
         embed.set_image(url=json_data["image"])
-        await ctx.send(embed=embed)
+        embed.add_field(name="А також, цікавий автоматично перекладений з англійської факт про пташок:",
+                        value=''.join(translator.translate(json_data["fact"])))
+        await interaction.response.send_message(embed=embed)
 
     @bot.command(pass_context=True, name="$check")
     async def t_check(ctx):
