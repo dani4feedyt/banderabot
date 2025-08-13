@@ -23,6 +23,7 @@ try:
     import sys
     import random
     import re
+    import git
     from random import randint
     from urllib.request import urlopen
     import lxml
@@ -54,11 +55,17 @@ try:
     load_dotenv()
 
     bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents=discord.Intents.all())
-    version = "release beta 0.1"
-    patch_note = "last updated: 09.08.25"
+
     w = "Bandera_bot.py"
     today = datetime.date.today()
     print(today)
+
+    repo = git.Repo(".git")
+    master = repo.head.reference
+    commit_message = master.commit.message
+    version = commit_message.split("-")[0]
+    patch_note = commit_message.split(": ")[1]
+    print(commit_message)
 
     spam = True
     url = None
