@@ -57,9 +57,9 @@ try:
 
     bot = commands.Bot(command_prefix=os.getenv("PREFIX"), intents=discord.Intents.all())
 
-    w = "Bandera_bot.py"
+    filename = "Bandera_bot.py"
     today = datetime.date.today()
-    print(today)
+    print(filename, today)
 
     repo = git.Repo(".git")
     master = repo.head.reference
@@ -74,10 +74,6 @@ try:
 
     main_ch_id = 695715314696061072
     bpg_guild_id = 1338461268473806858
-
-    months = {"jan": 31, "feb": 28, "mar": 31, "apr": 30, "may": 31, "jun": 30, "jly": 31, "aug": 31, "sep": 30, "oct": 31, "nov": 30, "dec": 31}
-    if today.year % 4 == 0:
-        months["feb"] = 29
 
     player_inst = Player()
     translator = Translator('en', 'uk')
