@@ -313,10 +313,50 @@ try:
         await player_inst.stop(voice)
 
 
-    @bot.command(name="rg_8421")
-    async def rg8421(ctx):
-        author = ctx.message.author
-        await ctx.send(f"<@{str(696670757794742322)}>, {author.mention} зазіхнув на головну тайну калу та дізнався рецепт надчистого лайна: \n||Гівно + Гівно - Гівно + Крапелька поносу та три крапельки гівна високої концентрації||")
+    @bot.tree.command(
+        name="rg8421",
+        description="*РЕДАГОВАНО*",
+    )
+    async def rg8421(interaction):
+        author = interaction.user
+
+        async def grnb_press():
+            await interaction.edit_original_response(content="\n||Гівно плюс Гівно "
+                                                             "\nмінус Гівно плюс Крапел"
+                                                             "\nька поносу та"
+                                                             "\nтри крапельки гівна"
+                                                             "\nвисокої концентр..."
+                                                             "\n*Далі нерозбірливо*||", view=None)
+
+            await asyncio.sleep(10)
+
+            await interaction.channel.send("*Кімната враз наповнюється гучним воєм сирени та роботизований голос "
+                                           "\nБандеработа розкотисто повторює одну фразу знову і знову, "
+                                           "пробираючи тебе до кісток*")
+            for _ in range(5):
+                await asyncio.sleep(2)
+                await interaction.channel.send(f"\n**Агов, <@{str(696670757794742322)}>, {author.mention} "
+                                               f"знайшов таємну інтеракцію, розгорнув сувій калу "
+                                               f"та дізнався рецепт надчистого лайна. "
+                                               f"\nПорушника має бути покарано. Повторюю.**")
+
+            kanava_inst = Kanava(bot)
+            await kanava_inst.kanava_worker(ctx=await bot.get_context(interaction), member=author, t=10, chance=0)
+
+        async def redb_press():
+            await interaction.edit_original_response(content="*Ти відкладаєш пергамент в сторону. "
+                                                             "\nНехай хтось інший наражає себе на "
+                                                             "небезпеку*", view=None)
+
+        await interaction.response.send_message("*Ти тримаєш в руках стародавній згорток пожовклого ||обісцяного|| "
+                                                "паперу. "
+                                                "\nНа його зовнішній стороні олівцем накарябана "
+                                                "дата: **8 квітня 2021 року**. "
+                                                "\nТи не маєш жодного поняття що "
+                                                "може бути всередині, але точно знаєш що власник сувою одразу "
+                                                "дізнається якщо ти його розгорнеш.*"
+                                                "\n**Розгорнути пергамент?**",
+                                                view=G_R(author, grnb_press, redb_press))
 
     @bot.command(name="rates")
     async def rates(ctx, amount, *, rate):
