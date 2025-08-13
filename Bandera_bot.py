@@ -428,7 +428,8 @@ try:
         def __init__(self, bot):
             self.bot = bot
 
-        @app_commands.command(name="kanava")
+        @app_commands.command(name="kanava",
+                              description="Перевір на своїх друзях!")
         @app_commands.checks.has_any_role("канавъе")
         async def kanava(self, interaction, member: discord.Member, t: int = 10, chance: Optional[int] = 30):
             ctx = await bot.get_context(interaction)
@@ -927,7 +928,7 @@ try:
         await interaction.edit_original_response(
             content=f"Ви дійсно бажаєте очистити **{msg_count}**"
                     f" повідомлен{msg_end_temp_1(msg_count)} починаючи з цього повідомлення? "
-                    f"**({message.created_at}**)",
+                    f"**(UTC: {message.created_at.strftime('%c')}**)",
             view=G_R(interaction.user, grnb_press, redb_press))
 
     @bot.command(name="spam", pass_context=True)
