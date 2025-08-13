@@ -23,8 +23,6 @@ try:
     import sys
     import random
     import re
-
-    os.environ["GIT_PYTHON_REFRESH"] = "quiet"
     import git
 
     from random import randint
