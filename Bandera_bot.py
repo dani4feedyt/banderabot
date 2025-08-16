@@ -733,12 +733,16 @@ try:
                                                     " або не було занесено до моєї бази даних. \n"
                                                     "*Для детальної інформації звертайтеся до @dani4feedyt#5200*")
 
-    @bot.command(name="quote")
-    async def quote(ctx: commands.Context):
-        quote = random.choice(quotes).get_text()
-        quote.replace("<p>", "")
-        quote.replace("</p>", "")
-        await ctx.send(f"Випадковий вислів Степана Андрійовича Бандери: \n\n***{quote}***")
+
+    @bot.tree.command(  # TODO Make the db entry or gl variable to check if the last quote is the same as the next one
+        name="quote",
+        description="Крилатий вислів Cтепана Бандери (Справжнього)"
+    )
+    async def quote(interaction):
+        quote_txt = random.choice(quotes).get_text()
+        quote_txt.replace("<p>", "")
+        quote_txt.replace("</p>", "")
+        await interaction.response.send_message(f"*{quote_txt}*")
 
     @bot.command(name="myroles")
     async def myroles(ctx):

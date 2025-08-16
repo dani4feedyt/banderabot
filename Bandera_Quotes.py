@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-n_1 = 20
+n_1 = 32
 page = requests.get("https://porokhivnytsya.com.ua/2018/12/30/stepan-bandera_quotes/",headers={'User-Agent': 'Chrome/23.0.1271.64'})
 soup = BeautifulSoup(page.content, 'html.parser')
 
