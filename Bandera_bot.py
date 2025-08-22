@@ -364,7 +364,7 @@ try:
 
 
     @bot.tree.command(
-        name="rates",
+        name="convert",
         description="Перевести деякі валюти в євро або в гривні",
     )
     async def rates(interaction, amount: float, rate_from: str, rate_to: str):
