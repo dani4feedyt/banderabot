@@ -1,13 +1,14 @@
-nondec = [["канад", "cad", "canad"],
-          ["дол", "usd", "dol", "бак", "бач", "buck"],
-          ["євр", "евр", "eur"],
-          ["шек", "ils", "she"],
-          ["біло", "бело", "bilo", "бела", "byn", "bela"],
-          ["poun", "brit", "брит", "фун", "ster", "gbp", "стерл"]]
-nondec_map = [["CAD", 13], ["USD", 7], ["EUR", 8], ["ILS", 16], ["BYN", 2], ["GBP", 28]]
-yesdec = [["руб", "rub"],
-          ["йен", "єн", "jp", "jap", "yen", "ien"]]
-yesdec_map = [["RUB", 20], ["JPY", 10]]
+to_currency = {"UAH": ["грн", "гри", "uah", "hry", "hri"],
+               "CAD": ["канад", "cad", "canad"],
+               "USD": ["дол", "usd", "dol", "бак", "бач", "buck"],
+               "EUR": ["євр", "евр", "eur"],
+               "ILS": ["шек", "ils", "she"],
+               "BYN": ["біло", "бело", "bilo", "бела", "byn", "bela"],
+               "GBP": ["poun", "brit", "брит", "фун", "ster", "gbp", "стерл"],
+               "RUB": ["руб", "rub"],
+               "JPY": ["йен", "єн", "jp", "jap", "yen", "ien"]}
+
+currency_divisor = {"UAH": 1, "CAD": 1, "USD": 1, "EUR": 1, "ILS": 1, "BYN": 1, "GBP": 1, "RUB": 10, "JPY": 10}
 
 Quotes1 = {1: "Мова програмування:computer::computer::computer: <<Чмухтон>>:dash::dash::snake: "
               "навчить молодих нормальній забивочці:muscle::muscle: Сподіваюся, програмісти:pager: "

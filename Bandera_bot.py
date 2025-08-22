@@ -362,54 +362,68 @@ try:
                                                 "\n**Розгорнути пергамент?**",
                                                 view=G_R(author, grnb_press, redb_press))
 
-    @bot.command(name="rates")
-    async def rates(ctx, amount, *, rate):
-        val = None
-        name = None
-        rate = rate.lower()
 
-        wait_msg = await ctx.send(f"*Підрахування...*", delete_after=10)
-        page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
-        soup = BeautifulSoup(page1.content, "html.parser")
+    @bot.tree.command(
+        name="rates",
+        description="Перевести деякі валюти в євро або в гривні",
+    )
+    async def rates(interaction, amount: float, rate_from: str, rate_to: str):
+        rate_from = rate_from.lower()
+        rate_to = rate_to.lower()
+        await interaction.response.send_message(f"*Підрахування...*")
 
-        date = soup.find("span", {"id": "exchangeDate"}).get_text()
+        def converter(soup, quantity, currency: str, divisor: int):
+            if currency == "UAH":
+                return quantity
+            else:
+                ind = 0
+                for value in soup.find_all("td", {"data-label": "Код літерний"}):
+                    if value.get_text() == currency:
+                        break
+                    ind += 1
 
-        def parser(currency: int, decimal: bool):
-            c_rate = soup.find_all("td", {"data-label": "Офіційний курс"})[currency].get_text()
-            c_rate = float(c_rate.replace(',', '.'))
-            if decimal:
-                c_rate /= 10
-            return round(c_rate, 2)
+                c_rate = soup.find_all("td", {"data-label": "Офіційний курс"})[ind].get_text()
+                c_rate = float(c_rate.replace(',', '.'))/divisor
+                return round(c_rate, 2)*quantity
 
-        for x in nondec:
-            if any(i in rate for i in x):
-                val = parser(nondec_map[nondec.index(x)][1], False)
-                name = nondec_map[nondec.index(x)][0]
-                break
+        async def assigner(amount, rate_from, rate_to):
+            page1 = requests.get("https://bank.gov.ua/ua/markets/exchangerates?date=today&period=daily")
+            soup = BeautifulSoup(page1.content, "html.parser")
 
-        for y in yesdec:
-            if any(i in rate for i in y):
-                val = parser(yesdec_map[yesdec.index(y)][1], True)
-                name = yesdec_map[yesdec.index(y)][0]
-                break
+            pair_1 = []
+            pair_2 = []
+            div_1 = None
+            div_2 = None
+            for name, subnames in to_currency.items():
+                if any(i in rate_from for i in subnames):
+                    div_1 = currency_divisor.get(name)
+                    val = converter(soup, amount, name, div_1)
+                    pair_1 = [name, val]
+                    break
 
-        if val is None:
-            await wait_msg.delete()
-            await ctx.send("**Помилка.** Курс даної валюти ще не було внесено до бази даних")
-            return
+            for name, subnames in to_currency.items():
+                if any(i in rate_to for i in subnames):
+                    div_2 = currency_divisor.get(name)
+                    val = converter(soup, 1, name, div_2)
+                    pair_2 = [name, val]
+                    break
 
-        if ',' in amount:
-            amount = str(amount).replace(',', '.')
-        amount = float(amount)
-        rt = float(val) * float(amount)
-        rt = round(rt, 2)
-        rt = str(rt)
-        if rt.endswith('0'):
-            rt = rt[:-2]
+            if div_1 is None or div_2 is None:
+                return None
+            else:
+                pair_3 = [pair_2[0], pair_1[1]/pair_2[1]]
+                return [pair_1, pair_2, pair_3]
 
-        await wait_msg.delete()
-        await ctx.send(f"{random.choice(appeal).capitalize()}, {int(amount)} {name} становить **{rt}** грн!"
-                       f"\n||*Станом на {date}: 1 {name} = {val} UAH*||")
+        result = await assigner(amount, rate_from, rate_to)
+        if result is None:
+            await interaction.edit_original_response(content=
+                                                     "**Помилка.** Курс даної валюти ще не було внесено до бази даних")
+        else:
+            await interaction.edit_original_response(content=f"{random.choice(appeal).capitalize()},"
+                                                     f" {amount} {result[0][0]} становить **{result[2][1]:.2f}**"
+                                                     f" {result[2][0]}!\n"
+                                                     f"||{amount} {result[0][0]} ->"
+                                                     f" {result[0][1]:.2f} UAH -> {result[2][1]:.2f} {result[2][0]}||")
 
     @bot.command(name="fetch vc")
     async def t_voice(ctx, member: discord.Member):
@@ -1002,9 +1016,10 @@ try:
         return f"\n\n*||**Description:** {str(error)}||*"
 
 
-    @rates.error
-    async def rates_error(ctx, error):
-        error_desc = "Введіть запит у коректному форматі.\n||**b!rates** *(Кількість) (Валюта)*||"
+    # @rates.error
+    # async def rates_error(_, interaction, error):
+    #     await interaction.response.send_message(f"Error. {error}\n"
+    #                                             f"\n||**b!rates** *(Кількість) (Валюта)*||", ephemeral=True)
 
 
     @Kanava.kanava.error
