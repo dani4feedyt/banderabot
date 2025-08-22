@@ -1,4 +1,4 @@
-to_currency = {"UAH": ["грн", "гри", "uah", "hry", "hri"],
+to_currency = {"UAH": ["грн", "гри", "uah", "hry", "hri", "hrn"],
                "CAD": ["канад", "cad", "canad"],
                "USD": ["дол", "usd", "dol", "бак", "бач", "buck"],
                "EUR": ["євр", "евр", "eur"],
