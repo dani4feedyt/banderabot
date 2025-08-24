@@ -593,19 +593,29 @@ try:
 
         await ctx.send(embed=embed)
 
-    @bot.command(name="pfp")
-    async def pfp(ctx, member: discord.Member):
+
+    @bot.tree.command(
+        name="pfp",
+        description="Отримати аватарку користувача у високій якості"
+    )
+    async def pfp(interaction, member: discord.Member):
         global url
         global irritation
-        author = ctx.message.author
+        author = interaction.user
         member_url = f"{member.avatar}"
         if member.avatar is None:
-            await ctx.send("**Помилка.** На жаль, у цього користувача відсутнє зображення профілю.")
+            await interaction.response.send_message(
+                "**Помилка.** На жаль, у цього користувача відсутнє зображення профілю.")
             irritation = 0
             return
+
+        else:
+            await interaction.response.send_message(
+                f"Аватарка {member}: ")
+
         if irritation == 11:
-            await ctx.send(file=discord.File("b2.png"))
-            await mute(ctx, author, 1, 30, reason="Задовбав.", bot_source=True)
+            await interaction.channel.send(file=discord.File("b2.png"))
+            await mute(await bot.get_context(interaction), author, 1, 30, reason="Задовбав.", bot_source=True)
             irritation = 0
             return
 
@@ -614,7 +624,7 @@ try:
         with open(f"src/last_pfp.jpg", "wb") as f:
             f.write(pfp_image.content)
             picture = discord.File("src/last_pfp.jpg")
-            pfp_u = await ctx.reply(file=picture)
+            pic = await interaction.channel.send(file=picture)
 
         if url == member_url:
             irritation += 1
@@ -623,34 +633,33 @@ try:
             irritation = 0
 
         if member.id == 783069117602857031:
-            await ctx.send("**Традиція і Порядок!**")
+            await interaction.response.send_message("**Традиція і Порядок!**")
 
         elif member.id == 486176412953346049:
             irritation = 0
-            pfp_t = await ctx.send("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО ТВОРЦЯ! Проводжу екстренне видалення даних")
+            msg = await interaction.channel.send("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО"
+                                                     " ТВОРЦЯ! Проводжу екстренне видалення даних")
             for c in range(2):
                 c += 1
                 for i in range(4):
-                    await asyncio.sleep(0.2)
-                    await pfp_t.edit(content=pfp_ph_sp[i])
+                    await asyncio.sleep(0.1)
+                    await msg.edit(content=pfp_ph_sp[i])
                     i += 1
-                if c == 1:
-                    await pfp_u.delete()
-                elif c == 2:
-                    await pfp_t.delete()
-                    await ctx.send("**Доступ відхилено.**")
+                if c == 2:
+                    await pic.delete()
+                    await msg.edit(content="**Доступ відхилено.**")
 
         else:
             if irritation == 0:
-                await ctx.send(random.choice(pfp_ph_0))
+                await interaction.channel.send(random.choice(pfp_ph_0))
             elif irritation == 1:
-                await ctx.send(random.choice(pfp_ph_1))
+                await interaction.channel.send(random.choice(pfp_ph_1))
             elif irritation == 2:
-                await ctx.send(random.choice(pfp_ph_2))
+                await interaction.channel.send(random.choice(pfp_ph_2))
             elif 3 <= irritation <= 7:
-                await ctx.send(pfp_ph[irritation - 3])
+                await interaction.channel.send(pfp_ph[irritation - 3])
             elif irritation >= 7:
-                await ctx.send(pfp_ph[-1])
+                await interaction.channel.send(pfp_ph[-1])
 
 
     @bot.tree.command(
@@ -1068,11 +1077,14 @@ try:
 
 
     async def on_app_command_error(interaction, error):
+
         if isinstance(error, app_commands.MissingPermissions):
             await interaction.response.send_message(
                 "Помилка. В тебе бракує повноважень.",
                 ephemeral=True
             )
+        else:
+            await interaction.response.send_message(error, ephemeral=True)
 
 
     @bot.event
