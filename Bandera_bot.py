@@ -46,6 +46,7 @@ try:
     from ttt_view import Select
     from player import Player
     from lang_transformer import Translator
+    from irritation import Irritation
 
 
     #############################################__ИДЕИ__#############################################
@@ -69,23 +70,59 @@ try:
     print(commit_message)
 
     spam = True
-    url = None
-    irritation = 0
 
     main_ch_id = 695715314696061072
     bpg_guild_id = 1338461268473806858
 
     player_inst = Player()
     translator = Translator('en', 'uk')
+    irritator = Irritation(engine, cur)
 
     def check(ctx, msg, check_list):
         if msg.author == ctx.author:
             if any(msg.content.lower() == i for i in check_list):
                 return msg.content.lower()
 
+
     @bot.event
     async def on_command(ctx):
-        print(f"Triggered... <{ctx.command}>; server: <{ctx.guild.name}>; channel: <{ctx.channel.name}>; user: <{ctx.message.author}>")
+        print(f"Triggered... <{ctx.command}>; server: <{ctx.guild.id}>; user: <{ctx.message.author.id}>")
+
+
+    @bot.event
+    async def on_interaction(interaction):
+        guild = interaction.guild.id
+        member = interaction.user.id
+        command = interaction.command.name
+        cur.execute(
+            f"SELECT last_command FROM irritator WHERE server_id = %s AND user_id = %s",
+            [guild, member])
+        result = cur.fetchone()
+        print(result)
+        if result is None:
+            print("Trig0")
+            cur.execute(
+                f"INSERT INTO irritator(user_id, server_id, last_command) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
+                [member, guild, command])
+        elif result[0] == command:
+            print("Trig1")
+            cur.execute(
+                f"UPDATE irritator SET irritation = irritation + 1 WHERE user_id = %s AND server_id = %s",
+                [member, guild])
+        else:
+            print("Trig2")
+            cur.execute(
+                f"UPDATE irritator SET irritation = 0, last_command = %s WHERE user_id = %s AND server_id = %s",
+                [command, member, guild])
+        engine.commit()
+
+        # print(f"Triggered... <{command}>; server: <{guild}>; user: <{member}>")
+
+        response = await irritator.check_irritation(interaction)
+        if response == "mute":
+            await interaction.channel.send(file=discord.File("b2.png"))
+        await interaction.channel.send(response)
+
 
     @bot.event
     async def on_member_join(member):
@@ -99,7 +136,6 @@ try:
         await member.guild.system_channel.send(f"Ласкаво просимо на сервер **{member.guild.name}**, {member.mention}!"
                                                                 f" Наші ряди поповнилися ще одним гідним (?) націоналістом. "
                                                                 f"Нас вже аж **{len(member.guild.members)}**!")
-
 
 
     @bot.event
@@ -599,25 +635,22 @@ try:
         description="Отримати аватарку користувача у високій якості"
     )
     async def pfp(interaction, member: discord.Member):
-        global url
-        global irritation
-        author = interaction.user
         member_url = f"{member.avatar}"
         if member.avatar is None:
             await interaction.response.send_message(
                 "**Помилка.** На жаль, у цього користувача відсутнє зображення профілю.")
-            irritation = 0
+
             return
 
         else:
             await interaction.response.send_message(
                 f"Аватарка {member}: ")
 
-        if irritation == 11:
-            await interaction.channel.send(file=discord.File("b2.png"))
-            await mute(await bot.get_context(interaction), author, 1, 30, reason="Задовбав.", bot_source=True)
-            irritation = 0
-            return
+        # if irritation == 11:
+        #     await interaction.channel.send(file=discord.File("b2.png"))
+        #     await mute(await bot.get_context(interaction), author, 1, 30, reason="Задовбав.", bot_source=True)
+        #     irritation = 0
+        #     return
 
         pfp_image = requests.get(member_url)
 
@@ -626,17 +659,10 @@ try:
             picture = discord.File("src/last_pfp.jpg")
             pic = await interaction.channel.send(file=picture)
 
-        if url == member_url:
-            irritation += 1
-        else:
-            url = member_url
-            irritation = 0
-
         if member.id == 783069117602857031:
             await interaction.response.send_message("**Традиція і Порядок!**")
 
         elif member.id == 486176412953346049:
-            irritation = 0
             msg = await interaction.channel.send("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО"
                                                      " ТВОРЦЯ! Проводжу екстренне видалення даних")
             for c in range(2):
@@ -648,18 +674,6 @@ try:
                 if c == 2:
                     await pic.delete()
                     await msg.edit(content="**Доступ відхилено.**")
-
-        else:
-            if irritation == 0:
-                await interaction.channel.send(random.choice(pfp_ph_0))
-            elif irritation == 1:
-                await interaction.channel.send(random.choice(pfp_ph_1))
-            elif irritation == 2:
-                await interaction.channel.send(random.choice(pfp_ph_2))
-            elif 3 <= irritation <= 7:
-                await interaction.channel.send(pfp_ph[irritation - 3])
-            elif irritation >= 7:
-                await interaction.channel.send(pfp_ph[-1])
 
 
     @bot.tree.command(
