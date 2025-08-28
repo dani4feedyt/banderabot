@@ -92,25 +92,25 @@ try:
 
     @bot.event
     async def on_interaction(interaction):
-        guild = interaction.guild.id
-        member = interaction.user.id
+        guild_id = interaction.guild.id
+        member_id = interaction.user.id
         command = interaction.command.name
         cur.execute(
             f"SELECT last_command FROM irritator WHERE server_id = %s AND user_id = %s",
-            [guild, member])
+            [guild_id, member_id])
         result = cur.fetchone()
         if result is None:
             cur.execute(
                 f"INSERT INTO irritator(user_id, server_id, last_command) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
-                [member, guild, command])
+                [member_id, guild_id, command])
         elif result[0] == command:
             cur.execute(
                 f"UPDATE irritator SET irritation = irritation + 1 WHERE user_id = %s AND server_id = %s",
-                [member, guild])
+                [member_id, guild_id])
         else:
             cur.execute(
                 f"UPDATE irritator SET irritation = 0, last_command = %s WHERE user_id = %s AND server_id = %s",
-                [command, member, guild])
+                [command, member_id, guild_id])
         engine.commit()
 
         # print(f"Triggered... <{command}>; server: <{guild}>; user: <{member}>")
@@ -121,7 +121,7 @@ try:
 
             mute_inst = Mute(bot)
             ctx = await bot.get_context(interaction)
-            await mute_inst.mute_worker(ctx, member, 5, 30, reason="Задовбав.", bot_source=True)
+            await mute_inst.mute_worker(ctx, interaction.user, 5, 30, reason="Задовбав.", bot_source=True)
         elif response:
             await interaction.channel.send(response)
 
@@ -276,11 +276,12 @@ try:
 
         else:
             if "b!" not in message.content:
-                if rule_mes(message):
+                rule_index = rule_mes(message)
+                if rule_index:
                     mute_inst = Mute(bot)
                     ctx = await bot.get_context(message)
-                    await mute_inst.mute_worker(ctx, member=message.author, time=3, rule_n=rule_mes(message),
-                                                reason="Задовбав.", bot_source=True)
+                    await mute_inst.mute_worker(ctx, member=message.author, time=3, rule_n=rule_index,
+                                                reason=rules_list.get(rule_index)[0], bot_source=True)
                     return
 
                 if "бандер" in message.content.lower():

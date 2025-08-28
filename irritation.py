@@ -44,7 +44,7 @@ class Irritation:
                 f"UPDATE irritator SET irritation = 0 WHERE user_id = %s AND server_id = %s",
                 [user_id, interaction.guild.id])
             self.engine.commit()
-            return "*Тут має бути трігер команди мут, ворк ін прогрес, Даня пачіні((*"
+            return "mute"
 
     async def clear(self, interaction):
         try:
