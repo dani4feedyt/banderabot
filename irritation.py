@@ -30,7 +30,7 @@ class Irritation:
         task = asyncio.create_task(self.clear(interaction))
         self.my_tasks[user_id] = task
 
-        print(f"Active tasks: {list(self.my_tasks.keys())}")
+        # print(f"Active tasks: {list(self.my_tasks.keys())}")
         if result[0] == 0:
             return None
         elif 1 <= result[0] < 5:
@@ -52,9 +52,9 @@ class Irritation:
             self.cur.execute(f"DELETE FROM irritator WHERE server_id = %s AND user_id = %s",
                              [interaction.guild.id, interaction.user.id])
             self.engine.commit()
-            print(f"Removed inst for {interaction.user.id}")
+            # print(f"Removed inst for {interaction.user.id}")
         except asyncio.CancelledError:
-            print(f"Reset cancelled for {interaction.user.id}")
+            # print(f"Reset cancelled for {interaction.user.id}")
             raise
         finally:
             self.my_tasks.pop(interaction.user.id, None)
