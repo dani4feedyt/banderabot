@@ -173,6 +173,8 @@ try:
             await asyncio.sleep(30)
 
 
+    # TODO Make checks for any terminated mutes, that expired but were not dealt with
+
     @tasks.loop(seconds=60)
     async def unmute_loop():
         cur.execute(
