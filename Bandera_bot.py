@@ -78,6 +78,7 @@ try:
     translator = Translator('en', 'uk')
     irritator = Irritation(engine, cur)
 
+
     def check(ctx, msg, check_list):
         if msg.author == ctx.author:
             if any(msg.content.lower() == i for i in check_list):
@@ -98,19 +99,15 @@ try:
             f"SELECT last_command FROM irritator WHERE server_id = %s AND user_id = %s",
             [guild, member])
         result = cur.fetchone()
-        print(result)
         if result is None:
-            print("Trig0")
             cur.execute(
                 f"INSERT INTO irritator(user_id, server_id, last_command) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
                 [member, guild, command])
         elif result[0] == command:
-            print("Trig1")
             cur.execute(
                 f"UPDATE irritator SET irritation = irritation + 1 WHERE user_id = %s AND server_id = %s",
                 [member, guild])
         else:
-            print("Trig2")
             cur.execute(
                 f"UPDATE irritator SET irritation = 0, last_command = %s WHERE user_id = %s AND server_id = %s",
                 [command, member, guild])
@@ -121,8 +118,12 @@ try:
         response = await irritator.check_irritation(interaction)
         if response == "mute":
             await interaction.channel.send(file=discord.File("b2.png"))
-            await mute(await bot.get_context(interaction), member, 1, 30, reason="Задовбав.", bot_source=True)
-        await interaction.channel.send(response)
+
+            mute_inst = Mute(bot)
+            ctx = await bot.get_context(interaction)
+            await mute_inst.mute_worker(ctx, member, 5, 30, reason="Задовбав.", bot_source=True)
+        elif response:
+            await interaction.channel.send(response)
 
 
     @bot.event
@@ -174,21 +175,16 @@ try:
 
     @tasks.loop(seconds=60)
     async def unmute_loop():
-        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
         cur.execute(
             f"SELECT user_id, server_id FROM mute_list WHERE muted_until = %s",
             [datetime.datetime.now().strftime("%Y-%m-%d %H:%M")])
         result_set = cur.fetchall()
-        print(result_set)
         for result in result_set:
             if result:
                 guild = await bot.fetch_guild(result[1])
                 member = await guild.fetch_member(result[0])
-                print(guild)
-                print(member)
                 user = await guild.query_members(user_ids=[member.id])
                 user = user[0]
-                print("user", user)
 
                 cur.execute(
                     f"DELETE FROM mute_list WHERE server_id = %s AND user_id = %s",
@@ -199,10 +195,11 @@ try:
                 if mutedRole in user.roles:
                     await member.remove_roles(mutedRole)
                     await member.send(f"Час муту на сервері **{guild.name}**"
-                                      f" вийшов. Ви можете вільно продовжити спілкування!")
+                                      f" вийшов. Ти можеш вільно продовжити спілкування!")
 
-                    embed = discord.Embed(title="Мут знято", description=f"Час муту **{member.mention}** вийшов."
-                                                                         f" Приємного спілкування!",
+                    embed = discord.Embed(title="Мут знято", description=f"Час спливає невпинно..."
+                                                                         f"\nНавіть мут **{member.mention}** закінчився"
+                                                                         f" ,дитєтко навчилось розмовляти!",
                                           color=0x013ADF)
 
                     if guild.system_channel:
@@ -271,6 +268,7 @@ try:
 
     # TODO Указать в таблице правил количество наказания в минутах
 
+
     @bot.event
     async def on_message(message):
         if message.author.id == 783069117602857031:
@@ -279,8 +277,10 @@ try:
         else:
             if "b!" not in message.content:
                 if rule_mes(message):
+                    mute_inst = Mute(bot)
                     ctx = await bot.get_context(message)
-                    await mute(ctx, member=message.author, time=3, rule_n=rule_mes(message), bot_source=True)
+                    await mute_inst.mute_worker(ctx, member=message.author, time=3, rule_n=rule_mes(message),
+                                                reason="Задовбав.", bot_source=True)
                     return
 
                 if "бандер" in message.content.lower():
@@ -568,7 +568,8 @@ try:
                         await asyncio.sleep(0.5)
                         await member.edit(voice_channel=channel2)
                         await asyncio.sleep(0.5)
-                        await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ, ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
+                        await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ,"
+                                          " ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                         try:
                             await bot.wait_for("message", check=lambda message: check(message, message, checklists[1]), timeout=1.5)
                         except asyncio.TimeoutError:
@@ -585,7 +586,8 @@ try:
                         continue
                 else:
                     await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
-                    await member.send(f"Цього разу ти зміг уникнути покарання. Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
+                    await member.send(f"Цього разу ти зміг уникнути покарання."
+                                      f" Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
                     await ctx.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
                     cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                         [i, member.guild.id, member.id])
@@ -876,8 +878,12 @@ try:
 
         @app_commands.command(name="mute", description="Зроби надокучливих друзів німими!")
         @app_commands.checks.has_permissions(moderate_members=True)
-        async def mute(self, interaction, member: discord.Member, time: int, rule_n: int, reason: str, bot_source: bool):
-            guild = interaction.guild
+        async def mute(self, interaction, member: discord.Member, time: int, rule_n: int, reason: str):
+            ctx = await bot.get_context(interaction)
+            await self.mute_worker(ctx, member, time, rule_n, reason, False)
+
+        async def mute_worker(self, ctx, member: discord.Member, time: int, rule_n: int, reason: str, bot_source=True):
+            guild = ctx.guild
 
             self.member = member
             self.guild = guild
@@ -885,7 +891,7 @@ try:
             if bot_source:
                 author = f"<@!{str(783069117602857031)}>"
             else:
-                author = interaction.user.mention
+                author = ctx.message.author.mention
 
             reason_txt = ""
             if 1 <= rule_n <= len(rules_list):
@@ -897,8 +903,6 @@ try:
                     reason_txt = reason
             else:
                 rule_gif = None
-
-            print("reasssson:", reason_txt)
 
             mutedRole = discord.utils.get(guild.roles, name="Muted")
 
@@ -917,18 +921,16 @@ try:
             embed.add_field(name="Порушення:", value=reason_txt, inline=False)
             embed.add_field(name="Порушене правило:", value=f"**#{rule_n}**", inline=False)
 
-            await interaction.response.send_message(embed=embed)
+            await ctx.send(embed=embed)
 
             if reason_txt:
-                await interaction.followup.send(reason_txt)
+                await ctx.send(reason_txt)
             if rule_gif:
-                await interaction.followup.send(rule_gif)
+                await ctx.send(rule_gif)
 
             muted_until = datetime.datetime.now() + datetime.timedelta(minutes=time)
 
             muted_until_datetime = muted_until.strftime("%Y-%m-%d %H:%M")
-
-            print("daten", muted_until_datetime)
 
             await member.add_roles(mutedRole)
 
@@ -936,20 +938,17 @@ try:
                 f"SELECT muted_until FROM mute_list WHERE server_id = %s AND user_id = %s",
                 [guild.id, member.id])
             result = cur.fetchone()
-            print("ress", result)
             if result is None:
-                print("Trig7")
                 cur.execute(
                     f"INSERT INTO mute_list(server_id, user_id, muted_until) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
                     [guild.id, member.id, muted_until_datetime])
             else:
                 raw_timestamp = datetime.datetime.strptime(result[0], '%Y-%m-%d %H:%M')
-                print("timestamp", raw_timestamp)
                 muted_until_datetime = raw_timestamp + datetime.timedelta(minutes=time)
-                print("daten1234", muted_until_datetime)
+                muted_until_striped = muted_until_datetime.strftime("%Y-%m-%d %H:%M")
                 cur.execute(
                     f"UPDATE mute_list SET muted_until = %s WHERE user_id = %s AND server_id = %s",
-                    [muted_until_datetime, member.id, guild.id])
+                    [muted_until_striped, member.id, guild.id])
             engine.commit()
 
             await asyncio.sleep(1)
@@ -966,22 +965,39 @@ try:
         @app_commands.command(name="unmute", description="Зроби німих друзів знову балакучими!")
         @app_commands.checks.has_permissions(moderate_members=True)
         async def unmute(self, interaction, member: discord.Member):
-            ctx = await bot.get_context(interaction)
-            user = await ctx.message.guild.query_members(user_ids=[member.id])[0]
-            mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
-            author = ctx.message.author
-            if mutedRole in user.roles:
-                await self.member.remove_roles(mutedRole)
-                await self.member.send(f"Час муту на сервері **{self.ctx.guild.name}**"
-                                       f" вийшов. Ви можете вільно продовжити спілкування!")
+            cur.execute(
+                f"DELETE FROM mute_list WHERE server_id = %s AND user_id = %s",
+                [interaction.guild.id, member.id])
+            engine.commit()
 
-                embed = discord.Embed(title="Мут знято", description=f"Час муту **{self.member.mention}** вийшов."
-                                                                     f" Приємного спілкування!",
+            mutedRole = discord.utils.get(interaction.guild.roles, name="Muted")
+            if mutedRole in member.roles:
+                await member.remove_roles(mutedRole)
+                await member.send(f"{interaction.user.mention} певно тебе дуже цінить та поважає,"
+                                  f" бо зняв(ла) з тебе мут на сервері"
+                                  f" **{interaction.guild.name}**"
+                                  f" \nТепер, коли ти можеш вільно писати, раджу гарненько йому віддячити!")
+
+                embed = discord.Embed(title="Мут знято через кумовство",
+                                      description=f"{interaction.user.mention} чином брудних схем та корупції"
+                                                  f" зняв мут з **{member.mention}**"
+                                                  f" Приємно що ми живемо при капіталізмі!",
                                       color=0x013ADF)
 
-                await self.ctx.send(embed=embed)
+                if interaction.guild.system_channel:
+                    await interaction.guild.system_channel.send(embed=embed, delete_after=600)
+                else:
+                    for channel in interaction.guild.text_channels:
+                        if channel.permissions_for(interaction.guild.me).send_messages:
+                            await channel.send(embed=embed, delete_after=600)
+                            break
+
+                await interaction.response.send_message(f"Мут з {member.mention} знято. Зізнавайся, він тобі заплатив "
+                                                        f" чи просто твій браток?")
+
             else:
-                await ctx.send("**Помилка.** Неможливо зняти мут з користувача, який його не має.")
+                await interaction.response.send_message("**Помилка.**"
+                                                        " Неможливо зняти мут з користувача, який його не має.")
 
     @bot.command(name="$roles")
     @commands.has_permissions(manage_messages=True)
