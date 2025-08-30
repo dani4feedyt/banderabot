@@ -175,6 +175,7 @@ try:
 
     # TODO Make checks for any terminated mutes, that expired but were not dealt with
 
+
     @tasks.loop(seconds=60)
     async def unmute_loop():
         cur.execute(
@@ -187,6 +188,15 @@ try:
                 member = await guild.fetch_member(result[0])
                 user = await guild.query_members(user_ids=[member.id])
                 user = user[0]
+
+                cur.execute(
+                    f"SELECT roles_list FROM mute_list WHERE server_id = %s AND user_id = %s",
+                    [guild.id, member.id])
+                role_ids = cur.fetchone()
+
+                role_list = role_ids[0]
+                roles = [discord.utils.get(member.guild.roles, id=r) for r in role_list]
+                await member.edit(roles=roles)
 
                 cur.execute(
                     f"DELETE FROM mute_list WHERE server_id = %s AND user_id = %s",
@@ -834,6 +844,8 @@ try:
     @bot.command(name="myroles")
     async def myroles(ctx):
         member = ctx.message.author
+        role_list = [role.id for role in member.roles]
+        print(role_list)
         roles = (", ".join(role.name for role in member.roles if role.name != "@everyone"))
         await ctx.reply(f"Перелік твоїх ролей, {random.choice(appeal)}:\n*{roles}*")
 
@@ -935,23 +947,27 @@ try:
 
             muted_until_datetime = muted_until.strftime("%Y-%m-%d %H:%M")
 
-            await member.add_roles(mutedRole)
+            await member.edit(roles=[mutedRole])
 
             cur.execute(
                 f"SELECT muted_until FROM mute_list WHERE server_id = %s AND user_id = %s",
                 [guild.id, member.id])
             result = cur.fetchone()
+
+            member_roles = [role.id for role in member.roles]
+
             if result is None:
                 cur.execute(
-                    f"INSERT INTO mute_list(server_id, user_id, muted_until) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
-                    [guild.id, member.id, muted_until_datetime])
+                    f"INSERT INTO mute_list(server_id, user_id, muted_until, roles_list) VALUES(%s, %s, %s, %s)"
+                    f" ON CONFLICT DO NOTHING",
+                    [guild.id, member.id, muted_until_datetime, member_roles])
             else:
                 raw_timestamp = datetime.datetime.strptime(result[0], '%Y-%m-%d %H:%M')
                 muted_until_datetime = raw_timestamp + datetime.timedelta(minutes=time)
                 muted_until_striped = muted_until_datetime.strftime("%Y-%m-%d %H:%M")
                 cur.execute(
-                    f"UPDATE mute_list SET muted_until = %s WHERE user_id = %s AND server_id = %s",
-                    [muted_until_striped, member.id, guild.id])
+                    f"UPDATE mute_list SET muted_until = %s, roles_list = %s WHERE user_id = %s AND server_id = %s",
+                    [muted_until_striped, member_roles, member.id, guild.id])
             engine.commit()
 
             await asyncio.sleep(1)
@@ -968,6 +984,15 @@ try:
         @app_commands.command(name="unmute", description="Зроби німих друзів знову балакучими!")
         @app_commands.checks.has_permissions(moderate_members=True)
         async def unmute(self, interaction, member: discord.Member):
+            cur.execute(
+                f"SELECT roles_list FROM mute_list WHERE server_id = %s AND user_id = %s",
+                [interaction.guild.id, member.id])
+            result = cur.fetchone()
+
+            role_list = result[0]
+            roles = [discord.utils.get(member.guild.roles, id=r) for r in role_list]
+            await member.edit(roles=roles)
+
             cur.execute(
                 f"DELETE FROM mute_list WHERE server_id = %s AND user_id = %s",
                 [interaction.guild.id, member.id])
