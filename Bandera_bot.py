@@ -924,11 +924,18 @@ try:
             if not mutedRole:
                 mutedRole = await guild.create_role(name="Muted")
                 for channel in guild.channels:
-                    await channel.set_permissions(mutedRole, speak=False,
-                                                  send_messages=False, send_voice_messages=False,
-                                                  read_message_history=True, use_soudboard=False,
-                                                  read_messages=True, view_channel=False, stream=False,
-                                                  use_application_commands=False)
+                    await channel.set_permissions(
+                        mutedRole,
+                        speak=False,
+                        send_messages=False,
+                        send_voice_messages=False,
+                        read_message_history=True,
+                        use_soundboard=False,
+                        read_messages=True,
+                        view_channel=False,
+                        stream=False,
+                        use_application_commands=False
+                    )
 
             embed = discord.Embed(title="Мут", description=f"**{member.mention}**"
                                                            f" був відправлений до муту модератором **{author}**"
@@ -982,6 +989,23 @@ try:
                               f' за причиною: **"{reason_txt}"**')
             await member.send(reason_txt)
             await member.send(rule_gif)
+
+        @commands.Cog.listener()
+        async def on_guild_channel_create(self, channel):
+            mutedRole = discord.utils.get(channel.guild.roles, name="Muted")
+            if mutedRole:
+                await channel.set_permissions(
+                    mutedRole,
+                    speak=False,
+                    send_messages=False,
+                    send_voice_messages=False,
+                    read_message_history=True,
+                    use_soundboard=False,
+                    read_messages=True,
+                    view_channel=False,
+                    stream=False,
+                    use_application_commands=False
+                )
 
         @app_commands.command(name="unmute", description="Зроби німих друзів знову балакучими!")
         @app_commands.checks.has_permissions(moderate_members=True)
