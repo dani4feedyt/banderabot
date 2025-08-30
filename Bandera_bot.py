@@ -925,8 +925,10 @@ try:
                 mutedRole = await guild.create_role(name="Muted")
                 for channel in guild.channels:
                     await channel.set_permissions(mutedRole, speak=False,
-                                                  send_messages=False, read_message_history=True,
-                                                  read_messages=True, view_channel=False)
+                                                  send_messages=False, send_voice_messages=False,
+                                                  read_message_history=True, use_soudboard=False,
+                                                  read_messages=True, view_channel=False, stream=False,
+                                                  use_application_commands=False)
 
             embed = discord.Embed(title="Мут", description=f"**{member.mention}**"
                                                            f" був відправлений до муту модератором **{author}**"
