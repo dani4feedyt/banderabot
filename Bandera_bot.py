@@ -196,7 +196,9 @@ try:
 
                 role_list = role_ids[0]
                 roles = [discord.utils.get(member.guild.roles, id=r) for r in role_list]
+                print(roles)
                 await member.edit(roles=roles)
+                print(roles)
 
                 cur.execute(
                     f"DELETE FROM mute_list WHERE server_id = %s AND user_id = %s",
@@ -936,6 +938,7 @@ try:
                         stream=False,
                         use_application_commands=False
                     )
+                    await mutedRole.edit(color=0x000000)
 
             embed = discord.Embed(title="Мут", description=f"**{member.mention}**"
                                                            f" був відправлений до муту модератором **{author}**"
@@ -955,8 +958,6 @@ try:
             muted_until = datetime.datetime.now() + datetime.timedelta(minutes=time)
 
             muted_until_datetime = muted_until.strftime("%Y-%m-%d %H:%M")
-
-            await member.edit(roles=[mutedRole])
 
             cur.execute(
                 f"SELECT muted_until FROM mute_list WHERE server_id = %s AND user_id = %s",
@@ -978,6 +979,8 @@ try:
                     f"UPDATE mute_list SET muted_until = %s, roles_list = %s WHERE user_id = %s AND server_id = %s",
                     [muted_until_striped, member_roles, member.id, guild.id])
             engine.commit()
+
+            await member.edit(roles=[mutedRole])
 
             await asyncio.sleep(1)
             try:
@@ -1006,6 +1009,7 @@ try:
                     stream=False,
                     use_application_commands=False
                 )
+                await mutedRole.edit(color=0x000000)
 
         @app_commands.command(name="unmute", description="Зроби німих друзів знову балакучими!")
         @app_commands.checks.has_permissions(moderate_members=True)
