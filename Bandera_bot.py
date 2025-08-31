@@ -940,8 +940,11 @@ try:
 
         @app_commands.command(name="mute", description="Зроби надокучливих друзів німими!")
         @app_commands.checks.has_permissions(moderate_members=True)
-        @app_commands.rename(member='надокучливий друг', time='тривалість', rule_n='номер порушеного правила',
-                             reason='коментар до муту')
+        @app_commands.rename(member='користувач', time='тривалість', rule_n='правило',
+                             reason='коментар')
+        @app_commands.describe(member='надокучливий друг', time='тривалість муту у хвилинах',
+                               rule_n='номер порушеного правила',
+                               reason='напиши сюди щось цікаве')
         async def mute(self, interaction, member: discord.Member, time: int, rule_n: int, reason: str):
             ctx = await bot.get_context(interaction)
             await self.mute_worker(ctx, member, time, rule_n, reason, False)
