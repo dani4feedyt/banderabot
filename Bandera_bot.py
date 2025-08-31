@@ -976,8 +976,8 @@ try:
                 muted_until_datetime = raw_timestamp + datetime.timedelta(minutes=time)
                 muted_until_striped = muted_until_datetime.strftime("%Y-%m-%d %H:%M")
                 cur.execute(
-                    f"UPDATE mute_list SET muted_until = %s, roles_list = %s WHERE user_id = %s AND server_id = %s",
-                    [muted_until_striped, member_roles, member.id, guild.id])
+                    f"UPDATE mute_list SET muted_until = %s WHERE user_id = %s AND server_id = %s",
+                    [muted_until_striped, member.id, guild.id])
             engine.commit()
 
             await member.edit(roles=[mutedRole])
