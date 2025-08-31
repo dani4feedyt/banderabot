@@ -475,6 +475,9 @@ try:
         name="convert",
         description="Перевести деякі валюти в євро або в гривні",
     )
+    @app_commands.rename(amount='кількість', rate_from='валюта_з', rate_to='валюта_в')
+    @app_commands.describe(amount='Кількість валюти для переводу', rate_from='Валюта, з якої буде виконано переведення',
+                           rate_to='Валюта, в яку буде виконано переведення')
     async def rates(interaction, amount: float, rate_from: str, rate_to: str):
         rate_from = rate_from.lower()
         rate_to = rate_to.lower()
@@ -549,9 +552,12 @@ try:
         @app_commands.command(name="kanava",
                               description="Перевір на своїх друзях!")
         @app_commands.checks.has_any_role("канавъе")
+        @app_commands.rename(member='користувач', t='занурення', chance='складність')
+        @app_commands.describe(member='Злодіюга', t='Кількість повторень занурення у канаву',
+                               chance='Рівень складності закінчення інтеракції (0-100)')
         async def kanava(self, interaction, member: discord.Member, t: int = 10, chance: Optional[int] = 30):
             ctx = await bot.get_context(interaction)
-            await ctx.send(f"Канава активована для користувача {member.mention}", delete_after=10)
+            await ctx.send(f"Канава активована для злодіюги {member.mention}", delete_after=10)
             await self.kanava_worker(ctx, member, t, chance)
 
         async def kanava_worker(self, ctx, member: discord.Member, t: int, chance: int):
@@ -593,7 +599,7 @@ try:
                 if member.voice:
                     try:
                         rn = randint(0, 10)
-                        ch = round(chance/10)
+                        ch = 10 - round(chance/10)
                         await member.edit(voice_channel=channel1)
                         await asyncio.sleep(0.5)
                         await member.edit(voice_channel=channel2)
@@ -732,6 +738,8 @@ try:
         name="pfp",
         description="Отримати аватарку користувача у високій якості"
     )
+    @app_commands.rename(member='користувач')
+    @app_commands.describe(member='Користувач, чиє зображення профілю буде надіслано')
     async def pfp(interaction, member: discord.Member):
         member_url = f"{member.avatar}"
         if member.avatar is None:
@@ -743,12 +751,6 @@ try:
         else:
             await interaction.response.send_message(
                 f"Аватарка {member}: ")
-
-        # if irritation == 11:
-        #     await interaction.channel.send(file=discord.File("b2.png"))
-        #     await mute(await bot.get_context(interaction), author, 1, 30, reason="Задовбав.", bot_source=True)
-        #     irritation = 0
-        #     return
 
         pfp_image = requests.get(member_url)
 
@@ -846,8 +848,10 @@ try:
 
     @bot.tree.command(
         name="rule",
-        description="Подивитися правила серверу (1-34)"
+        description="Подивитися правила серверу"
     )
+    @app_commands.rename(rule_n='номер')
+    @app_commands.describe(rule_n='Номер правила (1-34)')
     async def rule(interaction, rule_n: int):
         if 1 <= rule_n <= len(rules_list):
             if rules_list[rule_n][0]:
@@ -860,8 +864,10 @@ try:
 
     @bot.tree.command(
         name="pasta",
-        description="Крилатий вислів про Колюмбас (1-4)"
+        description="Крилатий вислів про Колюмбас"
         )
+    @app_commands.rename(number='номер')
+    @app_commands.describe(number='Номер вислову (1-4)')
     async def pasta(interaction, number: int):
         if 1 <= number < 5:
             await interaction.response.send_message(Quotes1[number])
@@ -892,12 +898,6 @@ try:
 
     @bot.command()
     async def kanava_info(ctx, member: discord.Member = None):
-        await ctx.send("• Щоб почати допитувати користувача у **канаві**,"
-                       " введіть його нікнейм, кількість занурень та рівень мого милосердя у форматі:"
-                       " **b!kanava @(Нікнейм) (Кількість) (Милосердя *<%>*)**\n"
-                       "• Той, хто знаходиться під впливом цієї команди,"
-                       " буде допитуватися особисто Степаном Андрійовичем Бандерою (мною)\n\n"
-                       "||*Наприклад: b!kanava @user#5234 10*||")
         if member is None:
             member = ctx.message.author
 
@@ -913,16 +913,6 @@ try:
             await ctx.send(f"Утікач {member.mention} повинен відбути ще **{num[0]}** занурен{msg_end_temp_1(num[0])}."
                            f" Я до нього дістануся!")
 
-
-    @bot.command()
-    async def mute_info(ctx):
-        await ctx.send("• Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі:"
-                       " **b!mute @(Нікнейм) (Час *<хв>*) (Номер правила) (Деталі порушення)**\n"
-                       "• Людина, на яку було накладено мут, буде тимчасово заблокована на майже всіх"
-                       " голосових та текстових каналах\n"
-                       "• При закінченні терміну дії, мут буде автоматично знятий\n"
-                       "• Для дострокового зняття муту: **b!unmute @(Нікнейм)**\n\n"
-                       "||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     @bot.command()
     async def spam_info(ctx):
@@ -942,9 +932,9 @@ try:
         @app_commands.checks.has_permissions(moderate_members=True)
         @app_commands.rename(member='користувач', time='тривалість', rule_n='правило',
                              reason='коментар')
-        @app_commands.describe(member='надокучливий друг', time='тривалість муту у хвилинах',
-                               rule_n='номер порушеного правила',
-                               reason='напиши сюди щось цікаве')
+        @app_commands.describe(member='Надокучливий друг', time='Тривалість муту у хвилинах',
+                               rule_n='Номер порушеного правила',
+                               reason='Напиши сюди щось цікаве')
         async def mute(self, interaction, member: discord.Member, time: int, rule_n: int, reason: str):
             ctx = await bot.get_context(interaction)
             await self.mute_worker(ctx, member, time, rule_n, reason, False)
@@ -1063,6 +1053,8 @@ try:
 
         @app_commands.command(name="unmute", description="Зроби німих друзів знову балакучими!")
         @app_commands.checks.has_permissions(moderate_members=True)
+        @app_commands.rename(member='користувач')
+        @app_commands.describe(member='Німий друг')
         async def unmute(self, interaction, member: discord.Member):
             cur.execute(
                 f"SELECT roles_list FROM mute_list WHERE server_id = %s AND user_id = %s",
