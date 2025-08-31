@@ -940,6 +940,8 @@ try:
 
         @app_commands.command(name="mute", description="Зроби надокучливих друзів німими!")
         @app_commands.checks.has_permissions(moderate_members=True)
+        @app_commands.rename(member='надокучливий друг', time='тривалість', rule_n='номер порушеного правила',
+                             reason='коментар до муту')
         async def mute(self, interaction, member: discord.Member, time: int, rule_n: int, reason: str):
             ctx = await bot.get_context(interaction)
             await self.mute_worker(ctx, member, time, rule_n, reason, False)
@@ -1032,9 +1034,9 @@ try:
                 await member.edit(voice_channel=None)
             except discord.errors.HTTPException:
                 return
-            await member.send(f'На вас було накладено мут на сервері **{guild.name}**'
+            await member.send(f'На тебе було накладено мут на сервері **{guild.name}**'
                               f' модератором **{author}** на **{time}** хвилин{msg_end_temp_2(time)},'
-                              f' за причиною: **"{reason_txt}"**')
+                              f' з приводу: **"{reason_txt}"**')
             await member.send(reason_txt)
             await member.send(rule_gif)
 
