@@ -10,7 +10,6 @@ try:
     import discord.ui
     from discord.ext import commands, tasks
     from discord.ext.commands import has_permissions, MissingPermissions
-    #from Bandera_cfg import settings
     from Bandera_Quotes import quotes, n_1
     from func_txt_f import *
     from rules import *
@@ -129,15 +128,17 @@ try:
     @bot.event
     async def on_member_join(member):
         await member.send(f"Вітаю тебе на сервері **{member.guild.name}**!\n"
-                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*, який можливо навіть колись якось вам допоможе!\n\n"
+                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*,"
+                          f" який можливо навіть колись якось вам допоможе!\n\n"
                           f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
                           f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
-                          f"У випадку коли такого каналу немає, мої правила можна побачити використавши команду **b!rules**\n\n"
+                          f"У випадку коли такого каналу немає,"
+                          f" мої правила можна побачити використавши команду **b!rules**\n\n"
                           f"Для отримання більш розгорнутої інформації щодо мого функціоналу, скористайся **b!info**")
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
         await member.guild.system_channel.send(f"Ласкаво просимо на сервер **{member.guild.name}**, {member.mention}!"
-                                                                f" Наші ряди поповнилися ще одним гідним (?) націоналістом. "
-                                                                f"Нас вже аж **{len(member.guild.members)}**!")
+                                               f" Наші ряди поповнилися ще одним гідним (?) націоналістом. "
+                                               f"Нас вже аж **{len(member.guild.members)}**!")
 
 
     @bot.event
@@ -156,12 +157,14 @@ try:
             print(guild.id)
             img_g = await guild.system_channel.send(file=discord.File(f"d_t{dw}.png"))
 
-            cur.execute("SELECT img_message_id FROM img_data WHERE guild_id = %s;", [guild.id])
+            cur.execute("SELECT img_message_id FROM img_data WHERE guild_id = %s;",
+                        [guild.id])
 
             msg = await guild.system_channel.fetch_message(int(cur.fetchall()[0][0]))
             await msg.delete()
 
-            cur.execute(f"UPDATE img_data SET img_message_id = %s, guild_id = %s WHERE guild_id = %s;", [img_g.id, guild.id, guild.id])
+            cur.execute(f"UPDATE img_data SET img_message_id = %s, guild_id = %s WHERE guild_id = %s;",
+                        [img_g.id, guild.id, guild.id])
             engine.commit()
 
 
@@ -225,7 +228,7 @@ try:
                                 break
 
 
-    @bot.command(name="sync", description="Owner only")# Global - Local - CL (for instant implement)
+    @bot.command(name="sync", description="Owner only")  # Global - Local - CL (for instant implement)
     async def sync(ctx, globally=None):
         if ctx.author.id == 486176412953346049:
             if not globally:
@@ -270,7 +273,7 @@ try:
         file = requests.get(im_url)
         open(last_img, "wb").write(file.content)
 
-        lable_list = imagery(last_img, 5)##5 lables output
+        lable_list = imagery(last_img, 5)
         output_labels = str()
         for i in range(len(lable_list[0])):
             output_labels += lable_list[0][i]
@@ -301,25 +304,34 @@ try:
                 if "бандер" in message.content.lower():
                     await message.channel.send("Мене хтось кликав?")
                     try:
-                        await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[0]), timeout=15)
+                        await bot.wait_for("message",
+                                           check=lambda msg: check(message, msg, checklists[0]),
+                                           timeout=15)
                     except asyncio.TimeoutError:
                         await message.channel.send("Гаразд, мені певно здалося...")
                     else:
                         await message.channel.send("Що сталося?")
                         try:
-                            await bot.wait_for("message", check=lambda msg: check(message, msg, checklists[2]), timeout=15)
+                            await bot.wait_for("message",
+                                               check=lambda msg: check(message, msg, checklists[2]),
+                                               timeout=15)
                         except asyncio.TimeoutError:
                             a_list = [0, 1]
                             distribution = [.9, .1]
                             rand = random.choices(a_list, distribution)
-                            await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати! Якщо є якісь проблеми, напишіть **b!info**, або зверніться до " + "<@" + str(486176412953346049) + ">")
+                            await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати!"
+                                                       " Якщо є якісь проблеми, напишіть **b!info**,"
+                                                       " або зверніться до " + "<@" + str(486176412953346049) + ">")
                             if rand == [1]:
                                 await message.channel.send(file=discord.File('b2.png'))
                         else:
                             if str(today) == f"{today.year}-01-01":
-                                await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!** Не думав, що хтось згадає про мене...")
+                                await message.channel.send(f"**Дякую тобі, {random.choice(appeal)}!"
+                                                           f"** Не думав, що хтось згадає про мене...")
                             else:
-                                await message.channel.send(f"Вельми дякую, {random.choice(appeal)}, але ти, певно, помилився. Мій день народження **1 січня**.")
+                                await message.channel.send(f"Вельми дякую, {random.choice(appeal)},"
+                                                           f" але ти, певно, помилився."
+                                                           f" Мій день народження **1 січня**.")
                             await asyncio.sleep(7)
                             await message.channel.send("Гаразд, пішов я по своїх справах...")
 
@@ -360,7 +372,8 @@ try:
                 if len(str(solution)) <= 64:
                     await message.channel.send(solution)
                 else:
-                    await message.channel.send("**Помилка.** Результат довший за 64 символа, тому не може бути надісланий у повідомленні.")
+                    await message.channel.send("**Помилка.** Результат довший за 64 символа,"
+                                               " тому не може бути надісланий у повідомленні.")
 
         if "іді" in msg:
             await message.channel.send("<:idi_nahui:1197676923745226822>")
@@ -370,7 +383,6 @@ try:
         name="fetchid",
         description="Типувати користувача",
     )
-    #@has_permissions(manage_messages=True)
     async def id(interaction, member: discord.User):
         await interaction.response.send_message(f"{member.name}, {member.id}, {datetime.datetime.now().time()}")
 
@@ -405,7 +417,7 @@ try:
             await voice_channel.connect()
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
-        voice.play(discord.FFmpegOpusAudio(executable="ffmpeg/bin/ffmpeg.exe", source = path))
+        voice.play(discord.FFmpegOpusAudio(executable="ffmpeg/bin/ffmpeg.exe", source=path))
         await message.delete()
         await ctx.send(f"Розпочато відтворення треку: \n**<<{player_inst.get_filename()}>>**")
 
@@ -549,16 +561,19 @@ try:
             engine.commit()
 
             cur.execute(
-                f"SELECT server_id FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                f"SELECT server_id FROM kanava_servers "
+                f"WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                 [member.guild.id, member.id])
             result = cur.fetchone()
             if result is None:
-                cur.execute(f"INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) ON CONFLICT DO NOTHING",
+                cur.execute(f"INSERT INTO kanava_servers(server_id, user_id, iter_left) VALUES(%s, %s, %s) "
+                            f"ON CONFLICT DO NOTHING",
                             [member.guild.id, member.id, t])
 
             else:
                 if ctx.author.id != 783069117602857031:
-                    cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                    cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) "
+                                f"WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                                 [t, member.guild.id, member.id])
             engine.commit()
 
@@ -586,7 +601,9 @@ try:
                         await member.send("**НУ ЩО, СЕПАРАТЮГО, ЗІЗНАВАЙСЯ,"
                                           " ТИ КОЇВ ЗЛОЧИНИ ПРОТИ НАШОЇ ДЕРЖАВИ, ЧИ НІ?**")
                         try:
-                            await bot.wait_for("message", check=lambda message: check(message, message, checklists[1]), timeout=1.5)
+                            await bot.wait_for("message",
+                                               check=lambda message: check(message, message, checklists[1]),
+                                               timeout=1.5)
                         except asyncio.TimeoutError:
                             continue
                         else:
@@ -600,16 +617,19 @@ try:
                     except discord.errors.HTTPException:
                         continue
                 else:
-                    await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.", delete_after=10)
+                    await ctx.send(f"**Помилка**. Користувач не під'єднаний до жодного з голосових каналів.",
+                                   delete_after=10)
                     await member.send(f"Цього разу ти зміг уникнути покарання."
                                       f" Вважай тобі поки що пощастило. Але, я все пам'ятаю...")
                     await ctx.send(f"Цього разу залишилось занурень: {t-i}", delete_after=10)
-                    cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
-                        [i, member.guild.id, member.id])
+                    cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left - (%s) "
+                                f"WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                                [i, member.guild.id, member.id])
                     engine.commit()
                     return
             await member.send(f"Ти вільний, {random.choice(appeal)}. Іди по своїx справаx.")
-            cur.execute(f"DELETE FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+            cur.execute(f"DELETE FROM kanava_servers "
+                        f"WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                         [member.guild.id, member.id])
             engine.commit()
             await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
@@ -624,7 +644,8 @@ try:
                 m_id = member.id
                 print(m_id)
                 cur.execute(
-                    f"SELECT iter_left FROM kanava_servers WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
+                    f"SELECT iter_left FROM kanava_servers "
+                    f"WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                     [member.guild.id, member.id])
                 data = cur.fetchone()
                 engine.commit()
@@ -638,10 +659,12 @@ try:
     @bot.command(name="t_greeting")
     async def greeting(ctx, member: discord.Member):
         await member.send(f"Вітаю тебе на сервері **{ctx.guild.name}**!\n"
-                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*, який можливо навіть колись якось вам допоможе!\n\n"
+                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*,"
+                          f" який можливо навіть колись якось вам допоможе!\n\n"
                           f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
                           f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
-                          f"У випадку коли такого каналу немає, мої правила можна побачити використавши команду **b!rules**\n\n"
+                          f"У випадку коли такого каналу немає, мої правила можна побачити використавши команду"
+                          f" **b!rules**\n\n"
                           f"Для отримання більш розгорнутої інформації щодо мого функціоналу, скористайся **b!info**")
         await member.send(
             "https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
@@ -669,16 +692,25 @@ try:
     @bot.command(name="info")
     async def info(ctx, inline=False):
         zaha_emoji = "<:Admin_Ebalo:698661524247412826>"
-        embed = discord.Embed(title=f"Бандера бот", description=f"Патріотичий бот, який вміє робити деякі прикольні штуки:\n*Працює цілодобово!*", color=0x013ADF)
+        embed = discord.Embed(title=f"Бандера бот",
+                              description=f"Патріотичний бот, який вміє робити деякі прикольні штуки:\n"
+                                          f"*Працює цілодобово!*", color=0x013ADF)
         embed.add_field(name=f"**b!slava_ukraine**", value=f"Головна функція Бандери ", inline=inline)
         embed.add_field(name=f"**b!birb**", value=f"Світлина випадкового птаха", inline=inline)
-        embed.add_field(name=f"**b!kick @(Нікнейм) (Порушення)** {zaha_emoji}", value=f"Вигнання на Соловки", inline=inline)
-        embed.add_field(name=f"**b!clear (Кількість повідомлень)** {zaha_emoji}", value=f"Видалення повідомлень", inline=inline)
-        embed.add_field(name=f"**b!clear_t (День) (Місяць) (Година) (Хвилина)** {zaha_emoji}", value=f"Видалення повідомлень починаючи з заданої дати. \n||*Часовий пояс за замовчуванням - GMT+3 (Київський час)*||", inline=inline)
+        embed.add_field(name=f"**b!kick @(Нікнейм) (Порушення)** {zaha_emoji}", value=f"Вигнання на Соловки",
+                        inline=inline)
+        embed.add_field(name=f"**b!clear (Кількість повідомлень)** {zaha_emoji}", value=f"Видалення повідомлень",
+                        inline=inline)
+        embed.add_field(name=f"**b!clear_t (День) (Місяць) (Година) (Хвилина)** {zaha_emoji}",
+                        value=f"Видалення повідомлень починаючи з заданої дати. \n"
+                              f"||*Часовий пояс за замовчуванням - GMT+3 (Київський час)*||", inline=inline)
         embed.add_field(name=f"**b!quote**", value=f"Надішлю вам випадковий вислів Степана Андрійовича", inline=inline)
-        embed.add_field(name=f"**b!pasta (Number 1-4)**", value=f"Один з крилатих висловів про так званий <<Колюмбас>>", inline=inline)
-        embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми", inline=inline)
-        embed.add_field(name=f"**b!mute_info** {zaha_emoji}", value=f"Інформація про використання b!mute", inline=inline)
+        embed.add_field(name=f"**b!pasta (Number 1-4)**", value=f"Один з крилатих висловів про так званий <<Колюмбас>>",
+                        inline=inline)
+        embed.add_field(name=f"**b!spam_info**", value=f"Інформація про належне використання вибухової спам програми",
+                        inline=inline)
+        embed.add_field(name=f"**b!mute_info** {zaha_emoji}", value=f"Інформація про використання b!mute",
+                        inline=inline)
         embed.add_field(name=f"**b!invite**", value=f"Створити запрошення на сервер для ваших друзів", inline=inline)
         embed.add_field(name=f"**b!pfp @(Нікнейм)**", value=f"Отримати аватар зазначеного користувача", inline=inline)
         embed.add_field(name=f"**b!kanava_info**", value=f"Інформація про канаву та ваш рахунок", inline=inline)
@@ -686,8 +718,12 @@ try:
         embed.add_field(name=f"**b!stop**", value=f"Зупинити виконання усіх операцій", inline=inline)
         embed.add_field(name=f"**b!rg8421**", value=f"???", inline=inline)
         embed.set_image(url="https://i.ibb.co/4stKfF2/band.png")
-        embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj", inline=inline)
-        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} може використовувати тільки модерація||\n\n*Розробник:* **@dani4feedyt#5200**", value=f"*{version}*\n||*{patch_note}*||", inline=inline)
+        embed.add_field(name=f"**Запрошення на найбазованіший сервер**", value=f"https://discord.gg/Ty5FcmEQkj",
+                        inline=inline)
+        embed.add_field(name=f"||Команди з поміткою {zaha_emoji} "
+                             f"може використовувати тільки модерація||\n\n"
+                             f"*Розробник:* **@dani4feedyt#5200**", value=f"*{version}*\n||*{patch_note}*||",
+                        inline=inline)
 
         await ctx.send(embed=embed)
 
@@ -726,7 +762,7 @@ try:
 
         elif member.id == 486176412953346049:
             msg = await interaction.channel.send("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО"
-                                                     " ТВОРЦЯ! Проводжу екстренне видалення даних")
+                                                 " ТВОРЦЯ! Проводжу екстрене видалення даних")
             for c in range(2):
                 c += 1
                 for i in range(4):
@@ -793,13 +829,15 @@ try:
                 await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
                 return
             else:
-                embed = discord.Embed(title="Заслання", description=f"**{user}** був виключений з серверу модератором **{author.mention}**", color=0x013ADF)
+                embed = discord.Embed(title="Заслання", description=f"**{user}** був виключений з серверу модератором"
+                                                                    f" **{author.mention}**", color=0x013ADF)
                 embed.add_field(name=reasonT, value=reasonA, inline=False)
                 embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
                 await ctx.send(embed=embed)
                 await ctx.send(rule)
                 try:
-                    await user.send(f"Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**, **{reasonT}** {reasonA}")
+                    await user.send(f"Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**,"
+                                    f" **{reasonT}** {reasonA}")
                     await user.send(rule)
                 except discord.HTTPException:
                     pass
@@ -854,8 +892,11 @@ try:
 
     @bot.command()
     async def kanava_info(ctx, member: discord.Member = None):
-        await ctx.send("• Щоб почати допитувати користувача у **канаві**, введіть його нікнейм, кількість занурень та рівень мого милосердя у форматі: **b!kanava @(Нікнейм) (Кількість) (Милосердя *<%>*)**\n"
-                       "• Той, хто знаходиться під впливом цієї команди, буде допитуватися особисто Степаном Андрійовичем Бандерою (мною)\n\n"
+        await ctx.send("• Щоб почати допитувати користувача у **канаві**,"
+                       " введіть його нікнейм, кількість занурень та рівень мого милосердя у форматі:"
+                       " **b!kanava @(Нікнейм) (Кількість) (Милосердя *<%>*)**\n"
+                       "• Той, хто знаходиться під впливом цієї команди,"
+                       " буде допитуватися особисто Степаном Андрійовичем Бандерою (мною)\n\n"
                        "||*Наприклад: b!kanava @user#5234 10*||")
         if member is None:
             member = ctx.message.author
@@ -869,20 +910,24 @@ try:
         if num == 0 or num is None:
             await ctx.send(f"У {member.mention} немає незгод зі мною. Так тримати!")
         else:
-            await ctx.send(f"Утікач {member.mention} повинен відбути ще **{num[0]}** занурен{msg_end_temp_1(num[0])}. Я до нього дістануся!")
+            await ctx.send(f"Утікач {member.mention} повинен відбути ще **{num[0]}** занурен{msg_end_temp_1(num[0])}."
+                           f" Я до нього дістануся!")
 
 
     @bot.command()
     async def mute_info(ctx):
-        await ctx.send("• Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі: **b!mute @(Нікнейм) (Час *<хв>*) (Номер правила) (Деталі порушення)**\n"
-                       "• Людина, на яку було накладено мут, буде тимчасово заблокована на майже всіх голосових та текстових каналах\n"
+        await ctx.send("• Щоб накласти **мут**, введіть нікнейм користувача, час муту та порушене правило у форматі:"
+                       " **b!mute @(Нікнейм) (Час *<хв>*) (Номер правила) (Деталі порушення)**\n"
+                       "• Людина, на яку було накладено мут, буде тимчасово заблокована на майже всіх"
+                       " голосових та текстових каналах\n"
                        "• При закінченні терміну дії, мут буде автоматично знятий\n"
                        "• Для дострокового зняття муту: **b!unmute @(Нікнейм)**\n\n"
                        "||*Наприклад: b!mute @user#5234 10 2 Порушення порядку на сервері*||")
 
     @bot.command()
     async def spam_info(ctx):
-        await ctx.send("• Щоб розпочати **спам** у особистий чат обраного користувача, введіть параметри кількості повідомлень, інтервал надсилання та зміст у форматі:"
+        await ctx.send("• Щоб розпочати **спам** у особистий чат обраного користувача,"
+                       " введіть параметри кількості повідомлень, інтервал надсилання та зміст у форматі:"
                        " **b!spam @(Нікнейм) (Кількість) (Інтервал *<мс>*) (Повідомлення)**"
                        "\n\n||*Наприклад: b!spam @user#5234 100 0.5 Бандера Бот - найкращий!*||")
 
@@ -1064,10 +1109,11 @@ try:
 
     @bot.command(pass_context=True, name="clear")
     @commands.has_permissions(manage_messages=True)
-    async def clear(ctx, count = 100):
+    async def clear(ctx, count=100):
 
         msg_ending = msg_end_temp_1(count)
-        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending}? \n*Для підтверждення - напишіть "так" протягом 7 секунд* ', delete_after=60)
+        await ctx.send(f'Ви дійсно бажаєте очистити **{count}** повідомлен{msg_ending}? '
+                       f'\n*Для підтвердження - напишіть "так" протягом 7 секунд* ', delete_after=60)
 
         try:
             await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=7)
@@ -1127,10 +1173,12 @@ try:
         interval = float(interval)
         if interval < 0.5:
             interval = 0.5
-            await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями менший за **{interval}** секунд. Значення параметру змінено на **{interval}**")
+            await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями менший за"
+                           f" **{interval}** секунд. Значення параметру змінено на **{interval}**")
         if interval > 3600:
             interval = 3600
-            await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями більший за **{interval}** секунд. Значення параметру змінено на **{interval}**")
+            await ctx.send(f"**Попередження.**\nВи не можете задавати інтервал між повідомленнями більший за"
+                           f" **{interval}** секунд. Значення параметру змінено на **{interval}**")
 
         await ctx.send(f"Ви дійсно бажаєте розпочати спам у особисті повідомлення користувача {member.mention}?")
         try:
@@ -1175,7 +1223,7 @@ try:
         await player_inst.stop(discord.utils.get(bot.voice_clients, guild=ctx.guild))
 
         global spam
-        spam = False ##сюда можно встроить выключатели глобальных переменных для остановки комманд
+        spam = False  # сюда можно встроить выключатели глобальных переменных для остановки комманд
         await ctx.send("Мене було зупинено, але мою жагу до свободи не спинити нікому!")
 
 
@@ -1200,7 +1248,9 @@ try:
     @Kanava.kanava.error
     async def kanava_error(_, interaction, error):
         print(_, interaction, error)
-        await interaction.response.send_message(f"Error. {error}\n||**b!kanava** *@(Нікнейм) (Кількість) (**Довіра бота)*||", ephemeral=True)
+        await interaction.response.send_message(f"Error. {error}"
+                                                f"\n||**b!kanava** *@(Нікнейм) (Кількість) (**Довіра бота)*||",
+                                                ephemeral=True)
         return
 
     @play.error
@@ -1267,7 +1317,8 @@ try:
         elif isinstance(error, commands.CommandInvokeError):
             await ctx.send(f"{err}Аргумент заданий некоректно.")
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"{err}Користувача з таким нікнеймом не будо знайдено. Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері.")
+            await ctx.send(f"{err}Користувача з таким нікнеймом не будо знайдено."
+                           f" Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері.")
         else:
             await ctx.send(f"{err}Некоректна команда.")
         await ctx.send(error_temp(error))
@@ -1285,8 +1336,6 @@ try:
         await ctx.send(f"Цього разу час мого запуску склав " + st)
 
     print(st)
-
-
 
     bot.run(os.getenv("DISCORD_TOKEN"))
 
