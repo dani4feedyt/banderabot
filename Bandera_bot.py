@@ -93,7 +93,10 @@ try:
     async def on_interaction(interaction):
         guild_id = interaction.guild.id
         member_id = interaction.user.id
-        command = interaction.command.name
+        try:
+            command = interaction.command.name
+        except AttributeError:
+            return False
         cur.execute(
             f"SELECT last_command FROM irritator WHERE server_id = %s AND user_id = %s",
             [guild_id, member_id])
@@ -800,51 +803,59 @@ try:
         else:
             await ctx.send("Підтверджено")
 
-    @bot.command(pass_context=True, name="kick")
-    @commands.has_permissions(kick_members=True)
-    async def kick(ctx, user: discord.Member, rule_n=None, *, reason=None):
-        if user == ctx.message.author:
-            await ctx.send("**Помилка.** Ви не можете виключити себе.")
-        else:
-            if rule_n is None:
-                rule_n = 0
-            rule_n = int(rule_n)
-            if 1 <= rule_n <= len(rules_list):
-                rule = (rules_list[rule_n][1])
-                ruleA = f"**№{rule_n}: {rules_list[rule_n][0]}**"
-            else:
-                rule = '⁣'
-                ruleA = "None"
-            guild = ctx.guild
-            author = ctx.message.author
+
+    @bot.tree.command(
+        name="kick",
+        description="Вигнати злодіяку з серверу"
+    )
+    @app_commands.checks.has_permissions(moderate_members=True)
+    @app_commands.rename(member='користувач', rule_n='порушення', reason='коментар')
+    @app_commands.describe(member='Жертва для заслання', rule_n='Номер порушеного правила',
+                           reason='Напиши сюди щось цікаве')
+    async def kick(interaction, member: discord.Member, rule_n: int, reason: str = ''):
+        if member == interaction.user:
+            await interaction.response.send_message("**Помилка.** Ви не можете виключити себе.")
+            return
+
+        reason_txt = ''
+        if 1 <= rule_n <= len(rules_list):
+            rule_gif = (rules_list[rule_n][1])
             if reason is None:
-                reasonT = "**Без будь-якого приводу**"
-                reasonA = '⁣'
+                if rules_list[rule_n][0]:
+                    reason_txt = rules_list[rule_n][0]
             else:
-                reasonT = "Порушення:"
-                reasonA = reason
-            await ctx.send(f"Ви дійсно бажаєте виключити **{user}** з серверу?", delete_after=60)
+                reason_txt = reason
+        else:
+            rule_gif = None
 
-            try:
-                await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
-            except asyncio.TimeoutError:
-                await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
-                return
-            else:
-                embed = discord.Embed(title="Заслання", description=f"**{user}** був виключений з серверу модератором"
-                                                                    f" **{author.mention}**", color=0x013ADF)
-                embed.add_field(name=reasonT, value=reasonA, inline=False)
-                embed.add_field(name="Порушене правило:", value=ruleA, inline=False)
-                await ctx.send(embed=embed)
-                await ctx.send(rule)
-                try:
-                    await user.send(f"Ви були виключені з серверу **{guild.name}** модератором **{author.mention}**,"
-                                    f" **{reasonT}** {reasonA}")
-                    await user.send(rule)
-                except discord.HTTPException:
-                    pass
-                await user.kick(reason=reason)
+        async def grnb_press():
 
+            embed = discord.Embed(title="Вигнання",
+                                  description=f"**{member.mention}**"
+                                              f" був відправлений з серверу до Сибіру руками **{interaction.user}**",
+                                  color=0x013ADF)
+
+            embed.add_field(name="Порушення:", value=reason_txt, inline=False)
+            embed.add_field(name="Порушене правило:", value=f"**#{rule_n}**", inline=False)
+
+            await interaction.edit_original_response(embed=embed, view=None)
+
+            if reason_txt:
+                await interaction.channel.send(reason_txt)
+            if rule_gif:
+                await interaction.channel.send(rule_gif)
+
+            await member.send(embed=embed)
+
+            await member.kick()
+
+        async def redb_press():
+            await interaction.edit_original_response(content="Вигнання скасовано.", view=None)
+            return
+
+        await interaction.response.send_message(
+            content=f"Ви дійсно бажаєте виключити **{member}** з серверу?",
+            view=G_R(interaction.user, grnb_press, redb_press))
 
     @bot.tree.command(
         name="rule",
