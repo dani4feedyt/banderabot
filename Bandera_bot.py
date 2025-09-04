@@ -133,7 +133,7 @@ try:
     @bot.event
     async def on_member_join(member):
         await member.send(f"Вітаю тебе на сервері **{member.guild.name}**!\n"
-                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*,"
+                          f"Я - **Бандера бот**, найгеніальніший бот, створений <@{str(dani4feed_id)}>,"
                           f" який можливо навіть колись якось вам допоможе!\n\n"
                           f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
                           f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
@@ -255,7 +255,9 @@ try:
         description="Патріотично"
     )
     async def slash_command(interaction):
-        await interaction.response.send_message(f"Героям слава, друже. \n**Моя поточна версія: {version}**")
+        await interaction.response.send_message(f"Героям слава, друже."
+                                                f"\n**Моя поточна версія: {version} "
+                                                f"\nОстаннє оновлення: {patch_note}**")
 
     @bot.tree.command(
         name="ticktacktoe",
@@ -324,9 +326,9 @@ try:
                             a_list = [0, 1]
                             distribution = [.9, .1]
                             rand = random.choices(a_list, distribution)
-                            await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати!"
-                                                       " Якщо є якісь проблеми, напишіть **b!info**,"
-                                                       " або зверніться до " + "<@" + str(dani4feed_id) + ">")
+                            await message.channel.send(f"Я взагалі-то маю свої справи, прошу не відволікати!"
+                                                       f" Якщо є якісь проблеми, напишіть **b!info**,"
+                                                       f" або зверніться до <@{str(dani4feed_id)}>")
                             if rand == [1]:
                                 await message.channel.send(file=discord.File('b2.png'))
                         else:
@@ -661,7 +663,7 @@ try:
     @bot.command(name="t_greeting")
     async def greeting(ctx, member: discord.Member):
         await member.send(f"Вітаю тебе на сервері **{ctx.guild.name}**!\n"
-                          f"Я - **Бандера бот**, найгеніальніший бот, створений *@dani4feedyt#5200*,"
+                          f"Я - **Бандера бот**, найгеніальніший бот, створений <@{str(dani4feed_id)}>,"
                           f" який можливо навіть колись якось вам допоможе!\n\n"
                           f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
                           f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
@@ -724,7 +726,7 @@ try:
                         inline=inline)
         embed.add_field(name=f"||Команди з поміткою {zaha_emoji} "
                              f"може використовувати тільки модерація||\n\n"
-                             f"*Розробник:* **@dani4feedyt#5200**", value=f"*{version}*\n||*{patch_note}*||",
+                             f"*Розробник:* <@{str(dani4feed_id)}>", value=f"*{version}*\n||*{patch_note}*||",
                         inline=inline)
 
         await ctx.send(embed=embed)
@@ -860,9 +862,9 @@ try:
         if 1 <= number < 5:
             await interaction.response.send_message(Quotes1[number])
         else:
-            await interaction.response.send_message("**Помилка.** Вислів під цим номером ще не було вигадано,"
-                                                    " або не було занесено до моєї бази даних. \n"
-                                                    "*Для детальної інформації звертайтеся до @dani4feedyt#5200*")
+            await interaction.response.send_message(f"**Помилка.** Вислів під цим номером ще не було вигадано,"
+                                                    f" або не було занесено до моєї бази даних. \n"
+                                                    f"*Для детальної інформації звертайтеся до <@{str(dani4feed_id)}>")
 
 
     @bot.tree.command(  # TODO Make the db entry or gl variable to check if the last quote is the same as the next one
@@ -1223,7 +1225,7 @@ try:
 
     async def on_app_command_error(interaction, error):
         err_base = "**Помилка. **"
-        err_end = " Спробуй ще раз, або звернися до" + str(dani4feed_id)
+        err_end = f" Спробуй ще раз, або звернися до <@{str(dani4feed_id)}>"
 
         cmd_name = interaction.command.name if interaction.command else "null"
 
@@ -1258,7 +1260,7 @@ try:
     @bot.event
     async def on_command_error(ctx, error):
         err_base = "**Помилка. **"
-        err_end = " Спробуй ще раз, або звернися до" + str(dani4feed_id)
+        err_end = f" Спробуй ще раз, або звернися до <@{str(dani4feed_id)}>"
 
         cmd_name = ctx.command.name if ctx.command else "null"
         if cmd_name in custom_errors:
