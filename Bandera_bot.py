@@ -70,6 +70,8 @@ try:
 
     spam = True
 
+    banderabot_id = 783069117602857031
+    dani4feed_id = 486176412953346049
     main_ch_id = 695715314696061072
     bpg_guild_id = 1338461268473806858
 
@@ -231,9 +233,9 @@ try:
                                 break
 
 
-    @bot.command(name="sync", description="Owner only")  # Global - Local - CL (for instant implement)
+    @bot.command(name="sync", description="Developer only")  # Global - Local - CL (for instant implement)
     async def sync(ctx, globally=None):
-        if ctx.author.id == 486176412953346049:
+        if ctx.author.id == dani4feed_id:
             if not globally:
                 bot.tree.copy_global_to(guild=discord.Object(id=ctx.guild.id))
                 await bot.tree.sync(guild=discord.Object(id=ctx.guild.id))
@@ -291,7 +293,7 @@ try:
 
     @bot.event
     async def on_message(message):
-        if message.author.id == 783069117602857031:
+        if message.author.id == banderabot_id:
             await bot.process_commands(message)
 
         else:
@@ -324,7 +326,7 @@ try:
                             rand = random.choices(a_list, distribution)
                             await message.channel.send("Я взагалі-то маю свої справи, прошу не відволікати!"
                                                        " Якщо є якісь проблеми, напишіть **b!info**,"
-                                                       " або зверніться до " + "<@" + str(486176412953346049) + ">")
+                                                       " або зверніться до " + "<@" + str(dani4feed_id) + ">")
                             if rand == [1]:
                                 await message.channel.send(file=discord.File('b2.png'))
                         else:
@@ -580,7 +582,7 @@ try:
                             [member.guild.id, member.id, t])
 
             else:
-                if ctx.author.id != 783069117602857031:
+                if ctx.author.id != banderabot_id:
                     cur.execute(f"UPDATE kanava_servers SET iter_left = kanava_servers.iter_left + (%s) "
                                 f"WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
                                 [t, member.guild.id, member.id])
@@ -762,10 +764,10 @@ try:
             picture = discord.File("src/last_pfp.jpg")
             pic = await interaction.channel.send(file=picture)
 
-        if member.id == 783069117602857031:
+        if member.id == banderabot_id:
             await interaction.response.send_message("**Традиція і Порядок!**")
 
-        elif member.id == 486176412953346049:
+        elif member.id == dani4feed_id:
             msg = await interaction.channel.send("О НІ! МЕНІ НЕ БУЛО ДОЗВОЛЕНО РОЗГОЛОШУВАТИ ІНФОРМАЦІЮ ПРО СВОГО"
                                                  " ТВОРЦЯ! Проводжу екстрене видалення даних")
             for c in range(2):
@@ -810,23 +812,19 @@ try:
     )
     @app_commands.checks.has_permissions(moderate_members=True)
     @app_commands.rename(member='користувач', rule_n='порушення', reason='коментар')
-    @app_commands.describe(member='Жертва для заслання', rule_n='Номер порушеного правила',
+    @app_commands.describe(member='Жертва заслання', rule_n='Номер порушеного правила',
                            reason='Напиши сюди щось цікаве')
     async def kick(interaction, member: discord.Member, rule_n: int, reason: str = ''):
         if member == interaction.user:
             await interaction.response.send_message("**Помилка.** Ви не можете виключити себе.")
             return
+        elif member.id == banderabot_id:
+            await interaction.response.send_message("Ти що, намагався мене позбутися? Тільки но спробуй знову...")
+            kanava_inst = Kanava(bot)
+            await kanava_inst.kanava_worker(ctx=await bot.get_context(interaction), member=interaction.user,
+                                            t=100, chance=0)
 
-        reason_txt = ''
-        if 1 <= rule_n <= len(rules_list):
-            rule_gif = (rules_list[rule_n][1])
-            if reason is None:
-                if rules_list[rule_n][0]:
-                    reason_txt = rules_list[rule_n][0]
-            else:
-                reason_txt = reason
-        else:
-            rule_gif = None
+        rule_gif, reason_txt = rules_func(rule_n, reason)
 
         async def grnb_press():
 
@@ -957,20 +955,11 @@ try:
             self.guild = guild
 
             if bot_source:
-                author = f"<@!{str(783069117602857031)}>"
+                author = f"<@!{str(banderabot_id)}>"
             else:
                 author = ctx.message.author.mention
 
-            reason_txt = ""
-            if 1 <= rule_n <= len(rules_list):
-                rule_gif = (rules_list[rule_n][1])
-                if reason is None:
-                    if rules_list[rule_n][0]:
-                        reason_txt = rules_list[rule_n][0]
-                else:
-                    reason_txt = reason
-            else:
-                rule_gif = None
+            rule_gif, reason_txt = rules_func(rule_n, reason)
 
             mutedRole = discord.utils.get(guild.roles, name="Muted")
 

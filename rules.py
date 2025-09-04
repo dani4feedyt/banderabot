@@ -49,3 +49,18 @@ trigger_list = {1: ["геншин", "генш", "genshin", "gensh"],
                 10: ["айзек", "айзач", "isaac", "isac", "צחק", "יִצְחק", "саак", "азик"],
                 29: ["вольфс", "wolfsa", "volfs", "ꑭ"]
                 }
+
+
+def rules_func(rule_n, reason):
+    reason_txt = ''
+    if 1 <= rule_n <= len(rules_list):
+        rule_gif = (rules_list[rule_n][1])
+        if reason is None:
+            if rules_list[rule_n][0]:
+                reason_txt = rules_list[rule_n][0]
+        else:
+            reason_txt = reason
+    else:
+        rule_gif = None
+
+    return rule_gif, reason_txt
