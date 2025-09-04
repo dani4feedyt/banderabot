@@ -1216,103 +1216,82 @@ try:
     async def t_ping(ctx):
         await ctx.send(f"Моя затримка складає **{round(bot.latency, 3)}** с")
 
- ###############################################ErrorHandling###############################################
+    # ErrorHandling
 
-    error_desc = ""
+    def format_error(error: Exception) -> str:
+        return f"\n\n*||**Детальний опис:** {str(error)}||*"
 
-    def error_temp(error):
-        return f"\n\n*||**Description:** {str(error)}||*"
-
-
-    # @rates.error
-    # async def rates_error(_, interaction, error):
-    #     await interaction.response.send_message(f"Error. {error}\n"
-    #                                             f"\n||**b!rates** *(Кількість) (Валюта)*||", ephemeral=True)
-
-
-    @Kanava.kanava.error
-    async def kanava_error(_, interaction, error):
-        print(_, interaction, error)
-        await interaction.response.send_message(f"Error. {error}"
-                                                f"\n||**b!kanava** *@(Нікнейм) (Кількість) (**Довіра бота)*||",
-                                                ephemeral=True)
-        return
-
-    @play.error
-    async def play_error(ctx, error):
-        global error_desc
-        error_desc = "Помилка у виконанні треку. Можливо посилання було введено некоректно."
-
-    @pfp.error
-    async def pfp_error(ctx, error):
-        global error_desc
-        error_desc = "||**b!pfp** *@(Нікнейм)*||"
-
-
-    @kick.error
-    async def kick_error(ctx, error):
-        global error_desc
-        error_desc = "||**b!kick** *@(Нікнейм) {Причина}*||"
-
-
-    @pasta.error
-    async def pasta_error(ctx, error):
-        global error_desc
-        error_desc = "||**b!pasta** *(Номер пасти)*||"
-
-
-    # @mute.error
-    # async def mute_error(ctx, error):
-    #     global error_desc
-    #     error_desc = "||**b!mute** *@(Нікнейм) (Час муту у хвилинах) {Номер порушення} {Опис}*||"
-    #
-    # @unmute.error
-    # async def unmute_error(ctx, error):
-    #     global error_desc
-    #     error_desc = "||**b!unmute** *@(Нікнейм)*||"
-
-    @spam.error
-    async def spam_error(ctx, error):
-        global error_desc
-        error_desc = "||**b!spam** *(Кількість повідомлень) (Кулдаун між повідомленнями) (Слово для спаму)*||"
+    custom_errors = {"play": "Помилка у виконанні треку. Можливо посилання некоректне.",
+                     "pfp": "Неможливо захопити зображення. Мабуть, нікнейм будо введено некоректно.",
+                     "kick": "Неможливо вигнати користувача.",
+                     "rates": "Несподівана помилка при переведенні валюти. Можливо центробанк змінив свої графіки.",
+                     "kanava": "Фортуна на стороні правопорушника. В канаві не залишилося помиїв.",
+                     "spam": "Неможливо продовжити спам. Користувач міг обмежити можливість отримувати ці повідомлення."
+                     }
 
 
     async def on_app_command_error(interaction, error):
+        err_base = "**Помилка. **"
+        err_end = " Спробуй ще раз, або звернися до" + str(dani4feed_id)
+
+        cmd_name = interaction.command.name if interaction.command else "null"
+
+        if cmd_name in custom_errors:
+            try:
+                await interaction.response.send_message(custom_errors[cmd_name] + err_end
+                                                        + format_error(error), ephemeral=True)
+            except discord.InteractionResponded:
+                await interaction.followup.send(custom_errors[cmd_name] + err_end
+                                                + format_error(error), ephemeral=True)
+            return
 
         if isinstance(error, app_commands.MissingPermissions):
-            await interaction.response.send_message(
-                "Помилка. В тебе бракує повноважень.",
-                ephemeral=True
-            )
+            err_msg = err_base + "В тебе бракує повноважень."
+        elif isinstance(error, app_commands.CommandNotFound):
+            err_msg = err_base + "Такої команди не існує."
+        elif isinstance(error, app_commands.CommandOnCooldown):
+            err_msg = err_base + "Команда в кулдауні, не поспішай."
+        elif isinstance(error, app_commands.CommandInvokeError):
+            err_msg = err_base + "Сталася помилка у виконанні команди." + err_end
         else:
-            await interaction.response.send_message(error, ephemeral=True)
+            err_msg = err_base + "Невідома помилка у виконанні команди." + err_end
+
+        try:
+            await interaction.response.send_message(err_msg + format_error(error), ephemeral=True)
+        except discord.InteractionResponded:
+            await interaction.followup.send(err_msg + format_error(error), ephemeral=True)
+
+    bot.tree.on_error = on_app_command_error
 
 
     @bot.event
     async def on_command_error(ctx, error):
-        print(error)
-        global error_desc
-        err = "**Помилка. **"
+        err_base = "**Помилка. **"
+        err_end = " Спробуй ще раз, або звернися до" + str(dani4feed_id)
+
+        cmd_name = ctx.command.name if ctx.command else "null"
+        if cmd_name in custom_errors:
+            await ctx.send(custom_errors[cmd_name] + err_end + format_error(error), ephemeral=True)
+            return
+
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send(f"{err}Такої команди не існує.")
+            err_msg = err_base + "Такої команди не існує."
         elif isinstance(error, commands.MissingPermissions):
-            await ctx.send(f"{err}Йой, хлопче, в тебе не вистачає прав для виконання цієї команди!")
+            err_msg = err_base + "Йой, хлопче, в тебе не вистачає прав для виконання цієї команди!"
         elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(f"{err}Не вистачає аргументів для виконання команди, перевірте коректність написання.")
+            err_msg = (err_base + "Не вистачає аргументів для виконання команди, перевір коректність написання."
+                       + err_end)
         elif isinstance(error, commands.CommandInvokeError):
-            await ctx.send(f"{err}Аргумент заданий некоректно.")
+            err_msg = err_base + "Сталася помилка у виконанні команди." + err_end
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"{err}Користувача з таким нікнеймом не будо знайдено."
-                           f" Можливо, нікнейм будо введено некоректно, або цього користувача немає на сервері.")
+            err_msg = err_base + ("Користувача з таким нікнеймом не будо знайдено. "
+                                  "Можливо нікнейм будо введено некоректно, або його немає на сервері.")
         else:
-            await ctx.send(f"{err}Некоректна команда.")
-        await ctx.send(error_temp(error))
-        error_desc = ""
+            err_msg = err_base + "Невідома помилка у виконанні команди."
 
+        await ctx.send(err_msg + format_error(error))
 
-    bot.tree.on_error = on_app_command_error
-
-  ###############################################ErrorHandling###############################################
+    # ErrorHandlingEnd
 
     st = ("--- %s секунд ---" % round((time.time() - start_time), 3))
 
