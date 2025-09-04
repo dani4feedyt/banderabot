@@ -794,18 +794,6 @@ try:
                         value=''.join(translator.translate(json_data["fact"])))
         await interaction.response.send_message(embed=embed)
 
-    @bot.command(pass_context=True, name="$check")
-    async def t_check(ctx):
-        await ctx.send("Чи бажаєте ви {String}?")
-        try:
-            await bot.wait_for("message", check=lambda message: check(ctx, message, checklists[0]), timeout=30)
-        except asyncio.TimeoutError:
-            await ctx.send("Час очікування вичерпано, запит скасовано.", delete_after=20)
-            return
-        else:
-            await ctx.send("Підтверджено")
-
-
     @bot.tree.command(
         name="kick",
         description="Вигнати злодіяку з серверу"
