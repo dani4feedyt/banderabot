@@ -51,6 +51,14 @@ trigger_list = {1: ["геншин", "генш", "genshin", "gensh"],
                 }
 
 
+def rule_mes(sentence):
+    for rule in trigger_list:
+        for word in trigger_list[rule]:
+            if word in sentence.content.lower():
+                return rule
+    return False
+
+
 def rules_func(rule_n, reason):
     reason_txt = ''
     if 1 <= rule_n <= len(rules_list):

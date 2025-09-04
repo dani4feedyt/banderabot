@@ -288,7 +288,7 @@ try:
         await interaction.edit_original_response(content=f"Я гадаю, що це... {output_labels}")
 
 
-    # TODO Указать в таблице правил количество наказания в минутах
+    # TODO [optionally] make trigger mute punishments differ in duration
 
 
     @bot.event
@@ -346,15 +346,6 @@ try:
             else:
                 await bot.process_commands(message)
 
-
-    def rule_mes(sentence):
-        for rule in trigger_list:
-            for word in trigger_list[rule]:
-                if word in sentence.content.lower():
-                    return rule
-        return False
-
-
     @bot.listen()
     async def on_message(message):
         msg = message.content.lower()
@@ -377,7 +368,7 @@ try:
                 if len(str(solution)) <= 64:
                     await message.channel.send(solution)
                 else:
-                    await message.channel.send("**Помилка.** Результат довший за 64 символа,"
+                    await message.channel.send("**Помилка.** Результат є довшим за 64 символи,"
                                                " тому не може бути надісланий у повідомленні.")
 
         if "іді" in msg:
