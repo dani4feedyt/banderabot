@@ -35,13 +35,16 @@ try:
     from selenium import webdriver
     from bs4 import BeautifulSoup
     from datetime import date
-    from image_rec import imagery
-    from db_handler import engine, cur
+
+    from load_handler import engine, cur
+    from load_handler import functional, textual
+
     from psycopg2.extras import Json
     from typing import Optional
 
     from views import *
 
+    from image_rec import imagery
     from ttt_view import Select
     from player import Player
     from lang_transformer import Translator
@@ -79,6 +82,7 @@ try:
     translator = Translator('en', 'uk')
     irritator = Irritation(engine, cur)
 
+    appeal = functional["appeal"]
 
     def check(ctx, msg, check_list):
         if msg.author == ctx.author:
@@ -254,8 +258,8 @@ try:
         name="slavaukraine",
         description="Патріотично"
     )
-    async def slash_command(interaction):
-        await interaction.response.send_message(f"Героям слава, друже."
+    async def slava_ukraine(interaction):
+        await interaction.response.send_message(f"Героям слава {random.choice(appeal)}."
                                                 f"\n**Моя поточна версія: {version} "
                                                 f"\nОстаннє оновлення: {patch_note}**")
 
@@ -503,16 +507,17 @@ try:
             pair_2 = []
             div_1 = None
             div_2 = None
-            for name, subnames in to_currency.items():
+            print("12342123")
+            for name, subnames in functional["triggers"]["rates_trig"].items():
                 if any(i in rate_from for i in subnames):
-                    div_1 = currency_divisor.get(name)
+                    div_1 = functional["values"]["rates"].get(name)
                     val = converter(soup, amount, name, div_1)
                     pair_1 = [name, val]
                     break
 
-            for name, subnames in to_currency.items():
+            for name, subnames in functional["triggers"]["rates_trig"].items():
                 if any(i in rate_to for i in subnames):
-                    div_2 = currency_divisor.get(name)
+                    div_2 = functional["values"]["rates"].get(name)
                     val = converter(soup, 1, name, div_2)
                     pair_2 = [name, val]
                     break
@@ -684,10 +689,6 @@ try:
         link = await ctx.channel.create_invite(max_age=age*60)
         await ctx.send(f"Посилання для запрошення ваших друзів на {age} хв!\n{link}")
 
-    @bot.command(name="slava_ukraine")
-    async def slava_ukraine(ctx):
-        await ctx.reply(f"**Героям слава, {random.choice(appeal)}!**")
-
     @bot.command(pass_context=True, name="echo")
     async def echo(ctx, *, msg):
         await ctx.send(msg)
@@ -767,7 +768,7 @@ try:
                 c += 1
                 for i in range(4):
                     await asyncio.sleep(0.1)
-                    await msg.edit(content=pfp_ph_sp[i])
+                    await msg.edit(content=textual['func_responses']['pfp']['pfp_ph_sp'][i])
                     i += 1
                 if c == 2:
                     await pic.delete()
@@ -781,7 +782,8 @@ try:
     async def birb(interaction):
         response = requests.get("https://some-random-api.com/animal/bird")
         json_data = json.loads(response.text)
-        embed = discord.Embed(color=0x013ADF, title=f"{random.choice(birb_ph)}, {random.choice(appeal)}:")
+        embed = discord.Embed(color=0x013ADF, title=f"{random.choice(textual['func_responses']['birb_ph'])},"
+                                                    f" {random.choice(appeal)}:")
         embed.set_image(url=json_data["image"])
         embed.add_field(name="А також, цікавий автоматично перекладений з англійської факт про пташок:",
                         value=''.join(translator.translate(json_data["fact"])))
@@ -860,7 +862,7 @@ try:
     @app_commands.describe(number='Номер вислову (1-4)')
     async def pasta(interaction, number: int):
         if 1 <= number < 5:
-            await interaction.response.send_message(Quotes1[number])
+            await interaction.response.send_message(textual["func_responses"]["chmu_quotes"][number-1])
         else:
             await interaction.response.send_message(f"**Помилка.** Вислів під цим номером ще не було вигадано,"
                                                     f" або не було занесено до моєї бази даних. \n"

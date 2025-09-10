@@ -3,7 +3,7 @@ import random
 import discord
 import tictactoe as ttt
 import time
-from txt_f import ttt_titles, ttt_wins, ttt_loses, ttt_ties
+from load_handler import textual
 
 import asyncio
 
@@ -120,21 +120,21 @@ class Button(discord.ui.Button['TicTacToe']):
                 await asyncio.sleep(3)
                 clearup(view)
 
-
         view.recreate_board(view.board, False)
 
         if wintxt is None:
-            await msg.edit(content=f"{random.choice(ttt_titles)} Ходи.")
+            await msg.edit(content=f"{random.choice(textual['func_responses']['ticktacktoe']['ttt_lines'])} Ходи.")
         else:
             await msg.edit(content=wintxt)
             if ai_win == 1:
-                await msg.reply(content=random.choice(ttt_wins))
+                await msg.reply(content=random.choice(textual['func_responses']['ticktacktoe']['ttt_wins']))
             elif ai_win == 0:
-                await msg.reply(content=random.choice(ttt_loses))
+                await msg.reply(content=random.choice(textual['func_responses']['ticktacktoe']['ttt_losses']))
             else:
-                await msg.reply(content=random.choice(ttt_ties))
+                await msg.reply(content=random.choice(textual['func_responses']['ticktacktoe']['ttt_ties']))
 
         await msg.edit(view=view)
+
 
 class TicTacToe(discord.ui.View):
     children: list[Button]
@@ -188,5 +188,3 @@ class TicTacToe(discord.ui.View):
                     disabled = True
 
                 self.add_item(Button(x, y, label, style, disabled))
-
-        print("board", board)

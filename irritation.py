@@ -1,4 +1,4 @@
-from txt_f import irritation_levels
+from load_handler import textual
 import random
 import asyncio
 
@@ -34,11 +34,11 @@ class Irritation:
         if result[0] == 0:
             return None
         elif 1 <= result[0] < 5:
-            return random.choice(irritation_levels.get("low"))
+            return random.choice(textual["irritation_levels"]["low"])
         elif 5 <= result[0] < 9:
-            return random.choice(irritation_levels.get("medium"))
+            return random.choice(textual["irritation_levels"]["medium"])
         elif 9 <= result[0] < 13:
-            return random.choice(irritation_levels.get("high"))
+            return random.choice(textual["irritation_levels"]["high"])
         else:
             self.cur.execute(
                 f"UPDATE irritator SET irritation = 0 WHERE user_id = %s AND server_id = %s",

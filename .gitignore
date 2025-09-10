@@ -3,6 +3,7 @@
 /ffmpeg/
 amazon-rds-ca-cert.pem
 .env
+verifier.json
 /src/last_pfp.jpg
 /src/last_img.jpg
 __pycache__/
