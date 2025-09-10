@@ -162,8 +162,6 @@ try:
     async def main_daily_pic():
         dw = str(datetime.datetime.today().weekday())
         for guild in bot.guilds:
-            print(guild)
-            print(guild.id)
             img_g = await guild.system_channel.send(file=discord.File(f"d_t{dw}.png"))
 
             cur.execute("SELECT img_message_id FROM img_data WHERE guild_id = %s;",
@@ -208,9 +206,7 @@ try:
 
                 role_list = role_ids[0]
                 roles = [discord.utils.get(member.guild.roles, id=r) for r in role_list]
-                print(roles)
                 await member.edit(roles=roles)
-                print(roles)
 
                 cur.execute(
                     f"DELETE FROM mute_list WHERE server_id = %s AND user_id = %s",
@@ -507,7 +503,6 @@ try:
             pair_2 = []
             div_1 = None
             div_2 = None
-            print("12342123")
             for name, subnames in functional["triggers"]["rates_trig"].items():
                 if any(i in rate_from for i in subnames):
                     div_1 = functional["values"]["rates"].get(name)
@@ -651,7 +646,6 @@ try:
         async def on_voice_state_update(self, member, before, after):
             if before.channel is None and after.channel:
                 m_id = member.id
-                print(m_id)
                 cur.execute(
                     f"SELECT iter_left FROM kanava_servers "
                     f"WHERE kanava_servers.server_id = %s AND kanava_servers.user_id = %s",
@@ -663,7 +657,6 @@ try:
                         f"Канава активована для користувача {member.mention}", delete_after=10)
                     ctx = await bot.get_context(message)
                     await self.kanava_worker(ctx, member=member, t=data[0], chance=30)
-                    print(data[0])
 
     @bot.command(name="t_greeting")
     async def greeting(ctx, member: discord.Member):
