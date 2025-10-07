@@ -23,6 +23,7 @@ jobs:
 
       - name: Pull latest changes in local repo
         run: |
+          whoami
           cd /mnt/Pull1/Scripts/banderabot
           git pull origin main
 
