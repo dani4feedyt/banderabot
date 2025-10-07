@@ -136,18 +136,14 @@ try:
 
     @bot.event
     async def on_member_join(member):
-        await member.send(f"Вітаю тебе на сервері **{member.guild.name}**!\n"
-                          f"Я - **Бандера бот**, найгеніальніший бот, створений <@{str(dani4feed_id)}>,"
-                          f" який можливо навіть колись якось вам допоможе!\n\n"
-                          f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
-                          f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
-                          f"У випадку коли такого каналу немає,"
-                          f" мої правила можна побачити використавши команду **b!rules**\n\n"
-                          f"Для отримання більш розгорнутої інформації щодо мого функціоналу, скористайся **b!info**")
+
+        await member.send(textual["general_responses"]["ev_member_join"][0].format(
+            guildname=member.guild.name, dani4feed_id=str(dani4feed_id)))
+
         await member.send("https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
-        await member.guild.system_channel.send(f"Ласкаво просимо на сервер **{member.guild.name}**, {member.mention}!"
-                                               f" Наші ряди поповнилися ще одним гідним (?) націоналістом. "
-                                               f"Нас вже аж **{len(member.guild.members)}**!")
+
+        await member.guild.system_channel.send(textual["general_responses"]["ev_member_join"][1].format(
+            guildname=member.guild.name, member=member.mention, member_count=len(member.guild.members)))
 
 
     @bot.event
@@ -429,44 +425,26 @@ try:
     )
     async def rg8421(interaction):
         author = interaction.user
+        script = textual["func_responses"]["rg8421"]
 
         async def grnb_press():
-            await interaction.edit_original_response(content="\n||Гівно плюс Гівно "
-                                                             "\nмінус Гівно плюс Крапел"
-                                                             "\nька поносу та"
-                                                             "\nтри крапельки гівна"
-                                                             "\nвисокої концентр..."
-                                                             "\n*Далі нерозбірливо*||", view=None)
+            await interaction.edit_original_response(content=script[2], view=None)
 
             await asyncio.sleep(10)
 
-            await interaction.channel.send("*Кімната враз наповнюється гучним воєм сирени та роботизований голос "
-                                           "\nБандеработа розкотисто повторює одну фразу знову і знову, "
-                                           "пробираючи тебе до кісток*")
+            await interaction.channel.send(script[3])
             for _ in range(5):
                 await asyncio.sleep(2)
-                await interaction.channel.send(f"\n**Агов, <@{str(696670757794742322)}>, {author.mention} "
-                                               f"знайшов таємну інтеракцію, розгорнув сувій калу "
-                                               f"та дізнався рецепт надчистого лайна. "
-                                               f"\nПорушника має бути покарано. Повторюю.**")
+                await interaction.channel.send(script[4].format(
+                    ivan_mention=str(696670757794742322), author=author.mention))
 
             kanava_inst = Kanava(bot)
             await kanava_inst.kanava_worker(ctx=await bot.get_context(interaction), member=author, t=10, chance=0)
 
         async def redb_press():
-            await interaction.edit_original_response(content="*Ти відкладаєш пергамент в сторону. "
-                                                             "\nНехай хтось інший наражає себе на "
-                                                             "небезпеку*", view=None)
+            await interaction.edit_original_response(content=script[1], view=None)
 
-        await interaction.response.send_message("*Ти тримаєш в руках стародавній згорток пожовклого ||обісцяного|| "
-                                                "паперу. "
-                                                "\nНа його зовнішній стороні олівцем накарябана "
-                                                "дата: **8 квітня 2021 року**. "
-                                                "\nТи не маєш жодного поняття що "
-                                                "може бути всередині, але точно знаєш що власник сувою одразу "
-                                                "дізнається якщо ти його розгорнеш.*"
-                                                "\n**Розгорнути пергамент?**",
-                                                view=G_R(author, grnb_press, redb_press))
+        await interaction.response.send_message(script[0], view=G_R(author, script, grnb_press, redb_press))
 
 
     @bot.tree.command(
@@ -475,7 +453,7 @@ try:
     )
     @app_commands.rename(amount='кількість', rate_from='валюта_з', rate_to='валюта_в')
     @app_commands.describe(amount='Кількість валюти для переводу', rate_from='Валюта, з якої буде виконано переведення',
-                           rate_to='Валюта, в яку буде виконано переведення')
+                           rate_to='Валюта, у яку буде виконано переведення')
     async def rates(interaction, amount: float, rate_from: str, rate_to: str):
         rate_from = rate_from.lower()
         rate_to = rate_to.lower()
@@ -660,14 +638,9 @@ try:
 
     @bot.command(name="t_greeting")
     async def greeting(ctx, member: discord.Member):
-        await member.send(f"Вітаю тебе на сервері **{ctx.guild.name}**!\n"
-                          f"Я - **Бандера бот**, найгеніальніший бот, створений <@{str(dani4feed_id)}>,"
-                          f" який можливо навіть колись якось вам допоможе!\n\n"
-                          f"Існує спеціальний лист **правил** спілкування зі мною, яких ти **маєш притримуватися**.\n"
-                          f"Якщо на цьому сервері є канал **#правила**, можеш із ними ознайомитися.\n"
-                          f"У випадку коли такого каналу немає, мої правила можна побачити використавши команду"
-                          f" **b!rules**\n\n"
-                          f"Для отримання більш розгорнутої інформації щодо мого функціоналу, скористайся **b!info**")
+        await member.send(textual["general_responses"]["ev_member_join"][0].format(
+            guildname=member.guild.name, dani4feed_id=str(dani4feed_id)))
+
         await member.send(
             "https://media.discordapp.net/attachments/810509408571359293/919313856159965214/kolovrat1.gif")
 

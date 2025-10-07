@@ -2,9 +2,10 @@ import discord
 
 
 class G_R(discord.ui.View):
-    def __init__(self, author, grnb_f, redb_f):
+    def __init__(self, author, script, grnb_f, redb_f):
         super().__init__()
         self.author = author
+        self.script = script
         self.grnb_f = grnb_f
         self.redb_f = redb_f
 
