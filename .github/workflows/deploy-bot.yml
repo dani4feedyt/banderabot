@@ -29,5 +29,5 @@ jobs:
 
       - name: Build and restart bot container
         run: |
-          sudo /mnt/Pull1/Scripts/docker-compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml down
-          sudo /mnt/Pull1/Scripts/docker-compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml up -d --build
+          sudo docker compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml down
+          sudo docker compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml up -d --build
