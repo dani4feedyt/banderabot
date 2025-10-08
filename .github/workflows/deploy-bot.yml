@@ -23,10 +23,11 @@ jobs:
 
       - name: Pull latest changes in local repo
         run: |
+          whoami
           cd /mnt/Pull1/Scripts/banderabot
           git pull origin main
 
       - name: Build and restart bot container
         run: |
-           /mnt/Pull1/Scripts/docker-compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml down
-           /mnt/Pull1/Scripts/docker-compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml up -d --build
+          sudo docker compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml down
+          sudo docker compose -f /mnt/Pull1/Scripts/banderabot/docker-compose.yml up -d --build
