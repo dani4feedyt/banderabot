@@ -802,7 +802,7 @@ try:
 
         await interaction.response.send_message(
             content=f"Ви дійсно бажаєте виключити **{member}** з серверу?",
-            view=G_R(interaction.user, grnb_press, redb_press))
+            view=G_R(interaction.user, None, grnb_press, redb_press))
 
     @bot.tree.command(
         name="rule",
@@ -1081,7 +1081,9 @@ try:
     @app_commands.checks.has_permissions(manage_messages=True)
     async def clear_int(interaction, message: discord.Message):
 
-        await interaction.response.send_message("*Зачекайте, підраховую повідомлення…*", delete_after=30)
+        script = textual["func_responses"]["int_clear"]
+
+        await interaction.response.send_message(script["lines"][0], delete_after=30)
 
         msg_count = 0
         async for message in message.channel.history(limit=None, after=message.created_at, oldest_first=True):
@@ -1090,27 +1092,24 @@ try:
         async def grnb_press():
             if msg_count > 500:
                 await interaction.edit_original_response(
-                    content="**Помилка.** Ви не можете видалити більше 500 повідомлень!",
-                    view=None)
+                    content=script["errors"][0].format(count=500), view=None)
             elif msg_count == 0:
                 await interaction.edit_original_response(
-                    content="**Помилка.** Недостатньо повідомлень для видалення!",
-                    view=None)
+                    content=script["errors"][1], view=None)
             else:
                 await message.channel.purge(limit=msg_count+1)
                 await message.channel.send(
-                    f"Було видалено **{msg_count}** повідомлен{msg_end_temp_1(msg_count)}!",
+                    content=script["lines"][2].format(count=msg_count, ending=msg_end_temp_1(msg_count)),
                     delete_after=60)
 
         async def redb_press():
-            await interaction.edit_original_response(content="Видалення скасовано", view=None)
+            await interaction.edit_original_response(content=script["lines"][3], view=None)
             return
 
         await interaction.edit_original_response(
-            content=f"Ви дійсно бажаєте очистити **{msg_count}**"
-                    f" повідомлен{msg_end_temp_1(msg_count)} починаючи з цього повідомлення? "
-                    f"**(UTC: {message.created_at.strftime('%c')}**)",
-            view=G_R(interaction.user, grnb_press, redb_press))
+            content=script["lines"][1].format(count=msg_count,
+                                              ending=msg_end_temp_1(msg_count), utc=message.created_at.strftime('%c')),
+            view=G_R(interaction.user, script, grnb_press, redb_press))
 
     @bot.command(name="spam", pass_context=True)
     @has_permissions(kick_members=True)
