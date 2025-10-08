@@ -67,8 +67,12 @@ try:
     repo = git.Repo(".git")
     master = repo.head.reference
     commit_message = master.commit.message
-    version = commit_message.split("-")[0]
-    patch_note = commit_message.split(": ")[1]
+    try:
+        version = commit_message.split("-")[0]
+        patch_note = commit_message.split(": ")[1]
+    except IndexError:
+        patch_note = ""
+        version = ""
     print(commit_message)
 
     spam = True
