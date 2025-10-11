@@ -768,11 +768,14 @@ try:
     @app_commands.describe(member='Жертва заслання', rule_n='Номер порушеного правила',
                            reason='Напиши сюди щось цікаве')
     async def kick(interaction, member: discord.Member, rule_n: int, reason: str = ''):
+
+        script = textual['func_responses']['kick']
+
         if member == interaction.user:
-            await interaction.response.send_message("**Помилка.** Ви не можете виключити себе.")
+            await interaction.response.send_message(script['errors'][0])
             return
         elif member.id == banderabot_id:
-            await interaction.response.send_message("Ти що, намагався мене позбутися? Тільки но спробуй знову...")
+            await interaction.response.send_message(script['lines'][0])
             kanava_inst = Kanava(bot)
             await kanava_inst.kanava_worker(ctx=await bot.get_context(interaction), member=interaction.user,
                                             t=100, chance=0)
@@ -782,8 +785,7 @@ try:
         async def grnb_press():
 
             embed = discord.Embed(title="Вигнання",
-                                  description=f"**{member.mention}**"
-                                              f" був відправлений з серверу до Сибіру руками **{interaction.user}**",
+                                  description=script['lines'][2].format(member=member.mention, author=interaction.user),
                                   color=0x013ADF)
 
             embed.add_field(name="Порушення:", value=reason_txt, inline=False)
@@ -801,12 +803,12 @@ try:
             await member.kick()
 
         async def redb_press():
-            await interaction.edit_original_response(content="Вигнання скасовано.", view=None)
+            await interaction.edit_original_response(content=script['lines'][3], view=None)
             return
 
         await interaction.response.send_message(
-            content=f"Ви дійсно бажаєте виключити **{member}** з серверу?",
-            view=G_R(interaction.user, None, grnb_press, redb_press))
+            content=script['lines'][1].format(member=member.mention),
+            view=G_R(interaction.user, script, grnb_press, redb_press))
 
     @bot.tree.command(
         name="rule",
@@ -832,11 +834,11 @@ try:
     @app_commands.describe(number='Номер вислову (1-4)')
     async def pasta(interaction, number: int):
         if 1 <= number < 5:
-            await interaction.response.send_message(textual["func_responses"]["chmu_quotes"][number-1])
+            await interaction.response.send_message(textual['func_responses']['pasta']['lines'][number-1])
         else:
-            await interaction.response.send_message(f"**Помилка.** Вислів під цим номером ще не було вигадано,"
-                                                    f" або не було занесено до моєї бази даних. \n"
-                                                    f"*Для детальної інформації звертайтеся до <@{str(dani4feed_id)}>")
+            await interaction.response.send_message(textual['func_responses']['pasta']['errors'][0].format(
+                dani4feed_id=str(dani4feed_id)
+            ))
 
 
     @bot.tree.command(  # TODO Make the db entry or gl variable to check if the last quote is the same as the next one
